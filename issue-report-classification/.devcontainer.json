@@ -1,0 +1,26 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/base:debian",
+	"hostRequirements": {
+		"gpu": "optional"
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/python": {
+			"version": "3.10",
+			"installTools": true,
+			"installJupyterlab": true,
+			"optimize": true
+		},
+		"ghcr.io/devcontainers/features/nvidia-cuda:1": {
+			"installCudnn": true
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter"
+			]
+		}
+	},
+	"postCreateCommand": "pip install wheel setuptools pip --upgrade && pip install -r requirements.txt"
+}
