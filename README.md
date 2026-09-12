@@ -37,6 +37,7 @@ Track A is complete and its outputs under `data/processed/` are the agreed input
 ## Layout
 
 ```
+.devcontainer/         Reproducible environment (see below)
 src/ai4se/
     model.py           IssueReport entity, label and repository constants
     repository.py      IssueRepository (abstract) + InMemory / File implementations
@@ -87,24 +88,58 @@ Issue bodies are Markdown documents. In the training set, 47% contain fenced cod
 
 Average retained length: 100% → 63% → 33% of the original word count.
 
-## Usage
+## Getting started
+
+### With the dev container (recommended)
+
+The repository ships a `.devcontainer/` so every group member — and the
+lecturer at the exam — runs an identical environment. Open the folder in
+VS Code and accept **Reopen in Container**, or run
+`devcontainer up --workspace-folder .` with the CLI. GitHub Codespaces picks
+the same definition up automatically.
+
+On first build the container:
+
+- pins Python 3.11 and installs `requirements.txt`;
+- bakes the NLTK corpora into the image, so the cleaning pipeline works offline;
+- installs a LaTeX toolchain (`latexmk` + TeX Live), so `make report` compiles
+  the report without a second environment;
+- installs the project with `pip install -e ".[dev]"`, so `import ai4se` works
+  from any directory with no `sys.path` manipulation;
+- downloads and caches the competition dataset;
+- runs the test suite as a smoke check.
+
+Pip and HuggingFace caches live in named volumes and survive rebuilds, which
+matters once track C starts downloading transformer checkpoints. To give the
+container a GPU for that track, uncomment the `runArgs` block in
+`devcontainer.json`.
+
+### Without the dev container
 
 ```bash
-pip install -r requirements.txt
-python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('omw-1.4')"
-
-# Reproduce Track A end to end
-jupyter lab notebooks/01_data_and_eda.ipynb
-
-# Verify the persistence requirement
-python -m pytest tests/ -v
-python tests/test_persistence_equivalence.py    # prints the comparison table
+python -m venv .venv && source .venv/bin/activate
+make install          # pip install -e ".[dev]" + NLTK corpora
 ```
+
+### Common commands
+
+```bash
+make help     # list every target
+make data     # download and cache the NLBSE'24 dataset
+make eda      # execute the Track A notebook end to end
+make lab      # start Jupyter Lab on port 8888
+make test     # run the test suite
+make check    # print the persistence-equivalence table for the report
+make lint     # ruff check + format
+make report   # compile report/report.tex
+```
+
+Optional dependency groups, installed per track:
+`pip install -e ".[ml]"` for track B, `pip install -e ".[dl]"` for tracks C and D.
 
 Minimal example:
 
 ```python
-import sys; sys.path.insert(0, "src")
 from ai4se.loader import load_split
 from ai4se.preprocessing import make_cleaner
 
