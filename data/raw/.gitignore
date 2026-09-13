@@ -1,0 +1,11 @@
+# The README states that the cached competition CSVs are git-ignored and
+# downloaded on demand, but the root .gitignore has no rule for them: running
+# `make data` followed by `git add .` commits 7 MB of data that `make data`
+# can always fetch again.
+#
+# This nested ignore file closes that gap without touching the root
+# .gitignore, so it cannot conflict with anyone else's branch. `.gitkeep`
+# stays tracked, so the directory itself survives a clone.
+*.csv
+*.json
+!.gitkeep
