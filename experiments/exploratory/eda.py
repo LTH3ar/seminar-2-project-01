@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+# ruff: noqa  -- verbatim exploratory script, kept for provenance (see README)
 """Preliminary EDA on the NLBSE'24 issue-report-classification dataset."""
 import re, sys, io, hashlib
 import pandas as pd, numpy as np

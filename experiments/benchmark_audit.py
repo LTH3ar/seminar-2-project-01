@@ -95,7 +95,9 @@ def _predict_per_repo(train: IssueRepository, test: IssueRepository) -> np.ndarr
     """
     issues = test.all()
     predictions = np.empty(len(issues), dtype=object)
-    for repo in REPOSITORIES:
+    # Projects present in the data, not the REPOSITORIES constant -- trusting
+    # the constant silently drops issues from any project it does not list.
+    for repo in test.repos():
         positions = [i for i, issue in enumerate(issues) if issue.repo == repo]
         if not positions:
             continue
@@ -127,7 +129,7 @@ def step_1_baseline(train: IssueRepository, test: IssueRepository) -> dict:
     print(f"    95% CI [{low:.4f}, {high:.4f}]  width {high - low:.4f}")
     per_repo_score = cross_repo_f1(y_true, per_repo_pred, repos)
     print(f"  one model per project           : {per_repo_score:.4f}")
-    print(f"  official SetFit baseline        : 0.8270\n")
+    print("  official SetFit baseline        : 0.8270\n")
 
     print("  per project and class (the table the report needs):")
     for row in classification_rows(y_true, global_pred, repos):
@@ -159,7 +161,10 @@ def step_2_temporal_confound(full: IssueRepository) -> dict:
             continue
         # Seconds since epoch as the single feature. No text is read.
         times = np.array(
-            [np.datetime64(i.created_at.replace(" ", "T")).astype("int64") for i in issues],
+            [
+                np.datetime64(i.created_at.replace(" ", "T")).astype("int64")
+                for i in issues
+            ],
             dtype=float,
         ).reshape(-1, 1)
         labels = [i.label for i in issues]

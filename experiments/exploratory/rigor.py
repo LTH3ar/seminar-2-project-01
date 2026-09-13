@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+# ruff: noqa  -- verbatim exploratory script, kept for provenance (see README)
 """Q1-grade statistical machinery, run for real on the current baselines.
 Every number printed here goes into the protocol document."""
 import warnings, sys, io, json, hashlib, re

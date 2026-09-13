@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+# ruff: noqa  -- verbatim exploratory script, kept for provenance (see README)
 """Four probe experiments that the research plan will be built on."""
 import re, sys, io
 import pandas as pd, numpy as np

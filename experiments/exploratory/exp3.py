@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+# ruff: noqa  -- verbatim exploratory script, kept for provenance (see README)
 """Is there a TEMPORAL CONFOUND baked into the NLBSE'24 benchmark?"""
 import warnings, sys, io
 warnings.filterwarnings("ignore")
