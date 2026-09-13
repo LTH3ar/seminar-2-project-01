@@ -85,16 +85,50 @@ def test_macro_f1_is_hand_checkable():
     y_pred = ["bug", "feature", "feature", "feature"]
     # bug:      tp=1 fp=0 fn=1 -> F1 = 2/3
     # feature:  tp=2 fp=1 fn=0 -> F1 = 4/5
-    # question: absent entirely -> F1 = 0.0 by convention
-    assert macro_f1(y_true, y_pred) == pytest.approx((2 / 3 + 4 / 5 + 0.0) / 3)
+    # question: never occurs, so it is not part of the average at all --
+    #           scikit-learn's behaviour, and the reason a fold missing a class
+    #           does not silently score zero for it.
+    assert macro_f1(y_true, y_pred) == pytest.approx((2 / 3 + 4 / 5) / 2)
 
 
 def test_cross_repo_f1_averages_projects_not_items(toy_predictions):
     """The official score weights each project equally, not each issue."""
     y_true, y_pred, repos = toy_predictions
-    per_repo = per_repo_f1(y_true, y_pred, repos)
+    per_repo = per_repo_f1(y_true, y_pred, repos, average="micro")
     assert per_repo == {"a/a": pytest.approx(2 / 3), "b/b": pytest.approx(2 / 3)}
-    assert cross_repo_f1(y_true, y_pred, repos) == pytest.approx(2 / 3)
+    assert cross_repo_f1(y_true, y_pred, repos, average="micro") == pytest.approx(2 / 3)
+
+
+def test_the_default_average_is_the_competition_metric(toy_predictions):
+    """The default must be the weighted average, not accuracy.
+
+    Getting this wrong is silent: micro-F1 looks like a plausible score and
+    differs from the official figure only by a point or two, so it would sit in
+    a results table unnoticed.
+    """
+    y_true, y_pred, repos = toy_predictions
+    default = cross_repo_f1(y_true, y_pred, repos)
+    explicit = cross_repo_f1(y_true, y_pred, repos, average="weighted")
+    assert default == explicit
+    assert default != pytest.approx(cross_repo_f1(y_true, y_pred, repos, "micro"))
+
+
+def test_weighted_ignores_absent_classes_while_macro_penalises_them():
+    """A class with no instances must not drag the official metric down."""
+    from ai4se.evaluation import weighted_f1
+
+    # Only two of the three labels occur; a perfect prediction of them.
+    y_true = ["bug", "bug", "feature"]
+    y_pred = ["bug", "bug", "feature"]
+    assert weighted_f1(y_true, y_pred) == pytest.approx(1.0)
+    assert macro_f1(y_true, y_pred) == pytest.approx(1.0)
+
+
+def test_unknown_average_is_rejected(toy_predictions):
+    """A typo in the average name must fail rather than pick a default."""
+    y_true, y_pred, repos = toy_predictions
+    with pytest.raises(ValueError):
+        per_repo_f1(y_true, y_pred, repos, average="wieghted")
 
 
 def test_cross_repo_differs_from_pooled_when_projects_are_unequal():

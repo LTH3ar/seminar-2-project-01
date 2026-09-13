@@ -1,4 +1,4 @@
-"""Evaluation, significance testing and statistical power for track D.
+﻿"""Evaluation, significance testing and statistical power for track D.
 
 The competition ranks submissions by the *cross-repository F1*: one classifier
 is trained per project, scored on that project's test issues, and the five
@@ -24,12 +24,14 @@ the base requirements and can be used from any track.
 """
 
 from .metrics import (
+    OFFICIAL_BASELINES,
     bootstrap_ci,
     classification_rows,
     cross_repo_f1,
     macro_f1,
     micro_f1,
     per_repo_f1,
+    weighted_f1,
 )
 from .power import (
     is_conclusive,
@@ -48,6 +50,7 @@ from .significance import (
 from .splits import random_split_control, stratified_folds, time_aware_split
 
 __all__ = [
+    "OFFICIAL_BASELINES",
     "McNemarResult",
     "bootstrap_ci",
     "classification_rows",
@@ -67,4 +70,5 @@ __all__ = [
     "random_split_control",
     "stratified_folds",
     "time_aware_split",
+    "weighted_f1",
 ]

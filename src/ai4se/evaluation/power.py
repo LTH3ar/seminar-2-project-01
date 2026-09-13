@@ -101,9 +101,7 @@ def power_curve(
     Returns:
         One row per delta with ``"delta_points"`` and ``"power"``.
     """
-    return [
-        {"delta_points": d * 100, "power": power_at(d, **kwargs)} for d in deltas
-    ]
+    return [{"delta_points": d * 100, "power": power_at(d, **kwargs)} for d in deltas]
 
 
 def minimum_detectable_difference(
