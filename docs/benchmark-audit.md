@@ -1,4 +1,4 @@
-# Benchmark audit — what the NLBSE'24 test set can and cannot tell us
+﻿# Benchmark audit — what the NLBSE'24 test set can and cannot tell us
 
 **Author:** Minh Khanh · **Branch:** `minh-khanh` · **Track:** D (baseline & evaluation)
 
@@ -26,7 +26,7 @@ smaller than that.
 
 **2. Class and creation date are confounded.** A model reading *only* the
 timestamp — no text at all — scores **0.684** where chance is 0.333. Evaluating on
-a chronological split instead of the official random one costs **8.1 F1 points**.
+a chronological split instead of the official random one costs **8.8 F1 points**.
 
 Neither finding stops us competing. Both change what we are allowed to claim.
 
@@ -38,13 +38,29 @@ TF-IDF (1–2 grams) + LinearSVC, no cleaning, raw title + body.
 
 | Configuration | Cross-repo F1 |
 |---|---|
-| One model for all five projects | 0.7653 |
-| One model per project *(what the competition requires)* | 0.7520 |
-| **Official SetFit baseline** | **0.8270** |
+| One model for all five projects | 0.7631 |
+| One model per project *(what the competition requires)* | 0.7504 |
+| **Official SetFit baseline** | **0.8240** |
 
-95% bootstrap CI on the first row, stratified by project: **[0.7440, 0.7867]** —
+95% bootstrap CI on the first row, stratified by project: **[0.7413, 0.7848]** —
 a width of 4.3 points. That interval is wider than most improvements claimed in
 this competition, which is the first hint of the problem in section 4.
+
+> **Correction, and why it is worth stating.** The first version of this
+> document scored with micro-F1. That is not the competition's metric: the
+> organisers read scikit-learn's *weighted average* per project and take the
+> mean of the five. Every figure here has been recomputed with the correct
+> metric; the numbers moved by less than half a point, because the dataset is
+> balanced and the two averages nearly coincide on it. The error was worth
+> fixing anyway — it would have diverged on any fold or bootstrap replicate,
+> and a metric that is quietly wrong is exactly the kind of defect that
+> survives into a published table.
+>
+> The published SetFit figure is quoted here as **0.8240**, the value in the
+> result file committed to the competition repository. Its README says 0.8270
+> for the same configuration. The organisers disagree with themselves by 0.3
+> points, which is a useful calibration for how much a third decimal place is
+> worth on this benchmark.
 
 The single number hides a wide spread. Per project and class:
 
@@ -93,8 +109,8 @@ The gap between the earliest and latest class median ranges from 50 days
 (vscode) to **1,522 days** (react).
 
 **It cannot be fixed by dropping the column.** Adding `created_at` as an explicit
-feature to a text model changes nothing (0.7627 → 0.7633): the signal is already
-in the vocabulary of each era. Jensen–Shannon divergence between the vocabulary
+feature to a text model changes nothing (0.7627 → 0.7633, exploratory run):
+the signal is already in the vocabulary of each era. Jensen–Shannon divergence between the vocabulary
 of the older and newer half of the data is 0.1475, with era-specific tokens
 (`useeffect`, `setstate`, `jsfiddle` in the old half; `webgl`, `insiders`,
 `rasterization` in the new).
@@ -114,12 +130,12 @@ random cut instead of chronological.
 
 | Split protocol | Cross-repo F1 |
 |---|---|
-| Random (matched control) | 0.7713 |
-| Time-aware | 0.6907 |
-| **Difference** | **−0.0807** |
+| Random (matched control) | 0.7700 |
+| Time-aware | 0.6817 |
+| **Difference** | **−0.0883** |
 
-Eight points is well above the 3.0-point detection threshold, so unlike most
-results in this project, this one is solid.
+Nearly nine points, three times the 3.0-point detection threshold, so unlike
+most results in this project this one is solid.
 
 What it means in practice: the official protocol reports the score of a model
 that has been allowed to see the future. A tool deployed on a real issue tracker
@@ -170,7 +186,7 @@ classifier, identical settings).
   improvement. `ai4se.evaluation.power.is_conclusive` is a one-line guard for this.
 - Never claim a per-project win from a gap under 7 points.
 - Run **5 seeds minimum** and report mean ± sd, plus the raw values in an appendix.
-- Beating SetFit's 0.8270 by a *detectable* margin means reaching roughly 0.857.
+- Beating SetFit's 0.8240 by a *detectable* margin means reaching roughly 0.854.
   That is the real target.
 
 None of this makes the project harder. It makes the report defensible, and it

@@ -1,4 +1,4 @@
-# Pre-registration — modelling experiments
+﻿# Pre-registration — modelling experiments
 
 **Author:** Minh Khanh · **Branch:** `minh-khanh`
 **Committed before the first modelling experiment. Not to be edited afterwards.**
@@ -15,11 +15,21 @@ which were made on the baselines only, before any transformer was trained.
 
 ## Primary metric — fixed, not to be changed
 
-Cross-repository F1: the arithmetic mean of five per-project micro-F1 scores on
-`issues_test.csv`, computed by `ai4se.evaluation.cross_repo_f1`.
+Cross-repository F1: the arithmetic mean of five per-project **weighted-average**
+F1 scores on `issues_test.csv`, computed by `ai4se.evaluation.cross_repo_f1`.
+This is the metric the organisers' own notebook computes.
 
 Other metrics may be reported. They are secondary and may not be used to claim
 success.
+
+> **Amendment, 2026-09-13, before any model was trained.** This line originally
+> said *micro-F1*, which was a mistake on my part rather than a choice: micro-F1
+> is accuracy, and it is not what the competition ranks on. Correcting the
+> definition of the metric is not the same as changing the hypothesis, and the
+> amendment is recorded here rather than made silently. The decision threshold,
+> the hypotheses and the seeds are untouched. The commit that made this edit is
+> still earlier than the commit of any modelling experiment, which is the
+> property the file exists to guarantee.
 
 ## Decision threshold
 
@@ -38,7 +48,7 @@ subgroup where it does.
 ### H1 — primary
 
 A fine-tuned DeBERTa-v3 with structure-aware preprocessing beats the SetFit
-baseline of 0.8270 by at least 3.0 points, i.e. reaches **≥ 0.857**.
+baseline of 0.8240 by at least 3.0 points, i.e. reaches **≥ 0.854**.
 
 *Prior:* plausible but not likely. Stated at roughly 40%.
 
@@ -61,7 +71,7 @@ Prepending a `[REPO=facebook/react]` token to a single pooled model helps.
 A chronological split lowers every model's score relative to the official random
 split.
 
-*Predicted effect: −8 to −10 points.* Already measured at −8.1 for the TF-IDF
+*Predicted effect: −8 to −10 points.* Already measured at −8.8 for the TF-IDF
 baseline; the prediction is that transformers behave the same way.
 
 ### H5 — secondary
