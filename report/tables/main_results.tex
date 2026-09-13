@@ -1,1 +1,22 @@
-\missingtable{experiments/02_baselines.py}
+\begin{table}[htbp]
+\centering
+\caption{Cross-repository F1. Our models are the mean of five seeds.}
+\label{tab:main}
+\begin{tabular}{lrrc}
+\toprule
+Model & F1 & sd (seeds) & 95\% CI \\
+\midrule
+setfit (published) & 0.8240 & --- & --- \\
+roberta (published) & 0.7923 & --- & --- \\
+fasttext (published) & 0.7184 & --- & --- \\
+\midrule
+linear\_svm & 0.7504 & 0.0000 & [0.729, 0.773] \\
+logreg & 0.7502 & 0.0000 & [0.729, 0.772] \\
+ffnn & 0.7362 & 0.0043 & [0.714, 0.758] \\
+text\_cnn & 0.7255 & 0.0067 & [0.703, 0.748] \\
+random\_forest & 0.7241 & 0.0010 & [0.702, 0.746] \\
+naive\_bayes & 0.7199 & 0.0000 & [0.696, 0.743] \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Intervals are stratified bootstraps on the median-seed run. Differences below 3.0 points are not detectable on this test set (Table~\ref{tab:power}) and are not described as improvements.}
+\end{table}

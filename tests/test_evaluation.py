@@ -14,6 +14,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -129,6 +130,34 @@ def test_unknown_average_is_rejected(toy_predictions):
     y_true, y_pred, repos = toy_predictions
     with pytest.raises(ValueError):
         per_repo_f1(y_true, y_pred, repos, average="wieghted")
+
+
+def test_our_averages_agree_with_scikit_learn():
+    """Pin the hand-rolled metrics to the reference implementation.
+
+    These functions are written with numpy alone so the package imports
+    without scikit-learn. That independence is only worth having if the
+    results are identical, and "identical" is a claim that has to be checked
+    rather than assumed -- the whole audit rests on these three numbers.
+    """
+    metrics = pytest.importorskip(
+        "sklearn.metrics", reason="scikit-learn not installed"
+    )
+    from ai4se.evaluation import weighted_f1
+
+    rng = np.random.default_rng(0)
+    labels = np.array(LABELS3, dtype=object)
+    for size in (12, 60, 300):
+        y_true = rng.choice(labels, size=size)
+        y_pred = rng.choice(labels, size=size)
+        for name, ours in (
+            ("micro", micro_f1),
+            ("macro", macro_f1),
+            ("weighted", weighted_f1),
+        ):
+            assert ours(y_true, y_pred) == pytest.approx(
+                metrics.f1_score(y_true, y_pred, average=name)
+            ), f"{name} diverges from scikit-learn at n={size}"
 
 
 def test_cross_repo_differs_from_pooled_when_projects_are_unequal():
