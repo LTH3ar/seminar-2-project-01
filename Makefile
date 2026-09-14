@@ -1,4 +1,4 @@
-.PHONY: help install data eda lab test check lint clean report
+.PHONY: help install data eda pipeline lab test check lint clean report
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -16,6 +16,9 @@ eda:  ## Execute the Track A notebook end to end
 	jupyter nbconvert --to notebook --execute --inplace \
 		notebooks/01_data_and_eda.ipynb \
 		--ExecutePreprocessor.timeout=900
+
+pipeline:  ## Run validation, leakage audits, cleaning and fold generation
+	python examples/data_pipeline.py
 
 lab:  ## Start Jupyter Lab on port 8888
 	jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --ServerApp.token=''

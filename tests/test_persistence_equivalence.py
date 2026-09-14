@@ -99,7 +99,11 @@ def test_repository_switch_is_one_argument():
 
     for implementation in (memory, file_backed):
         assert isinstance(implementation, IssueRepository)
-        missing = {m for m in interface if not callable(getattr(implementation, m, None))}
+        missing = {
+            method
+            for method in interface
+            if not callable(getattr(implementation, method, None))
+        }
         assert not missing, f"{type(implementation).__name__} is missing {missing}"
 
     # Both are usable through the interface without any type check.

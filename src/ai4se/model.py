@@ -9,7 +9,8 @@ data came from.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass
+from hashlib import sha256
 from typing import Any, ClassVar
 
 #: The three issue types used by the NLBSE'24 competition.
@@ -70,6 +71,14 @@ class IssueReport:
     def raw_text(self) -> str:
         """Title and body concatenated, the default classifier input."""
         return f"{self.title}\n{self.body}".strip()
+
+    @property
+    def issue_id(self) -> str:
+        """Return a stable identifier derived from the official source fields."""
+        value = "\x1f".join(
+            (self.repo, self.created_at, self.label, self.title, self.body)
+        )
+        return sha256(value.encode("utf-8")).hexdigest()
 
     @property
     def text(self) -> str:

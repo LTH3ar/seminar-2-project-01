@@ -10,14 +10,20 @@ from __future__ import annotations
 
 from collections import Counter
 
-import matplotlib
-
-matplotlib.use("Agg")  # safe default for headless execution; notebooks override
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from .model import LABELS
 from .repository import IssueRepository
+
+
+def _pyplot():
+    """Import plotting dependencies only when a figure is requested."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    return plt
 
 
 def overview(repository: IssueRepository) -> pd.DataFrame:
@@ -96,7 +102,10 @@ def structural_noise(repository: IssueRepository) -> pd.DataFrame:
     return (by_label * 100).round(1)
 
 
-def cleaning_impact(repository: IssueRepository, sample: int | None = None) -> pd.DataFrame:
+def cleaning_impact(
+    repository: IssueRepository,
+    sample: int | None = None,
+) -> pd.DataFrame:
     """Average word count before and after each cleaning level.
 
     Args:
@@ -113,15 +122,14 @@ def cleaning_impact(repository: IssueRepository, sample: int | None = None) -> p
         rows.append(
             {
                 "raw": len(raw.split()),
+                "conservative": len(clean_text(raw, "conservative").split()),
                 "light": len(clean_text(raw, "light").split()),
                 "full": len(clean_text(raw, "full").split()),
             }
         )
     frame = pd.DataFrame(rows)
     summary = frame.mean().to_frame("mean_words").round(1)
-    summary["retained_%"] = (
-        100 * frame.mean() / frame["raw"].mean()
-    ).round(1)
+    summary["retained_%"] = (100 * frame.mean() / frame["raw"].mean()).round(1)
     return summary
 
 
@@ -214,6 +222,7 @@ def distinctive_terms(
 
 def plot_label_distribution(repository: IssueRepository):
     """Grouped bar chart of class counts per project."""
+    plt = _pyplot()
     table = label_distribution(repository).drop(index="total", columns="total")
     fig, ax = plt.subplots(figsize=(9, 4.5))
     table.plot(kind="bar", ax=ax, width=0.75)
@@ -228,6 +237,7 @@ def plot_label_distribution(repository: IssueRepository):
 
 def plot_length_distribution(repository: IssueRepository, clip: int = 800):
     """Overlaid histograms of issue length per class, on a log-count axis."""
+    plt = _pyplot()
     frame = repository.to_dataframe()
     frame["words"] = (
         frame["title"].fillna("") + " " + frame["body"].fillna("")
