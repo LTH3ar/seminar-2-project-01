@@ -22,5 +22,11 @@
 			]
 		}
 	},
-	"postCreateCommand": "pip install wheel setuptools pip --upgrade && pip install -r requirements.txt"
+	"forwardPorts": [8888],
+	"containerEnv": {
+		"PYTHONDONTWRITEBYTECODE": "1",
+		"PYTHONUNBUFFERED": "1",
+		"TOKENIZERS_PARALLELISM": "false"
+	},
+	"postCreateCommand": "pip install wheel setuptools pip --upgrade && pip install -r requirements.txt && pip install -e '.[dev,eda]' && python -m nltk.downloader stopwords wordnet omw-1.4 && make test"
 }

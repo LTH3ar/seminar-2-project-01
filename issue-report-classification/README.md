@@ -158,3 +158,57 @@ Participants are encouraged, but not required, to use the baseline as a template
 | overall               | feature       | 0.8448    | 0.8700 | 0.8558     |
 | overall               | question      | 0.8001    | 0.7700 | 0.7827     |
 | overall               | average       | 0.8305    | 0.8267 | **0.8270** |
+
+## Integrated project workflow
+
+The datdq branch keeps the supplied competition notebooks and bundled datasets,
+and now incorporates the reusable workflow developed on main without adding a
+second package tree.
+
+The workflow is:
+
+    bundled or downloaded CSV files
+        -> CSV, JSON, or in-memory persistence
+        -> strict validation and descriptive audits
+        -> train/test duplicate-leakage detection
+        -> conservative, raw, light, or full text cleaning
+        -> structural feature extraction and EDA
+        -> duplicate-safe stratified folds for each repository
+        -> baseline and team model experiments
+
+The conservative cleaner remains the default because it preserves software
+signals such as versions, error numbers, punctuation, URLs, and code markers.
+The raw, light, and full levels from main are available for controlled
+preprocessing ablations. Full cleaning adds lowercasing, stop-word removal, and
+lemmatization; light cleaning removes Markdown noise and identifiers.
+
+Install and run the integrated pipeline:
+
+    python -m pip install -e ".[dev,eda]"
+    make test
+    make pipeline
+
+Install the optional model dependencies before running the SetFit, RoBERTa,
+or fastText notebooks:
+
+    make install-models
+
+The same application service works with CSV and memory backends:
+
+    from issue_classifier.service import IssueDataService, create_issue_repository
+
+    repository = create_issue_repository("csv", "data")
+    service = IssueDataService(repository)
+    prepared = service.prepare("train", repo="facebook/react")
+    folds = service.make_folds()
+
+The JSON repository supports lossless interchange:
+
+    from issue_classifier.repositories import JsonIssueRepository
+
+    target = JsonIssueRepository("data/json")
+    service.copy_split("train", target)
+
+The official test split is used only for final evaluation and leakage auditing.
+Cross-validation folds are always generated from training records and keep
+normalized duplicate texts together.
