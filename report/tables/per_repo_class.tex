@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Per-project, per-class F1 of the strongest model (\texttt{linear\_svm}).}
+\label{tab:perrepoclass}
+\begin{tabular}{lrrr}
+\toprule
+Project & bug & feature & question \\
+\midrule
+\texttt{facebook/react} & 0.925 & 0.765 & 0.674 \\
+\texttt{tensorflow/tensorflow} & 0.817 & 0.811 & 0.703 \\
+\texttt{microsoft/vscode} & 0.737 & 0.696 & 0.739 \\
+\texttt{bitcoin/bitcoin} & 0.667 & 0.815 & 0.657 \\
+\texttt{opencv/opencv} & 0.670 & 0.788 & 0.794 \\
+\midrule
+mean & 0.763 & 0.775 & 0.713 \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize The single cross-repository figure conceals this spread; the weakest and strongest cells differ by roughly 30 points.}
+\end{table}
