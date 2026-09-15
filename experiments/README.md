@@ -9,6 +9,14 @@ the report is typed by hand.
 | `benchmark_audit.py` | Baseline, temporal confound, split protocol, significance, power | `.[ml]` | ~2 min CPU |
 | `02_baselines.py` | k-fold selection then test evaluation of six models, five seeds each | `.[ml,dl]` | ~10 min CPU |
 | `03_setfit.py` | Reproduces the organisers' published baseline | `.[dl]` | 15 min GPU / 1–3 h CPU |
+
+> **Run `03_setfit.py` on a GPU.** `all-mpnet-base-v2` has 110M parameters and
+> each project generates 12,000 contrastive pairs, so a laptop CPU needs hours
+> for what a T4 does in about fifteen minutes.
+> [`notebooks/02_setfit_colab.ipynb`](../notebooks/02_setfit_colab.ipynb) does
+> the whole thing on Colab — open it there, run every cell, and download the two
+> result files into `results/`. The repository is private, so the notebook asks
+> for a read-only token (or takes a zip upload instead).
 | `04_make_tables.py` | Regenerates `report/tables/*.tex` from `results/*.json` | base | seconds |
 
 ```bash
