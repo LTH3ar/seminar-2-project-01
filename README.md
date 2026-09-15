@@ -42,15 +42,26 @@ src/ai4se/
     model.py           IssueReport entity, label and repository constants
     repository.py      IssueRepository (abstract) + InMemory / File implementations
     loader.py          Downloads and caches the official NLBSE'24 splits
-    preprocessing.py   Markdown-aware cleaning pipeline (raw / light / full)
+    preprocessing.py   Markdown-aware cleaning and structural features
     eda.py             Dataset characterisation and figures
+    validation.py      Strict record and split validation
+    audit.py           Duplicate and train/test leakage analysis
+    folds.py           Per-project stratified group folds
+    service.py         Unified application workflow
 notebooks/
+    00_dataset_extraction_reference.ipynb
     01_data_and_eda.ipynb
+    02_setfit_baseline.ipynb
+    03_roberta_baseline.ipynb
+    04_fasttext_baseline.ipynb
 tests/
     test_persistence_equivalence.py
+    test_data_quality.py
 data/raw/              Cached competition CSVs (git-ignored, downloaded on demand)
-data/processed/        Cleaned datasets handed to tracks B, C, D
+data/processed/        Cleaned datasets handed to tracks B, C, and D
+results/baselines/     Reproduced SetFit, RoBERTa, and fastText metrics
 results/figures/       Figures referenced by the LaTeX report
+docs/                  Competition reference and dataset notes
 report/                LaTeX sources
 ```
 
@@ -78,15 +89,20 @@ Everything downstream — EDA, preprocessing, vectorisation, training, evaluatio
 
 ## Cleaning pipeline
 
-Issue bodies are Markdown documents. In the training set, 47% contain fenced code blocks (58% of bug reports), 59% contain URLs, and 43% use a GitHub issue template whose headings are class-independent boilerplate. Three cleaning levels are provided so the ablation study can be run by changing one string:
+Issue bodies are Markdown documents. In the training set, 47% contain fenced
+code blocks (58% of bug reports), 59% contain URLs, and 43% use a GitHub issue
+template whose headings are class-independent boilerplate. Four cleaning levels
+are provided so the ablation study can be run by changing one string:
 
 | Level | Operations | Intended consumer |
 |---|---|---|
+| <code>conservative</code> | replaces URLs and code blocks while preserving versions, numbers, and punctuation | software-aware default |
 | `raw` | whitespace normalisation only | control condition |
 | `light` | removes code, stack traces, Markdown markup, URLs, paths, SHAs, mentions | transformer models |
 | `full` | `light` + lowercasing, punctuation removal, stop words, lemmatisation | TF-IDF models |
 
-Average retained length: 100% → 63% → 33% of the original word count.
+Run the EDA or integrated pipeline to compare retained text across all four
+levels on the current dataset.
 
 ## Getting started
 
@@ -127,6 +143,7 @@ make install          # pip install -e ".[dev]" + NLTK corpora
 make help     # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
+make pipeline # validate, audit, prepare and generate grouped folds
 make lab      # start Jupyter Lab on port 8888
 make test     # run the test suite
 make check    # print the persistence-equivalence table for the report
@@ -168,3 +185,21 @@ Kallis, Colavito, Al-Kaswan, Pascarella, Chaparro, Rani. *The NLBSE'24 Tool Comp
 Kallis, Di Sorbo, Canfora, Panichella. *Predicting issue types on GitHub.* Science of Computer Programming 205, 2021.
 
 Colavito, Lanubile, Novielli. *Few-Shot Learning for Issue Report Classification.* NLBSE'23.
+
+## Consolidated datdq workflow
+
+This branch uses the root ai4se structure from main and incorporates the
+data-quality and experiment work developed on datdq. There is one package,
+one test directory, one notebook directory, and one results directory.
+
+Additional safeguards include strict record validation, duplicate analysis,
+train/test leakage reporting, software-aware conservative cleaning, structural
+features, and per-repository stratified group folds.
+
+Run the integrated process with:
+
+    make pipeline
+
+Install the supplied baseline notebook dependencies with:
+
+    python -m pip install -e ".[baseline]"

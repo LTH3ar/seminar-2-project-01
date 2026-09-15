@@ -24,7 +24,9 @@ be run by changing a single string:
 
 from __future__ import annotations
 
+import html
 import re
+import unicodedata
 from dataclasses import replace
 from functools import lru_cache
 from typing import Callable, Iterable
@@ -57,6 +59,24 @@ RE_STACK_FRAME = re.compile(
 )
 RE_NON_WORD = re.compile(r"[^a-z\s]")
 RE_WHITESPACE = re.compile(r"\s+")
+RE_WORD = re.compile(r"\b\w+\b", re.UNICODE)
+RE_CHECKBOX = re.compile(r"(?:^|\s)-\s*\[[ xX]\]")
+RE_STACK_TRACE = re.compile(
+    r"(?:traceback \(most recent call last\)|\bat\s+[\w.$]+\([^\n]+:\d+\))",
+    re.IGNORECASE,
+)
+RE_ERROR_WORD = re.compile(
+    r"\b(?:bug|crash|error|exception|fail(?:ed|ure)?|incorrect|broken)\b",
+    re.IGNORECASE,
+)
+RE_REQUEST_WORD = re.compile(
+    r"\b(?:feature|proposal|request|support|enhancement|would like)\b",
+    re.IGNORECASE,
+)
+RE_QUESTION_WORD = re.compile(
+    r"\b(?:how|why|what|where|when|can|could|does|is it possible)\b",
+    re.IGNORECASE,
+)
 
 #: Domain stop words that appear in nearly every issue regardless of its class
 #: and therefore carry no discriminative signal.
@@ -80,16 +100,10 @@ def _english_stopwords() -> frozenset[str]:
     pipeline still runs in an offline environment.
     """
     try:
-        import nltk
         from nltk.corpus import stopwords
 
-        try:
-            words = stopwords.words("english")
-        except LookupError:
-            nltk.download("stopwords", quiet=True)
-            words = stopwords.words("english")
-        return frozenset(words)
-    except Exception:  # pragma: no cover - offline fallback
+        return frozenset(stopwords.words("english"))
+    except (ImportError, LookupError):
         return frozenset(
             "a an the and or but if then else of to in on at for with without "
             "is are was were be been being do does did have has had i you he "
@@ -104,18 +118,12 @@ def _english_stopwords() -> frozenset[str]:
 def _lemmatizer():
     """Return an NLTK WordNet lemmatiser, or ``None`` if unavailable."""
     try:
-        import nltk
         from nltk.stem import WordNetLemmatizer
 
         lemmatizer = WordNetLemmatizer()
-        try:
-            lemmatizer.lemmatize("tests")
-        except LookupError:
-            nltk.download("wordnet", quiet=True)
-            nltk.download("omw-1.4", quiet=True)
-            lemmatizer.lemmatize("tests")
+        lemmatizer.lemmatize("tests")
         return lemmatizer
-    except Exception:  # pragma: no cover - offline fallback
+    except (ImportError, LookupError):
         return None
 
 
@@ -206,11 +214,18 @@ def clean_text(
     Returns:
         The cleaned text.
     """
-    if level not in {"raw", "light", "full"}:
+    if level not in {"raw", "conservative", "light", "full"}:
         raise ValueError(f"Unknown cleaning level: {level!r}")
 
+    text = html.unescape(text or "")
+    text = unicodedata.normalize("NFKC", text)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     if level == "raw":
         result = normalise_whitespace(text)
+    elif level == "conservative":
+        result = RE_FENCED_CODE.sub(" <CODE_BLOCK> ", text)
+        result = RE_URL.sub(" <URL> ", result)
+        result = normalise_whitespace(result)
     else:
         stripped = normalise_whitespace(
             strip_identifiers(strip_markup(strip_code(text)))
@@ -224,6 +239,27 @@ def clean_text(
     if max_words is not None:
         result = " ".join(result.split()[:max_words])
     return result
+
+
+def structural_features(issue: IssueReport) -> dict[str, float]:
+    """Extract model-independent structural signals from an issue."""
+    raw_text = issue.raw_text
+    return {
+        "title_char_count": float(len(issue.title)),
+        "body_char_count": float(len(issue.body)),
+        "title_word_count": float(len(RE_WORD.findall(issue.title))),
+        "body_word_count": float(len(RE_WORD.findall(issue.body))),
+        "body_line_count": float(len(issue.body.splitlines())),
+        "question_mark_count": float(raw_text.count("?")),
+        "url_count": float(len(RE_URL.findall(raw_text))),
+        "code_block_count": float(raw_text.count(chr(96) * 3) // 2),
+        "checkbox_count": float(len(RE_CHECKBOX.findall(raw_text))),
+        "has_stack_trace": float(bool(RE_STACK_TRACE.search(raw_text))),
+        "has_error_keyword": float(bool(RE_ERROR_WORD.search(raw_text))),
+        "has_request_keyword": float(bool(RE_REQUEST_WORD.search(raw_text))),
+        "has_question_keyword": float(bool(RE_QUESTION_WORD.search(raw_text))),
+        "body_is_empty": float(not issue.body.strip()),
+    }
 
 
 def clean_issue(
