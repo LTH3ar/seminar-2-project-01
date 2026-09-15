@@ -1,4 +1,4 @@
-"""Reproduction of the official SetFit baseline (track D).
+﻿"""Reproduction of the official SetFit baseline (track D).
 
 The organisers publish a SetFit notebook as the reference to beat. Its
 configuration is copied here exactly, because a reproduction that quietly
@@ -74,6 +74,12 @@ class SetFitClassifier(Classifier):
         num_epochs: Epochs over the generated contrastive pairs.
         num_iterations: Contrastive pairs generated per training example.
         seed: Seed for reproducibility.
+        max_seq_length: Tokens kept per document by the encoder. 384 is
+            ``all-mpnet-base-v2``'s own configured limit, set explicitly
+            because sentence-transformers does not always apply it: left
+            uncapped, the longest issue in this dataset is over 21,000 tokens
+            and exhausts a 15 GB T4 during contrastive training. Capping it
+            restores the intended behaviour rather than changing it.
         output_dir: Where the trainer writes its scratch files.
     """
 
@@ -84,6 +90,7 @@ class SetFitClassifier(Classifier):
         num_epochs: int = 1,
         num_iterations: int = 20,
         seed: int = 42,
+        max_seq_length: int = 384,
         output_dir: str = "results/setfit_runs",
     ) -> None:
         self.name = "setfit"
@@ -92,6 +99,7 @@ class SetFitClassifier(Classifier):
         self.num_epochs = num_epochs
         self.num_iterations = num_iterations
         self.seed = seed
+        self.max_seq_length = max_seq_length
         self.output_dir = output_dir
         self._model = None
 
@@ -102,6 +110,11 @@ class SetFitClassifier(Classifier):
 
         dataset = Dataset.from_dict({"text": list(texts), "label": list(labels)})
         self._model = SetFitModel.from_pretrained(self.base_model)
+        # Without this the encoder may accept the full document; a single
+        # 21,000-token issue then allocates more than the GPU has and the run
+        # dies partway through, after twenty minutes of useful training.
+        if self.max_seq_length:
+            self._model.model_body.max_seq_length = self.max_seq_length
         arguments = TrainingArguments(
             output_dir=self.output_dir,
             save_strategy="no",
