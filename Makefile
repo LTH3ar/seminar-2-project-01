@@ -1,4 +1,4 @@
-.PHONY: help install data eda pipeline lab test check lint clean report
+.PHONY: help install data eda pipeline lab test check lint clean report results setfit setfit-cv
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -19,6 +19,16 @@ eda:  ## Execute the Track A notebook end to end
 
 pipeline:  ## Run validation, leakage audits, cleaning and fold generation
 	python examples/data_pipeline.py
+
+results:  ## Build report-ready baseline result tables and comparison plot
+	python examples/build_results_table.py
+
+setfit:  ## Reproduce SetFit on the official train/test split
+	python examples/setfit_reproduction.py --mode official
+
+setfit-cv:  ## Evaluate SetFit with duplicate-safe grouped folds
+	python examples/setfit_reproduction.py --mode cross-validation \
+		--output results/evaluations/setfit-cross-validation.json
 
 lab:  ## Start Jupyter Lab on port 8888
 	jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --ServerApp.token=''

@@ -23,6 +23,10 @@ The competition requires **one classifier per project** (five per submission). P
 | opencv/opencv | 0.8173 |
 | **cross-repository** | **0.8270** |
 
+These are the published competition values. The supplied local SetFit result
+reproduces a cross-repository F1 of 0.8240; Track D keeps both values explicit
+instead of presenting them as the same run.
+
 ## Team and tracks
 
 | Track | Owner | Scope |
@@ -47,6 +51,9 @@ src/ai4se/
     validation.py      Strict record and split validation
     audit.py           Duplicate and train/test leakage analysis
     folds.py           Per-project stratified group folds
+    evaluation.py      Shared metrics, grouped CV, holdout evaluation, plots
+    reporting.py       CSV/Markdown result tables and model comparison plots
+    setfit_baseline.py SetFit adapter matching the supplied notebook
     service.py         Unified application workflow
 notebooks/
     00_dataset_extraction_reference.ipynb
@@ -57,10 +64,12 @@ notebooks/
 tests/
     test_persistence_equivalence.py
     test_data_quality.py
+    test_evaluation.py
 data/raw/              Cached competition CSVs (git-ignored, downloaded on demand)
 data/processed/        Cleaned datasets handed to tracks B, C, and D
 results/baselines/     Reproduced SetFit, RoBERTa, and fastText metrics
 results/figures/       Figures referenced by the LaTeX report
+results/tables/        Shared model comparison tables
 docs/                  Competition reference and dataset notes
 report/                LaTeX sources
 ```
@@ -144,6 +153,9 @@ make help     # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
 make pipeline # validate, audit, prepare and generate grouped folds
+make results  # build shared baseline tables and comparison plot
+make setfit   # reproduce SetFit on the official test split
+make setfit-cv # run duplicate-safe grouped cross-validation for SetFit
 make lab      # start Jupyter Lab on port 8888
 make test     # run the test suite
 make check    # print the persistence-equivalence table for the report
@@ -152,7 +164,9 @@ make report   # compile report/report.tex
 ```
 
 Optional dependency groups, installed per track:
-`pip install -e ".[ml]"` for track B, `pip install -e ".[dl]"` for tracks C and D.
+`pip install -e ".[ml]"` for track B, `pip install -e ".[dl]"` for track C,
+`pip install -e ".[evaluation]"` for D's reporting tools, and
+`pip install -e ".[setfit]"` for the SetFit reproduction.
 
 Minimal example:
 
@@ -202,4 +216,21 @@ Run the integrated process with:
 
 Install the supplied baseline notebook dependencies with:
 
-    python -m pip install -e ".[baseline]"
+    python -m pip install -e ".[setfit]"
+
+## Shared evaluation
+
+Track D provides one evaluation contract for Tracks B, C, and D. Models expose
+`fit(texts, labels)` and `predict(texts)` while the shared evaluator handles
+duplicate-safe folds, fixed label ordering, per-class metrics, macro and
+weighted averages, confusion matrices, out-of-fold predictions, timing, and
+the competition's mean across repositories.
+
+The SetFit command reproduces the supplied notebook on the official split by
+default. Its output uses the same versioned JSON schema as future classical and
+deep-learning runs. Generate the current cross-model tables with:
+
+    make results
+
+See `docs/evaluation.md` for the schema, SetFit settings, evaluation protocol,
+and integration instructions for other model tracks.

@@ -216,6 +216,7 @@ data/processed/*
 !data/processed/.gitkeep
 results/figures/*
 !results/figures/.gitkeep
+results/models/
 
 # Marimo
 marimo/_static/
