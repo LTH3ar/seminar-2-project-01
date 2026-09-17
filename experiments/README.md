@@ -9,6 +9,7 @@ the report is typed by hand.
 | `benchmark_audit.py` | Baseline, temporal confound, split protocol, significance, power | `.[ml]` | ~2 min CPU |
 | `02_baselines.py` | k-fold selection then test evaluation of six models, five seeds each | `.[ml,dl]` | ~10 min CPU |
 | `03_setfit.py` | Reproduces the organisers' published baseline | `.[dl]` | 15 min GPU / 1–3 h CPU |
+| `05_transformer.py` | Fine-tuned DeBERTa-v3 with CV selection and five-seed evaluation | `.[dl]` | ~3 h GPU (125 fine-tunes); `--skip-selection` ~40 min |
 | `04_make_tables.py` | Regenerates `report/tables/*.tex` from `results/*.json` | base | seconds |
 
 ```bash
@@ -17,6 +18,7 @@ make data
 python experiments/benchmark_audit.py
 python experiments/02_baselines.py
 python experiments/03_setfit.py          # --preset fast to iterate
+python experiments/05_transformer.py     # --preset fast for CPU, default for GPU
 python experiments/04_make_tables.py
 make report
 ```

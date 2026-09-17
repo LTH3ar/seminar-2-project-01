@@ -126,9 +126,9 @@ On first build the container:
 - runs the test suite as a smoke check.
 
 Pip and HuggingFace caches live in named volumes and survive rebuilds, which
-matters once track C starts downloading transformer checkpoints. To give the
-container a GPU for that track, uncomment the `runArgs` block in
-`devcontainer.json`.
+matters once track C starts downloading transformer checkpoints. The
+container asks for a GPU as `optional`, so it uses one where the host has
+the NVIDIA Container Toolkit and builds normally where it does not.
 
 ### Without the dev container
 
