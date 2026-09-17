@@ -67,7 +67,7 @@ class TransformerClassifier(Classifier):
             the dataset untruncated (median 324, p95 2,125, max 79,064);
             256 leaves 41% and 1024 leaves 86% at four times the attention
             cost.  Searched rather than assumed -- see
-            ``experiments/05_transformer.py``.
+            ``experiments/02_baselines.py``.
         epochs: Number of fine-tuning epochs.  With only 300 examples per
             project, more than 5 risks over-fitting; fewer than 3 may
             under-fit.

@@ -40,35 +40,6 @@ def load(name: str) -> dict | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def model_results() -> dict | None:
-    """Merge every model run into one payload: baselines plus the transformer.
-
-    Both scripts emit the same per-model record; ``02_baselines.py`` writes a
-    mapping of them and ``05_transformer.py`` writes a single one. Merging
-    here is what puts the transformer -- the pre-registration's primary
-    hypothesis -- into the report tables instead of leaving it unread in
-    ``results/transformer.json``.
-
-    Returns:
-        Mapping with ``"seeds"``, ``"official_baselines"`` and ``"results"``
-        keyed by model name, or None when neither experiment has been run.
-    """
-    files = (load("baselines.json"), load("transformer.json"))
-    parts = [part for part in files if part]
-    if not parts:
-        return None
-    results: dict[str, dict] = {}
-    for part in parts:
-        found = part["results"]
-        for result in ([found] if "name" in found else found.values()):
-            results[result["name"]] = result
-    return {
-        "seeds": parts[0]["seeds"],
-        "official_baselines": parts[0]["official_baselines"],
-        "results": results,
-    }
-
-
 def write(name: str, body: str) -> None:
     """Write one table file and report what happened."""
     TABLES.mkdir(parents=True, exist_ok=True)
@@ -224,7 +195,7 @@ def setfit_reproduction() -> None:
 
 def main_results() -> None:
     """All models, five seeds each, against the published baselines."""
-    baselines = model_results()
+    baselines = load("baselines.json")
     if not baselines:
         return missing("main_results", "experiments/02_baselines.py")
 
@@ -270,7 +241,7 @@ def main_results() -> None:
 
 def per_repo_class() -> None:
     """The fifteen-cell table for the best model available."""
-    baselines = model_results()
+    baselines = load("baselines.json")
     if not baselines:
         return missing("per_repo_class", "experiments/02_baselines.py")
     best = max(baselines["results"].values(), key=lambda r: r["mean"])
@@ -361,7 +332,7 @@ def time_aware() -> None:
 
 def seed_scores() -> None:
     """All raw per-seed values, for the appendix."""
-    baselines = model_results()
+    baselines = load("baselines.json")
     if not baselines:
         return missing("seed_scores", "experiments/02_baselines.py")
     seeds = baselines["seeds"]

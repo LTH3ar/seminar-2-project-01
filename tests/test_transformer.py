@@ -3,7 +3,7 @@
 Fine-tuning DeBERTa-v3 needs a checkpoint download and minutes of compute, so
 nothing here trains a model. What is checked is the part that corrupts results
 *silently* when it breaks: that the factory resolves presets, overrides and
-seeds exactly the way ``experiments/05_transformer.py`` assumes, and that an
+seeds exactly the way ``experiments/02_baselines.py`` assumes, and that an
 unfitted model refuses to predict rather than returning garbage.
 
 Run with::
@@ -81,7 +81,7 @@ def test_overrides_reach_the_instance():
 def test_explicit_seed_wins_over_one_passed_as_an_override():
     """The loop seed has to win.
 
-    05_transformer.py passes the seed explicitly while forwarding the selected
+    02_baselines.py passes the seed explicitly while forwarding the selected
     hyper-parameters as ``**overrides``.
     """
     model = make_transformer(preset="fast", seed=43, learning_rate=3e-5)()
