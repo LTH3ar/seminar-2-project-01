@@ -1,4 +1,4 @@
-.PHONY: help install data eda lab test check lint clean tree report
+.PHONY: help install data eda evaluate notebooks lab test check lint clean tree report
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -16,6 +16,13 @@ eda:  ## Execute the Track A notebook end to end
 	jupyter nbconvert --to notebook --execute --inplace \
 		notebooks/01_data_and_eda.ipynb \
 		--ExecutePreprocessor.timeout=900
+
+evaluate:  ## Execute the Track D evaluation notebook end to end
+	jupyter nbconvert --to notebook --execute --inplace \
+		notebooks/02_evaluation_protocol.ipynb \
+		--ExecutePreprocessor.timeout=900
+
+notebooks: eda evaluate  ## Execute every notebook in order
 
 lab:  ## Start Jupyter Lab on port 8888
 	jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --ServerApp.token=''

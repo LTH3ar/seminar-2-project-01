@@ -26,6 +26,20 @@ __all__ = [
     "clean_text",
     "clean_issue",
     "make_cleaner",
+    # metrics
+    "evaluate",
+    "confusion_matrix",
+    "Scores",
+    # evaluation protocol
+    "stratified_folds",
+    "cross_validate",
+    "cross_validate_per_project",
+    "evaluate_competition",
+    "leaderboard",
+    "CrossValidationResult",
+    "CompetitionResult",
+    "SETFIT_BASELINE",
+    "SETFIT_OVERALL",
 ]
 
 __version__ = "0.1.0"

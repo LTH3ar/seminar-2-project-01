@@ -26,14 +26,17 @@ The competition requires **one classifier per project** (five per submission). P
 
 ## Team and tracks
 
-| Track | Owner | Scope |
-|---|---|---|
-| A — Data & persistence | *(name)* | Loading, EDA, cleaning pipeline, repository abstraction |
-| B — Classical ML | *(name)* | TF-IDF + Naive Bayes, Logistic Regression, SVM, Random Forest |
-| C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer |
-| D — Baseline & evaluation | *(name)* | SetFit reproduction, k-fold harness, metrics, results tables |
+| Track | Owner | Scope | Status |
+|---|---|---|---|
+| A — Data & persistence | *(name)* | Loading, EDA, cleaning pipeline, repository abstraction | done |
+| B — Classical ML | *(name)* | TF-IDF + Naive Bayes, Logistic Regression, SVM, Random Forest | |
+| C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer | |
+| D — Evaluation harness | *(name)* | Metrics, k-fold, competition protocol, reference floors | done |
+| D2 — SetFit reproduction | *(name)* | Reproduce the published baseline end to end | |
 
-Track A is complete and its outputs under `data/processed/` are the agreed input for B, C and D.
+Track A's outputs under `data/processed/` are the agreed input for every other
+track. Track D's runners in `ai4se.evaluation` are how every model is scored —
+B and C plug into them rather than writing their own metrics.
 
 ## Layout
 
@@ -48,10 +51,15 @@ src/ai4se/
     loader.py            Downloads and caches the official NLBSE'24 splits
     preprocessing.py     Markdown-aware cleaning pipeline (raw / light / full)
     eda.py               Dataset characterisation and figures
+    metrics.py           Precision, recall, F1, confusion matrix (from scratch)
+    evaluation.py        Stratified k-fold + the competition protocol
+    baselines.py         Reference floors, no third-party dependencies
 notebooks/
     01_data_and_eda.ipynb        Track A
+    02_evaluation_protocol.ipynb Track D
 tests/
     test_persistence_equivalence.py
+    test_evaluation.py
 data/
     raw/                 Cached competition CSVs (ignored, downloaded on demand)
     processed/           Cleaned datasets handed to tracks B, C, D (ignored)
@@ -177,6 +185,51 @@ train.apply(make_cleaner(level="full", max_words=400))
 X, y = train.texts_and_labels()                 # ready for scikit-learn
 react = train.by_repo("facebook/react")         # per-project classifier input
 ```
+
+## Evaluation protocol
+
+Defined in `ai4se.evaluation` and documented in notebook 02. Two measurements,
+not interchangeable:
+
+**Model selection** — stratified 10-fold cross-validation on the *training*
+split only, seeded at 42 so every member gets identical folds.
+
+**Final result** — the competition protocol on the *test* split, used once: a
+separate classifier per repository, each scored as the average F1 over the
+three classes, reported as the arithmetic mean of the five.
+
+Any object with `fit(X, y)` and `predict(X)` plugs in, supplied as a
+zero-argument factory:
+
+```python
+from ai4se.evaluation import cross_validate, evaluate_competition
+
+def svm_factory():
+    return make_pipeline(TfidfVectorizer(ngram_range=(1, 2)), LinearSVC())
+
+cross_validate(svm_factory, train, k=10, model_name="TF-IDF + LinearSVC")
+evaluate_competition(svm_factory, train, test, model_name="TF-IDF + LinearSVC")
+```
+
+Metrics are implemented from scratch in `ai4se.metrics` and verified against
+scikit-learn to twelve decimal places in `tests/test_evaluation.py`.
+
+### Reference floors
+
+Established so later results can be read in context. A model below 0.54 is not
+beating hand-written keyword rules.
+
+| Model | CV macro F1 | Test F1 | vs SetFit |
+|---|---|---|---|
+| Majority class | 0.1667 | 0.1667 | −0.660 |
+| Random (stratified) | 0.3626 | 0.3348 | −0.492 |
+| Keyword rules | 0.5107 | 0.5395 | −0.288 |
+| Naive Bayes (from scratch) | 0.6009 | 0.6679 | −0.159 |
+| **SetFit (NLBSE'24 baseline)** | — | **0.8270** | — |
+
+Per-project training beats a single global classifier by 0.068 on average
+despite using a fifth of the data, confirming the low cross-project vocabulary
+overlap measured in Track A.
 
 ## Key EDA findings
 

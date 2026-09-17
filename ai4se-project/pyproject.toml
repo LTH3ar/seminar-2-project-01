@@ -25,6 +25,8 @@ dev = [
     "ruff>=0.5",
     "nbformat>=5.9",
     "nbconvert>=7.0",
+    # Cross-checks the hand-written metrics and fold splitter in the tests.
+    "scikit-learn>=1.3",
 ]
 # Track B - classical machine learning.
 ml = ["scikit-learn>=1.3", "scipy>=1.11"]
@@ -59,6 +61,13 @@ ignore = ["D203", "D213"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.ruff.lint.pep8-naming]
+# N803/N806 flag the capital `X` used for feature matrices. That is the
+# universal scikit-learn convention for an estimator's fit/predict signature,
+# and renaming it would make the project's models look wrong to any reader who
+# knows the library, so these names are exempted rather than worked around.
+extend-ignore-names = ["X", "X_train", "X_test", "X_val"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D103"]

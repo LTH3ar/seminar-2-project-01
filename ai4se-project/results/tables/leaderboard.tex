@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+  \centering
+  \caption{Per-repository and cross-repository $F_1$ of the reference models against the NLBSE'24 SetFit baseline.}
+  \label{tab:reference-leaderboard}
+\begin{tabular}{lrrrrrrr}
+\toprule
+ & facebook/react & tensorflow/tensorflow & microsoft/vscode & bitcoin/bitcoin & opencv/opencv & overall & vs SetFit \\
+model &  &  &  &  &  &  &  \\
+\midrule
+SetFit (NLBSE'24 baseline) & 0.8718 & 0.8644 & 0.8262 & 0.7555 & 0.8173 & 0.8270 & 0.0000 \\
+naive Bayes (from scratch) & 0.7914 & 0.6466 & 0.6609 & 0.6030 & 0.6375 & 0.6679 & -0.1591 \\
+keyword rules & 0.5712 & 0.6239 & 0.4582 & 0.4945 & 0.5498 & 0.5395 & -0.2875 \\
+random (stratified) & 0.3428 & 0.3194 & 0.3428 & 0.3365 & 0.3326 & 0.3348 & -0.4922 \\
+majority & 0.1667 & 0.1667 & 0.1667 & 0.1667 & 0.1667 & 0.1667 & -0.6603 \\
+\bottomrule
+\end{tabular}
+\end{table}

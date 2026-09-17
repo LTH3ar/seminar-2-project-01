@@ -8,8 +8,10 @@ nltk>=3.8
 jupyterlab>=4.0
 ipykernel>=6.0
 
-# Testing
+# Testing. scikit-learn is used only to cross-check the hand-written metrics
+# and fold splitter in tests/test_evaluation.py; nothing in src/ imports it.
 pytest>=7.4
+scikit-learn>=1.3
 
 # Added by later tracks (B: classical ML, C: deep learning, D: baseline)
 # scikit-learn>=1.3
