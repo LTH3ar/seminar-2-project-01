@@ -293,9 +293,13 @@ class TransformerClassifier(Classifier):
         Raises:
             RuntimeError: If the classifier has not been fitted.
         """
+        # _get_logits first: it carries the unfitted guard, and importing
+        # torch above it would turn "not fitted" into ModuleNotFoundError
+        # wherever the deep-learning extra is absent -- CI, for one.
+        logits = self._get_logits(texts)
+
         import torch
 
-        logits = self._get_logits(texts)
         return torch.softmax(logits, dim=-1).cpu().numpy()
 
     @property
