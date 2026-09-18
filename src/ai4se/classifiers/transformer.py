@@ -110,9 +110,7 @@ class TransformerClassifier(Classifier):
         self._label2id: dict[str, int] = {}
         self._id2label: dict[int, str] = {}
 
-    def fit(
-        self, texts: Sequence[str], labels: Sequence[str]
-    ) -> TransformerClassifier:
+    def fit(self, texts: Sequence[str], labels: Sequence[str]) -> TransformerClassifier:
         """Fine-tune the transformer on labelled texts.
 
         The entire encoder is updated (no frozen layers) because the dataset
@@ -174,8 +172,7 @@ class TransformerClassifier(Classifier):
 
             def __getitem__(self, idx: int) -> dict[str, torch.Tensor]:
                 item = {
-                    key: torch.tensor(val[idx])
-                    for key, val in self.encodings.items()
+                    key: torch.tensor(val[idx]) for key, val in self.encodings.items()
                 }
                 item["label"] = torch.tensor(self.labels[idx], dtype=torch.long)
                 return item

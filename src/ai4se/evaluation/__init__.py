@@ -1,4 +1,4 @@
-﻿"""Evaluation, significance testing and statistical power for track D.
+"""Evaluation, significance testing and statistical power for track D.
 
 The competition ranks submissions by the *cross-repository F1*: one classifier
 is trained per project, scored on that project's test issues, and the five
