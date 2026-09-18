@@ -22,7 +22,7 @@ def parse_args() -> argparse.Namespace:
     """Parse result artifact paths."""
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("results", nargs="*", type=Path, default=DEFAULT_RESULTS)
+    parser.add_argument("results", nargs="*", type=Path)
     parser.add_argument(
         "--output-directory",
         type=Path,
@@ -41,7 +41,11 @@ def main() -> None:
     """Create report-ready result artifacts."""
 
     args = parse_args()
-    rows = load_result_rows(args.results)
+    result_paths = args.results or [
+        *DEFAULT_RESULTS,
+        *sorted(Path("results/classical").glob("*-official-holdout.json")),
+    ]
+    rows = load_result_rows(result_paths)
     csv_path, markdown_path = write_result_tables(rows, args.output_directory)
     print(f"Saved table to {csv_path}")
     print(f"Saved table to {markdown_path}")

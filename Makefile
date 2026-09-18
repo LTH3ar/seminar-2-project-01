@@ -1,4 +1,4 @@
-.PHONY: help install data eda pipeline lab test check lint clean report results setfit setfit-cv
+.PHONY: help install data eda pipeline classical classical-cv classical-holdout lab test check lint clean report results setfit setfit-cv
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -20,6 +20,15 @@ eda:  ## Execute the Track A notebook end to end
 pipeline:  ## Run validation, leakage audits, cleaning and fold generation
 	python examples/data_pipeline.py
 
+classical:  ## Select classical models by CV, then test only the winner
+	python examples/classical_ml.py --mode all
+
+classical-cv:  ## Compare all Track B models with grouped cross-validation
+	python examples/classical_ml.py --mode cross-validation
+
+classical-holdout:  ## Evaluate requested Track B models on the official split
+	python examples/classical_ml.py --mode official
+
 results:  ## Build report-ready baseline result tables and comparison plot
 	python examples/build_results_table.py
 
@@ -40,8 +49,8 @@ check:  ## Print the persistence-layer equivalence table for the report
 	python tests/test_persistence_equivalence.py
 
 lint:  ## Lint and format with ruff
-	ruff check src tests
-	ruff format src tests
+	ruff check src tests examples
+	ruff format src tests examples
 
 report:  ## Compile the LaTeX report
 	cd report && latexmk -pdf -interaction=nonstopmode report.tex

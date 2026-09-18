@@ -63,7 +63,11 @@ def write_result_tables(
     markdown_path = output_directory / f"{stem}.md"
 
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=TABLE_COLUMNS)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=TABLE_COLUMNS,
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(
             {column: row.get(column, "") for column in TABLE_COLUMNS}

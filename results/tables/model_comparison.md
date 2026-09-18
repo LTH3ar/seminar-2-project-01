@@ -18,3 +18,9 @@
 | fasttext | official_holdout | bitcoin/bitcoin | 300 | 0.6633 | 0.6639 | 0.6633 | 0.6618 | 0.6618 |  |  |
 | fasttext | official_holdout | opencv/opencv | 300 | 0.7133 | 0.7180 | 0.7133 | 0.7088 | 0.7088 |  |  |
 | fasttext | official_holdout | overall | 1500 | 0.7193 | 0.7223 | 0.7193 | 0.7184 | 0.7184 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | bitcoin/bitcoin | 300 | 0.6733 | 0.6822 | 0.6733 | 0.6754 | 0.6754 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | facebook/react | 300 | 0.8200 | 0.8232 | 0.8200 | 0.8202 | 0.8202 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | microsoft/vscode | 300 | 0.6700 | 0.6812 | 0.6700 | 0.6700 | 0.6700 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | opencv/opencv | 300 | 0.7600 | 0.7618 | 0.7600 | 0.7570 | 0.7570 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | tensorflow/tensorflow | 300 | 0.8267 | 0.8351 | 0.8267 | 0.8285 | 0.8285 |  |  |
+| TF-IDF + Logistic Regression | official_holdout | overall | 1500 | 0.7500 | 0.7567 | 0.7500 | 0.7502 | 0.7502 |  |  |

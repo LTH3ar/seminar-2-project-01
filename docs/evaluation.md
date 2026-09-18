@@ -60,6 +60,9 @@ macro-F1 chart to `results/figures/`. Each completed evaluation also supports
 per-repository and pooled confusion-matrix plots through
 `plot_confusion_matrices`.
 
+When no paths are supplied, the table builder includes the supplied baselines
+and every Track B `*-official-holdout.json` result under `results/classical/`.
+
 The supplied `results/baselines/setfit.json` records a reproduced
 cross-repository F1 of 0.8240. This is close to, but distinct from, the 0.8270
 score published with the competition baseline; the table generator preserves

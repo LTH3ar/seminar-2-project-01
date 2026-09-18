@@ -36,7 +36,8 @@ instead of presenting them as the same run.
 | C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer |
 | D — Baseline & evaluation | *(name)* | SetFit reproduction, k-fold harness, metrics, results tables |
 
-Track A is complete and its outputs under `data/processed/` are the agreed input for B, C and D.
+Tracks A, B, and D are implemented. Track B consumes the same cleaned
+`IssueReport` objects produced by A and uses D's shared evaluator.
 
 ## Layout
 
@@ -51,6 +52,7 @@ src/ai4se/
     validation.py      Strict record and split validation
     audit.py           Duplicate and train/test leakage analysis
     folds.py           Per-project stratified group folds
+    classical.py       TF-IDF + NB, logistic regression, SVM, random forest
     evaluation.py      Shared metrics, grouped CV, holdout evaluation, plots
     reporting.py       CSV/Markdown result tables and model comparison plots
     setfit_baseline.py SetFit adapter matching the supplied notebook
@@ -61,6 +63,7 @@ notebooks/
     02_setfit_baseline.ipynb
     03_roberta_baseline.ipynb
     04_fasttext_baseline.ipynb
+    05_classical_ml.ipynb
 tests/
     test_persistence_equivalence.py
     test_data_quality.py
@@ -68,6 +71,7 @@ tests/
 data/raw/              Cached competition CSVs (git-ignored, downloaded on demand)
 data/processed/        Cleaned datasets handed to tracks B, C, and D
 results/baselines/     Reproduced SetFit, RoBERTa, and fastText metrics
+results/classical/     Track B CV, selection, and official-holdout metrics
 results/figures/       Figures referenced by the LaTeX report
 results/tables/        Shared model comparison tables
 docs/                  Competition reference and dataset notes
@@ -153,6 +157,9 @@ make help     # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
 make pipeline # validate, audit, prepare and generate grouped folds
+make classical # select Track B model by CV, then evaluate the winner once
+make classical-cv # compare all classical models without touching test labels
+make classical-holdout # explicit official evaluation of Track B models
 make results  # build shared baseline tables and comparison plot
 make setfit   # reproduce SetFit on the official test split
 make setfit-cv # run duplicate-safe grouped cross-validation for SetFit
@@ -234,3 +241,20 @@ deep-learning runs. Generate the current cross-model tables with:
 
 See `docs/evaluation.md` for the schema, SetFit settings, evaluation protocol,
 and integration instructions for other model tracks.
+
+## Classical machine learning
+
+Track B is implemented in `ai4se.classical`. Every model is a complete
+scikit-learn pipeline containing word/character TF-IDF and one classifier, so
+the vectorizer is fitted independently inside every fold. The default workflow
+compares Complement Naive Bayes, logistic regression, linear SVM, and random
+forest with five-fold grouped cross-validation, selects by cross-repository
+macro-F1, and evaluates only the winner on the official test split.
+
+Run it with:
+
+    python -m pip install -e ".[ml]"
+    make classical
+
+See `docs/classical_ml.md` for hyperparameters, ablations, outputs, and the
+model-selection protocol.
