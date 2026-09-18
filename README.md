@@ -207,23 +207,6 @@ Kallis, Di Sorbo, Canfora, Panichella. *Predicting issue types on GitHub.* Scien
 
 Colavito, Lanubile, Novielli. *Few-Shot Learning for Issue Report Classification.* NLBSE'23.
 
-## Consolidated datdq workflow
-
-This branch uses the root ai4se structure from main and incorporates the
-data-quality and experiment work developed on datdq. There is one package,
-one test directory, one notebook directory, and one results directory.
-
-Additional safeguards include strict record validation, duplicate analysis,
-train/test leakage reporting, software-aware conservative cleaning, structural
-features, and per-repository stratified group folds.
-
-Run the integrated process with:
-
-    make pipeline
-
-Install the supplied baseline notebook dependencies with:
-
-    python -m pip install -e ".[setfit]"
 
 ## Shared evaluation
 
