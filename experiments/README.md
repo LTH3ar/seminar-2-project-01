@@ -7,7 +7,7 @@ the report is typed by hand.
 | Script | What it does | Needs | Time |
 |---|---|---|---|
 | `benchmark_audit.py` | Baseline, temporal confound, split protocol, significance, power | `.[ml]` | ~2 min CPU |
-| `02_baselines.py` | k-fold selection then test evaluation of six models, five seeds each | `.[ml,dl]` | ~10 min CPU |
+| `02_baselines.py` | k-fold selection then test evaluation of seven models (four classical, two neural, one fine-tuned DeBERTa-v3), five seeds each | `.[ml,dl]` | ~3 h GPU; `--transformer off` ~4 min CPU |
 | `03_setfit.py` | Reproduces the organisers' published baseline | `.[dl]` | 15 min GPU / 1–3 h CPU |
 | `04_make_tables.py` | Regenerates `report/tables/*.tex` from `results/*.json` | base | seconds |
 
@@ -15,7 +15,7 @@ the report is typed by hand.
 pip install -e ".[ml,dl]"
 make data
 python experiments/benchmark_audit.py
-python experiments/02_baselines.py
+python experiments/02_baselines.py       # --transformer off/fast to iterate
 python experiments/03_setfit.py          # --preset fast to iterate
 python experiments/04_make_tables.py
 make report

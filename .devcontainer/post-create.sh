@@ -21,8 +21,8 @@ ok()   { echo -e "${GREEN}    ok${RESET} $*"; }
 cd "$(dirname "$0")/.." || exit 1
 
 # ---------------------------------------------------------------- 1. install --
-step "Installing ai4se in editable mode"
-if pip install --no-cache-dir -e ".[dev]"; then
+step "Installing ai4se in editable mode (with dev, dl, ml, baseline extras)"
+if pip install --no-cache-dir -e ".[dev,dl,ml,baseline]"; then
     ok "import ai4se now works from any directory"
 else
     echo "    FAILED - the container is not usable, check pyproject.toml" >&2
