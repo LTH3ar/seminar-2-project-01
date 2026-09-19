@@ -1,0 +1,90 @@
+# ~/.zshrc for the AI4SE dev container. Copied in by the Dockerfile.
+# Plain zsh plus three Debian packages; no framework downloaded at build time.
+
+# ------------------------------------------------------------------ history --
+# ~/.zsh_state is a named volume, so history survives container rebuilds.
+# It is seeded once from a copy of the host's ~/.zsh_history.
+HISTFILE="${HOME}/.zsh_state/zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt EXTENDED_HISTORY      # timestamps; same format macOS zsh writes
+setopt SHARE_HISTORY         # every terminal sees every other terminal's commands
+setopt HIST_IGNORE_DUPS      # no consecutive duplicates
+setopt HIST_IGNORE_SPACE     # " secret-command" is not recorded
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY           # !! expands into the line instead of running it
+
+# --------------------------------------------------------------- completion --
+autoload -Uz compinit
+zstyle ':completion:*' menu select                          # arrow-key menu
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'      # case-insensitive
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${HOME}/.zsh_state/zcompcache"
+compinit -d "${HOME}/.zsh_state/zcompdump"
+
+# ------------------------------------------------------------------- keymap --
+bindkey -e
+# Up/Down search history for lines starting with what is already typed.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
+bindkey '^[[3~' delete-char
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+
+# ------------------------------------------------------------------- prompt --
+autoload -Uz vcs_info
+zstyle ':vcs_info:git:*' formats ' %F{magenta}(%b)%f'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}(%b|%a)%f'
+precmd() { vcs_info }
+setopt PROMPT_SUBST
+PROMPT='%F{cyan}%~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})%#%f '
+
+# ---------------------------------------------------------------- ssh-agent --
+# VS Code forwards the host's agent when one is running, in which case
+# SSH_AUTH_SOCK already works and this does nothing. Otherwise one agent is
+# started per container and shared by all terminals; run `ssh-add` once to
+# type a key's passphrase a single time.
+_agent_env="${HOME}/.ssh/agent.env"
+ssh-add -l >/dev/null 2>&1
+if [ $? -eq 2 ]; then
+    [ -r "${_agent_env}" ] && source "${_agent_env}" >/dev/null
+    ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then
+        (umask 077; ssh-agent -s > "${_agent_env}")
+        source "${_agent_env}" >/dev/null
+    fi
+fi
+unset _agent_env
+
+# ------------------------------------------------------------------ aliases --
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+alias gs='git status -sb'
+alias gl='git log --oneline --graph --decorate -20'
+
+# ------------------------------------------------------------------ plugins --
+# fzf: Ctrl-R fuzzy history search, Ctrl-T file picker.
+# fzf >= 0.48 (Debian 13 ships 0.60) generates its own integration; older
+# versions ship it as example files.
+if _fzf_init="$(fzf --zsh 2>/dev/null)"; then
+    eval "${_fzf_init}"
+elif [ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    [ -r /usr/share/doc/fzf/examples/completion.zsh ] \
+        && source /usr/share/doc/fzf/examples/completion.zsh
+fi
+unset _fzf_init
+# Grey inline suggestion from history; Right arrow or End accepts it.
+[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] \
+    && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Must be sourced last.
+[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
+    && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

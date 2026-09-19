@@ -50,6 +50,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 #   build-essential      source builds for any dependency without a wheel
 #   graphviz             optional architecture diagrams for the report
 #   curl                 used by post-create.sh and by GitHub CLI installs
+#   zsh                  default shell for the vscode user
+#   zsh-autosuggestions  grey inline suggestions from history
+#   zsh-syntax-highlighting  colours commands as you type
+#   fzf                  Ctrl-R fuzzy history search, Ctrl-T file picker
 # ---------------------------------------------------------------------------
 # apt versions are deliberately unpinned: Debian publishes security updates
 # within trixie, and pinning would break rebuilds every time it does. The
@@ -67,6 +71,10 @@ RUN apt-get update \
         sudo \
         build-essential \
         graphviz \
+        zsh \
+        zsh-autosuggestions \
+        zsh-syntax-highlighting \
+        fzf \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------------
@@ -91,7 +99,7 @@ RUN if [ "${INSTALL_LATEX}" = "true" ]; then \
 # Non-root user
 # ---------------------------------------------------------------------------
 RUN groupadd --gid ${USER_GID} ${USERNAME} \
-    && useradd --uid ${USER_UID} --gid ${USER_GID} --create-home --shell /bin/bash ${USERNAME} \
+    && useradd --uid ${USER_UID} --gid ${USER_GID} --create-home --shell /usr/bin/zsh ${USERNAME} \
     && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME}
 
@@ -119,10 +127,19 @@ RUN mkdir -p ${NLTK_DATA} \
 
 # Cache directories are created here, and owned by the user, so that the named
 # volumes mounted over them in devcontainer.json inherit the right ownership.
+# .zsh_state holds the shell history volume; .host-seed is the mount point for
+# the read-only copies staged on the host by stage-host-files.sh.
 RUN mkdir -p /home/${USERNAME}/.cache/pip \
              /home/${USERNAME}/.cache/huggingface \
              /home/${USERNAME}/.vscode-server \
+             /home/${USERNAME}/.zsh_state \
+             /home/${USERNAME}/.host-seed \
+             /home/${USERNAME}/.ssh \
+    && chmod 700 /home/${USERNAME}/.ssh /home/${USERNAME}/.zsh_state \
     && chown -R ${USER_UID}:${USER_GID} /home/${USERNAME}
+
+# Shell configuration: history, completion, git-aware prompt, plugins.
+COPY --chown=${USER_UID}:${USER_GID} .devcontainer/zshrc /home/${USERNAME}/.zshrc
 
 WORKDIR /workspaces/ai4se-project
 USER ${USERNAME}
