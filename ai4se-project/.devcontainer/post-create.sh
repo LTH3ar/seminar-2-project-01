@@ -92,3 +92,6 @@ cat <<'EOF'
       train = load_split("train", kind="memory")
 ────────────────────────────────────────────────────────────────────────
 EOF
+
+sudo chsh -s $(which zsh)
+echo "$(which zsh)" >> ~/.bashrc

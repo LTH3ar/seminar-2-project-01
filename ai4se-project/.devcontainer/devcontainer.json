@@ -72,15 +72,13 @@
         "notebook.output.textLineLimit": 60,
         "jupyter.notebookFileRoot": "${workspaceFolder}",
         "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.defaultProfile.osx": "zsh",
-        "terminal.integrated.defaultProfile.windows": "zsh",
         "terminal.integrated.profiles.linux": {
-          "bash": {
-            "path": "/bin/bash",
-            "args": [
-              "-l"
-            ]
-          },
+          // "bash": {
+          //   "path": "/bin/bash",
+          //   "args": [
+          //     "-l"
+          //   ]
+          // },
           "zsh": {
             "path": "/usr/bin/zsh"
           }
