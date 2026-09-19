@@ -1,6 +1,5 @@
 {
   "name": "AI4SE Project 1 - Issue Report Classification",
-
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
@@ -11,35 +10,35 @@
       "INSTALL_LATEX": "true"
     }
   },
-
   // Created in the Dockerfile at UID/GID 1000; the official Python image
   // ships no non-root user.
   "remoteUser": "vscode",
   "containerUser": "vscode",
-
+  // "features": {
+  //   "ghcr.io/devcontainers/features/common-utils": {
+  //     "configureZshAsDefaultShell": true
+  //   }
+  // },
   // No "features" block: git, sudo and the VS Code server prerequisites are
   // installed explicitly in the Dockerfile, so the image depends on nothing
   // beyond the official Python base.
-
   // Runs on the HOST before the container starts. Copies ~/.zsh_history and
   // ~/.ssh into ~/.cache/ai4se-devcontainer/host-seed; the originals are only
   // read, never mounted and never written. Linux, macOS and WSL hosts.
   "initializeCommand": "bash .devcontainer/stage-host-files.sh",
-
   "postCreateCommand": "bash .devcontainer/post-create.sh",
-
   // Installs the staged copies into ~/.ssh (every start) and seeds the zsh
   // history volume (first start only).
   "postStartCommand": "bash .devcontainer/sync-host-files.sh",
-
-  "forwardPorts": [8888],
+  "forwardPorts": [
+    8888
+  ],
   "portsAttributes": {
     "8888": {
       "label": "Jupyter Lab",
       "onAutoForward": "notify"
     }
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -56,10 +55,14 @@
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.testing.pytestEnabled": true,
-        "python.testing.pytestArgs": ["tests"],
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
         "python.testing.unittestEnabled": false,
         "editor.formatOnSave": true,
-        "editor.rulers": [88],
+        "editor.rulers": [
+          88
+        ],
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
           "editor.codeActionsOnSave": {
@@ -69,9 +72,18 @@
         "notebook.output.textLineLimit": 60,
         "jupyter.notebookFileRoot": "${workspaceFolder}",
         "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.osx": "zsh",
+        "terminal.integrated.defaultProfile.windows": "zsh",
         "terminal.integrated.profiles.linux": {
-          "zsh": { "path": "/usr/bin/zsh" },
-          "bash": { "path": "/bin/bash" }
+          "bash": {
+            "path": "/bin/bash",
+            "args": [
+              "-l"
+            ]
+          },
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
         },
         "files.exclude": {
           "**/__pycache__": true,
@@ -82,7 +94,6 @@
       }
     }
   },
-
   "containerEnv": {
     "PYTHONDONTWRITEBYTECODE": "1",
     "PYTHONUNBUFFERED": "1",
@@ -90,7 +101,6 @@
     "HF_HOME": "/home/vscode/.cache/huggingface",
     "TOKENIZERS_PARALLELISM": "false"
   },
-
   // Named volumes keep pip wheels, the HuggingFace model cache and the VS Code
   // server across rebuilds. The target directories are created and chowned to
   // vscode in the Dockerfile so the volumes inherit the right ownership.
@@ -104,11 +114,9 @@
     // container cannot write here, and never sees the host's ~/.ssh itself.
     "source=${localEnv:HOME}/.cache/ai4se-devcontainer/host-seed,target=/home/vscode/.host-seed,type=bind,readonly"
   ],
-
   // Uncomment to expose an NVIDIA GPU to the container for track C.
   // Requires the NVIDIA Container Toolkit on the host.
   // "hostRequirements": { "gpu": "optional" },
   // "runArgs": ["--gpus", "all", "--shm-size=2g"],
-
   "waitFor": "postCreateCommand"
 }
