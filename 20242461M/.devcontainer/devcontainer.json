@@ -118,6 +118,8 @@
   // "runArgs": ["--gpus", "all", "--shm-size=2g"],
   "runArgs": [
     "--network=host",
+    "--gpus", "all", 
+    "--shm-size=2g"
   ],
   "waitFor": "postCreateCommand"
 }
