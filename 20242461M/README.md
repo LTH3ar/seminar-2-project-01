@@ -24,15 +24,19 @@ The competition requires **one classifier per project** (five per submission). P
 | opencv/opencv | 0.8173 |
 | **cross-repository** | **0.8270** |
 
+For a full technical walkthrough of the codebase — architecture, module
+reference, design decisions, results and open work — see
+[`code_overview.md`](code_overview.md).
+
 ## Team and tracks
 
 | Track | Owner | Scope | Status |
 |---|---|---|---|
 | A — Data & persistence | *(name)* | Loading, EDA, cleaning pipeline, repository abstraction | done |
-| B — Classical ML | *(name)* | TF-IDF + Naive Bayes, Logistic Regression, SVM, Random Forest | |
-| C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer | |
-| D — Evaluation harness | *(name)* | Metrics, k-fold, competition protocol, reference floors | done |
-| D2 — SetFit reproduction | *(name)* | Reproduce the published baseline end to end | |
+| B — Classical ML | *(name)* | TF-IDF + NB, LogReg, SVM, Random Forest; ablation, grid search | done |
+| C — Deep learning | *(name)* | FFNN, CNN, learning curves, early stopping | done |
+| D — Evaluation harness | *(name)* | Metrics, ROC/AUC, k-fold, competition protocol, floors | done |
+| D2 — SetFit reproduction | *(name)* | Frozen-embedding baseline done; full SetFit needs a GPU | partial |
 
 Track A's outputs under `data/processed/` are the agreed input for every other
 track. Track D's runners in `ai4se.evaluation` are how every model is scored —
@@ -160,7 +164,9 @@ make install          # pip install -e ".[dev]" + NLTK corpora
 ### Common commands
 
 ```bash
-make help     # list every target
+make experiments  # regenerate every result (~6 min on one CPU core)
+make notebooks    # re-execute all five notebooks
+make help         # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
 make lab      # start Jupyter Lab on port 8888
@@ -214,22 +220,43 @@ evaluate_competition(svm_factory, train, test, model_name="TF-IDF + LinearSVC")
 Metrics are implemented from scratch in `ai4se.metrics` and verified against
 scikit-learn to twelve decimal places in `tests/test_evaluation.py`.
 
-### Reference floors
+### Results
 
-Established so later results can be read in context. A model below 0.54 is not
-beating hand-written keyword rules.
+Cross-repository F1 on the official test split, under the competition protocol.
 
-| Model | CV macro F1 | Test F1 | vs SetFit |
+| Model | overall | AUC | vs SetFit |
 |---|---|---|---|
-| Majority class | 0.1667 | 0.1667 | −0.660 |
-| Random (stratified) | 0.3626 | 0.3348 | −0.492 |
-| Keyword rules | 0.5107 | 0.5395 | −0.288 |
-| Naive Bayes (from scratch) | 0.6009 | 0.6679 | −0.159 |
-| **SetFit (NLBSE'24 baseline)** | — | **0.8270** | — |
+| **SetFit (NLBSE'24 baseline)** | **0.8270** | — | — |
+| TF-IDF + Logistic Regression (tuned) | **0.7603** | 0.9018 | −0.0667 |
+| TF-IDF + Linear SVM | 0.7583 | — | −0.0687 |
+| CNN (embeddings) | 0.7578 | 0.8904 | −0.0692 |
+| FFNN (TF-IDF) | 0.7467 | 0.8926 | −0.0803 |
+| Frozen MiniLM + LogReg | 0.7050 | 0.8837 | −0.1220 |
+| TF-IDF + Random Forest | 0.6962 | 0.8630 | −0.1308 |
+| Naive Bayes (from scratch) | 0.6679 | 0.8246 | −0.1591 |
+| Keyword rules | 0.5395 | — | −0.2875 |
+| Majority class | 0.1667 | — | −0.6603 |
 
-Per-project training beats a single global classifier by 0.068 on average
-despite using a fifth of the data, confirming the low cross-project vocabulary
-overlap measured in Track A.
+Full per-repository table: `results/tables/final_leaderboard.tex`, or
+`leaderboard_from_disk()`.
+
+### Findings
+
+- **Aggressive cleaning hurts.** `full` (stop words + lemmatisation) scores
+  0.015 below `light` — stop-word removal deletes *would* and *could*, the
+  modal words that mark a feature request.
+- **Frozen sentence embeddings underperform TF-IDF** (0.7050 vs 0.7603). Since
+  that is SetFit minus the contrastive fine-tuning, the fine-tuning is worth
+  roughly 0.12 F1 on its own: the adaptation, not the pretrained encoder, is
+  what makes the baseline strong.
+- **Neither neural model beats TF-IDF.** With 300 training issues per project
+  there is not enough data to learn a better representation.
+- **Per-project training beats a global classifier** by 0.068 on all five
+  repositories, despite using a fifth of the data.
+- **`bug` → `question` is the dominant error**, over a quarter of all mistakes.
+- **About a third of confident errors look like label noise** — the title
+  declares a different type than the label, and the model usually agrees with
+  the title.
 
 ## Key EDA findings
 

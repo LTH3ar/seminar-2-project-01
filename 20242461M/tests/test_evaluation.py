@@ -33,13 +33,18 @@ from ai4se.evaluation import (
     stratified_folds,
 )
 from ai4se.loader import load_split
-from ai4se.metrics import confusion_matrix, evaluate
+from ai4se.metrics import auc, confusion_matrix, evaluate, roc_auc_ovr, roc_curve
 from ai4se.model import LABELS
 from ai4se.preprocessing import make_cleaner
 from ai4se.repository import make_repository
 
 try:
-    from sklearn.metrics import f1_score, precision_recall_fscore_support
+    import numpy as np
+    from sklearn.metrics import (
+        f1_score,
+        precision_recall_fscore_support,
+        roc_auc_score,
+    )
     from sklearn.model_selection import StratifiedKFold
 
     HAS_SKLEARN = True
@@ -144,6 +149,101 @@ def test_metrics_match_sklearn():
             y_true, y_pred, labels=list(LABELS), average=average, zero_division=0
         )
         assert ours == pytest.approx(expected), f"{average} average disagrees"
+
+
+# --------------------------------------------------------------------------- #
+# ROC and AUC
+# --------------------------------------------------------------------------- #
+
+
+def _probabilistic(n: int = 400, seed: int = 11):
+    """Ground truth plus probabilities correlated with it."""
+    rng = random.Random(seed)
+    y_true = rng.choices(list(LABELS), weights=[5, 3, 2], k=n)
+    y_score = []
+    for label in y_true:
+        raw = {c: rng.random() + (0.8 if c == label else 0.0) for c in LABELS}
+        total = sum(raw.values())
+        y_score.append({c: v / total for c, v in raw.items()})
+    return y_true, y_score
+
+
+def test_auc_of_a_perfect_ranking_is_one():
+    y_true = ["bug", "bug", "feature", "feature"]
+    y_score = [
+        {"bug": 0.9, "feature": 0.1},
+        {"bug": 0.8, "feature": 0.2},
+        {"bug": 0.2, "feature": 0.8},
+        {"bug": 0.1, "feature": 0.9},
+    ]
+    _, macro = roc_auc_ovr(y_true, y_score, labels=["bug", "feature"])
+    assert macro == pytest.approx(1.0)
+
+
+def test_auc_of_a_constant_score_is_one_half():
+    """No ranking information at all should land on the diagonal."""
+    y_true = ["bug", "feature"] * 20
+    y_score = [{"bug": 0.5, "feature": 0.5}] * 40
+    _, macro = roc_auc_ovr(y_true, y_score, labels=["bug", "feature"])
+    assert macro == pytest.approx(0.5)
+
+
+def test_roc_curve_starts_at_origin_and_is_monotonic():
+    y_true, y_score = _probabilistic()
+    binary = [1 if label == "bug" else 0 for label in y_true]
+    scores = [p["bug"] for p in y_score]
+    fpr, tpr, _ = roc_curve(binary, scores)
+
+    assert (fpr[0], tpr[0]) == (0.0, 0.0)
+    assert (fpr[-1], tpr[-1]) == pytest.approx((1.0, 1.0))
+    # strict=False is deliberate: pairing a sequence with its own tail is an
+    # offset-by-one comparison, so the two sides differ in length by design.
+    pairs = lambda seq: zip(seq, seq[1:], strict=False)  # noqa: E731
+    assert all(a <= b for a, b in pairs(fpr)), "FPR must not decrease"
+    assert all(a <= b for a, b in pairs(tpr)), "TPR must not decrease"
+
+
+def test_roc_curve_handles_a_single_class():
+    """An absent class makes the curve undefined; return the diagonal, not a crash."""
+    fpr, tpr, _ = roc_curve([1, 1, 1], [0.2, 0.5, 0.9])
+    assert auc(fpr, tpr) == pytest.approx(0.5)
+
+
+def test_auc_is_absent_without_probabilities():
+    """A label-only model must report None, never a value faked from hard labels."""
+    scores = evaluate(["bug", "feature"], ["bug", "bug"], labels=LABELS)
+    assert scores.macro_auc is None
+    assert scores.per_class_auc is None
+    assert scores.auc("bug") is None
+
+
+def test_naive_bayes_probabilities_are_well_formed():
+    model = MultinomialNaiveBayes().fit(
+        ["app crashes", "please add dark mode", "how do I install"],
+        ["bug", "feature", "question"],
+    )
+    for row in model.predict_proba(["the app crashes on launch"]):
+        assert set(row) == set(LABELS)
+        assert sum(row.values()) == pytest.approx(1.0)
+        assert all(0.0 <= v <= 1.0 for v in row.values())
+
+
+@pytest.mark.skipif(not HAS_SKLEARN, reason="scikit-learn not installed")
+def test_auc_matches_sklearn():
+    """The hand-rolled ROC must agree with scikit-learn's."""
+    y_true, y_score = _probabilistic(n=500)
+    ours, ours_macro = roc_auc_ovr(y_true, y_score, labels=LABELS)
+
+    truth = np.array([[1 if t == c else 0 for c in LABELS] for t in y_true])
+    scores = np.array([[row[c] for c in LABELS] for row in y_score])
+
+    for index, label in enumerate(LABELS):
+        assert ours[label] == pytest.approx(
+            roc_auc_score(truth[:, index], scores[:, index])
+        )
+    assert ours_macro == pytest.approx(
+        roc_auc_score(truth, scores, average="macro", multi_class="ovr")
+    )
 
 
 # --------------------------------------------------------------------------- #

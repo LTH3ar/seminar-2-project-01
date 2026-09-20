@@ -3,16 +3,18 @@
   "scope": "all projects",
   "k": 10,
   "mean_macro_f1": 0.5106888286809145,
-  "std_macro_f1": 0.03400072939153957,
+  "std_macro_f1": 0.034000729391539565,
+  "mean_macro_auc": null,
   "folds": [
     {
       "n": 150,
       "accuracy": 0.5133333333333333,
       "macro_precision": 0.5111180598985477,
       "macro_recall": 0.5133333333333333,
-      "macro_f1": 0.4723372163922852,
+      "macro_f1": 0.47233721639228526,
       "micro_f1": 0.5133333333333333,
-      "weighted_f1": 0.4723372163922853,
+      "weighted_f1": 0.4723372163922852,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -36,6 +38,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 42,
@@ -62,6 +65,7 @@
       "macro_f1": 0.5614973262032086,
       "micro_f1": 0.6066666666666667,
       "weighted_f1": 0.5614973262032086,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -85,6 +89,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 44,
@@ -107,10 +112,11 @@
       "n": 150,
       "accuracy": 0.5466666666666666,
       "macro_precision": 0.5977879481311975,
-      "macro_recall": 0.5466666666666666,
+      "macro_recall": 0.5466666666666667,
       "macro_f1": 0.5235900249984757,
       "micro_f1": 0.5466666666666666,
       "weighted_f1": 0.5235900249984756,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -134,6 +140,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 42,
@@ -160,6 +167,7 @@
       "macro_f1": 0.475396359365825,
       "micro_f1": 0.52,
       "weighted_f1": 0.47539635936582497,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -183,6 +191,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 39,
@@ -204,11 +213,12 @@
     {
       "n": 150,
       "accuracy": 0.5466666666666666,
-      "macro_precision": 0.5418470418470419,
+      "macro_precision": 0.5418470418470418,
       "macro_recall": 0.5466666666666666,
       "macro_f1": 0.5121966997165472,
       "micro_f1": 0.5466666666666666,
       "weighted_f1": 0.5121966997165472,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -232,6 +242,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 43,
@@ -258,6 +269,7 @@
       "macro_f1": 0.45880302315945887,
       "micro_f1": 0.5066666666666667,
       "weighted_f1": 0.45880302315945887,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -281,6 +293,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 38,
@@ -307,6 +320,7 @@
       "macro_f1": 0.5350404727232076,
       "micro_f1": 0.5666666666666667,
       "weighted_f1": 0.5350404727232076,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -330,6 +344,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 42,
@@ -356,6 +371,7 @@
       "macro_f1": 0.5439039556129526,
       "micro_f1": 0.5733333333333334,
       "weighted_f1": 0.5439039556129527,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -379,6 +395,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 39,
@@ -404,7 +421,8 @@
       "macro_recall": 0.5599999999999999,
       "macro_f1": 0.52857933433473,
       "micro_f1": 0.56,
-      "weighted_f1": 0.5285793343347301,
+      "weighted_f1": 0.52857933433473,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -428,6 +446,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 43,
@@ -454,6 +473,7 @@
       "macro_f1": 0.49554387430245367,
       "micro_f1": 0.5333333333333333,
       "weighted_f1": 0.49554387430245367,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -477,6 +497,7 @@
           "support": 50
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 39,

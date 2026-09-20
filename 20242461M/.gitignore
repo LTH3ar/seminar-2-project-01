@@ -69,7 +69,3 @@ Thumbs.db
 # --------------------------------------------------------------------------
 !.gitkeep
 !**/.gitkeep
-.DS_Store
-**/.DS_Store
-devcontainer-lock.json
-**/devcontainer-lock.json

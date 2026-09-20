@@ -1,7 +1,8 @@
 {
   "model": "keyword rules",
-  "created_at": "2026-09-17T15:48:10+00:00",
+  "created_at": "2026-09-20T10:43:52+00:00",
   "overall_f1": 0.5395473887323416,
+  "overall_auc": null,
   "baseline_f1": 0.827,
   "delta": -0.2874526112676583,
   "per_repository": {
@@ -9,10 +10,11 @@
       "n": 300,
       "accuracy": 0.5466666666666666,
       "macro_precision": 0.5295120713175344,
-      "macro_recall": 0.5466666666666665,
+      "macro_recall": 0.5466666666666666,
       "macro_f1": 0.49454790927093145,
       "micro_f1": 0.5466666666666666,
       "weighted_f1": 0.49454790927093145,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -36,6 +38,7 @@
           "support": 100
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 69,
@@ -61,7 +64,8 @@
       "macro_recall": 0.6333333333333333,
       "macro_f1": 0.5711884727492712,
       "micro_f1": 0.6333333333333333,
-      "weighted_f1": 0.5711884727492713,
+      "weighted_f1": 0.5711884727492712,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -85,6 +89,7 @@
           "support": 100
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 99,
@@ -111,6 +116,7 @@
       "macro_f1": 0.4582230349471729,
       "micro_f1": 0.5266666666666666,
       "weighted_f1": 0.45822303494717287,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -134,6 +140,7 @@
           "support": 100
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 86,
@@ -157,9 +164,10 @@
       "accuracy": 0.54,
       "macro_precision": 0.5692204301075269,
       "macro_recall": 0.54,
-      "macro_f1": 0.5498393801965231,
+      "macro_f1": 0.549839380196523,
       "micro_f1": 0.54,
       "weighted_f1": 0.5498393801965231,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -183,6 +191,7 @@
           "support": 100
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 49,
@@ -209,6 +218,7 @@
       "macro_f1": 0.6239381464978097,
       "micro_f1": 0.6733333333333333,
       "weighted_f1": 0.6239381464978097,
+      "macro_auc": null,
       "per_class": {
         "bug": {
           "label": "bug",
@@ -232,6 +242,7 @@
           "support": 100
         }
       },
+      "per_class_auc": null,
       "confusion": {
         "bug": {
           "bug": 97,

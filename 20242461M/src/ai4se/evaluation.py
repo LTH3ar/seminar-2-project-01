@@ -56,7 +56,12 @@ RANDOM_SEED: int = 42
 
 
 class Model(Protocol):
-    """Minimal interface an estimator must satisfy to be evaluated."""
+    """Minimal interface an estimator must satisfy to be evaluated.
+
+    ``predict_proba`` is optional. A model that provides it also gets ROC and
+    AUC reported; one that does not is evaluated on its hard labels alone,
+    and its AUC fields stay ``None``.
+    """
 
     def fit(self, X: Sequence[str], y: Sequence[str]) -> object:
         """Train on texts ``X`` with labels ``y``."""
@@ -65,6 +70,62 @@ class Model(Protocol):
     def predict(self, X: Sequence[str]) -> Sequence[str]:
         """Return one predicted label per element of ``X``."""
         ...
+
+
+def class_probabilities(
+    model: object,
+    X: Sequence[str],
+    labels: Sequence[str] = LABELS,
+) -> list[dict[str, float]] | None:
+    """Extract per-class probabilities from a model, if it offers any.
+
+    Normalises the two conventions the project encounters into one shape:
+
+    * scikit-learn estimators return a ``(n_samples, n_classes)`` array and
+      carry the column order in ``classes_``;
+    * the project's own models return a list of ``{label: probability}``
+      dictionaries directly.
+
+    Args:
+        model: A fitted model.
+        X: The inputs that were predicted.
+        labels: Label order to report.
+
+    Returns:
+        One dictionary per sample, or ``None`` when the model cannot produce
+        probabilities. Failures are swallowed deliberately: an estimator
+        without a probability head (``LinearSVC``, for one) must still be
+        evaluable on its hard labels.
+    """
+    method = getattr(model, "predict_proba", None)
+    if method is None:
+        return None
+    try:
+        raw = method(X)
+    except (AttributeError, NotImplementedError, ValueError):
+        return None
+
+    if raw is None or len(raw) == 0:
+        return None
+
+    # Already in the project's own dictionary form.
+    if isinstance(raw[0], dict):
+        return [{label: float(row.get(label, 0.0)) for label in labels} for row in raw]
+
+    # scikit-learn's array form, with the column order in classes_.
+    classes = list(getattr(model, "classes_", []))
+    if not classes and hasattr(model, "steps"):  # a Pipeline
+        classes = list(getattr(model.steps[-1][1], "classes_", []))
+    if not classes:
+        return None
+
+    return [
+        {
+            label: float(row[classes.index(label)]) if label in classes else 0.0
+            for label in labels
+        }
+        for row in raw
+    ]
 
 
 ModelFactory = Callable[[], Model]
@@ -150,6 +211,12 @@ class CrossValidationResult:
         return mean(self.macro_f1_per_fold)
 
     @property
+    def mean_macro_auc(self) -> float | None:
+        """Mean macro AUC across folds, or ``None`` for a label-only model."""
+        aucs = [s.macro_auc for s in self.fold_scores if s.macro_auc is not None]
+        return mean(aucs) if aucs else None
+
+    @property
     def std_macro_f1(self) -> float:
         """Standard deviation across folds; a proxy for stability."""
         scores = self.macro_f1_per_fold
@@ -163,6 +230,7 @@ class CrossValidationResult:
             "k": self.k,
             "mean_macro_f1": self.mean_macro_f1,
             "std_macro_f1": self.std_macro_f1,
+            "mean_macro_auc": self.mean_macro_auc,
             "folds": [s.as_dict() for s in self.fold_scores],
         }
 
@@ -195,6 +263,14 @@ class CompetitionResult:
         return mean(self.repository_f1.values())
 
     @property
+    def overall_auc(self) -> float | None:
+        """Mean macro AUC over the five repositories, if available."""
+        aucs = [
+            s.macro_auc for s in self.per_repository.values() if s.macro_auc is not None
+        ]
+        return mean(aucs) if aucs else None
+
+    @property
     def delta_vs_baseline(self) -> float:
         """Difference against the SetFit baseline; positive means better."""
         return self.overall_f1 - SETFIT_OVERALL
@@ -205,6 +281,7 @@ class CompetitionResult:
             "model": self.model_name,
             "created_at": self.created_at,
             "overall_f1": self.overall_f1,
+            "overall_auc": self.overall_auc,
             "baseline_f1": SETFIT_OVERALL,
             "delta": self.delta_vs_baseline,
             "per_repository": {
@@ -286,8 +363,14 @@ def cross_validate(
     ):
         model = model_factory()
         model.fit([texts[i] for i in train_idx], [labels[i] for i in train_idx])
-        predictions = list(model.predict([texts[i] for i in val_idx]))
-        scores = evaluate([labels[i] for i in val_idx], predictions, labels=LABELS)
+        X_val = [texts[i] for i in val_idx]
+        predictions = list(model.predict(X_val))
+        scores = evaluate(
+            [labels[i] for i in val_idx],
+            predictions,
+            labels=LABELS,
+            y_score=class_probabilities(model, X_val),
+        )
         fold_scores.append(scores)
         if verbose:
             print(f"  fold {fold_number}/{k}: macro F1 = {scores.macro_f1:.4f}")
@@ -365,7 +448,12 @@ def evaluate_competition(
         model.fit(X_train, y_train)
         predictions = list(model.predict(X_test))
 
-        scores = evaluate(y_test, predictions, labels=LABELS)
+        scores = evaluate(
+            y_test,
+            predictions,
+            labels=LABELS,
+            y_score=class_probabilities(model, X_test),
+        )
         per_repository[repo] = scores
         if verbose:
             baseline = SETFIT_BASELINE.get(repo)
@@ -452,6 +540,26 @@ def to_latex(frame, caption: str, label: str, path: str | Path | None = None) ->
     return latex
 
 
+def result_slug(name: str) -> str:
+    """Turn a model name into the canonical file stem for its saved result.
+
+    Shared by the notebooks and by ``scripts/run_experiments.py`` so the two
+    cannot diverge. They did once: the notebook produced
+    ``naive_Bayes_from_scratch`` and the runner ``naive_bayes_from_scratch``,
+    and the same model appeared twice in the leaderboard until
+    :func:`leaderboard_from_disk` started rejecting duplicate model names.
+    """
+    return (
+        name.lower()
+        .replace(" + ", "_")
+        .replace(" ", "_")
+        .replace("(", "")
+        .replace(")", "")
+        .replace("-", "_")
+        .replace("'", "")
+    )
+
+
 def save_result(
     result: CrossValidationResult | CompetitionResult,
     path: str | Path,
@@ -466,3 +574,152 @@ def save_result(
 def load_result(path: str | Path) -> dict:
     """Read back a result written by :func:`save_result`."""
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def grid_search(
+    factory: Callable[..., Model],
+    grid: dict[str, Sequence],
+    repository: IssueRepository,
+    k: int = 5,
+    seed: int = RANDOM_SEED,
+    verbose: bool = False,
+):
+    """Cross-validate every combination in a hyperparameter grid.
+
+    Selection happens on the training split only, so the test split stays
+    untouched until the chosen configuration is final.
+
+    ``k`` defaults to 5 rather than 10: a grid multiplies the number of fits,
+    and 5 folds is enough to rank configurations even though 10 gives a better
+    estimate of the winner's score. Re-run the winner at ``k=10`` afterwards.
+
+    Args:
+        factory: A model factory accepting the grid's keyword arguments.
+        grid: Mapping from argument name to the values to try.
+        repository: The training split.
+        k: Folds per configuration.
+        seed: Fold seed.
+        verbose: Print each configuration as it completes.
+
+    Returns:
+        A pandas DataFrame, one row per configuration, sorted by mean macro F1.
+
+    Example:
+        >>> grid_search(linear_svm, {"C": [0.5, 1.0]}, train)  # doctest: +SKIP
+    """
+    import itertools
+
+    import pandas as pd
+
+    names = list(grid)
+    rows = []
+    for values in itertools.product(*(grid[name] for name in names)):
+        settings = dict(zip(names, values, strict=True))
+        result = cross_validate(
+            parameterised_factory(factory, **settings),
+            repository,
+            k=k,
+            seed=seed,
+            model_name=str(settings),
+        )
+        row = {
+            **settings,
+            "macro_f1": result.mean_macro_f1,
+            "std": result.std_macro_f1,
+            "macro_auc": result.mean_macro_auc,
+        }
+        rows.append(row)
+        if verbose:
+            print(f"  {settings} -> {result.mean_macro_f1:.4f}")
+
+    return (
+        pd.DataFrame(rows)
+        .sort_values("macro_f1", ascending=False)
+        .reset_index(drop=True)
+        .round(4)
+    )
+
+
+def parameterised_factory(factory: Callable[..., Model], **kwargs) -> ModelFactory:
+    """Freeze keyword arguments into a zero-argument model factory.
+
+    Needed because a bare ``lambda`` inside a loop captures the loop variable
+    by reference, so every configuration in a grid would be evaluated with the
+    last set of values.
+    """
+
+    def _factory() -> Model:
+        return factory(**kwargs)
+
+    _factory.__name__ = f"{getattr(factory, '__name__', 'model')}({kwargs})"
+    return _factory
+
+
+def leaderboard_from_disk(
+    tables_dir: str | Path = "results/tables",
+    include_baseline: bool = True,
+):
+    """Assemble the master results table from saved competition results.
+
+    Lets the report be rebuilt from ``results/tables/*.json`` without
+    re-training anything, which is the point of saving them in the first
+    place.
+
+    Args:
+        tables_dir: Directory holding ``competition_*.json`` files.
+        include_baseline: Add the published SetFit baseline as a row.
+
+    Returns:
+        A pandas DataFrame indexed by model, sorted by cross-repository F1.
+
+    Raises:
+        ValueError: If two saved results carry the same model name, which
+            would silently hide one of them.
+    """
+    import pandas as pd
+
+    directory = Path(tables_dir)
+    rows = []
+    for path in sorted(directory.glob("competition_*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        row = {"model": payload["model"]}
+        row.update(
+            {
+                repo: payload["per_repository"].get(repo, {}).get("macro_f1")
+                for repo in REPOSITORIES
+            }
+        )
+        row["overall"] = payload["overall_f1"]
+        row["AUC"] = payload.get("overall_auc")
+        row["vs SetFit"] = payload["delta"]
+        rows.append(row)
+
+    names = [row["model"] for row in rows]
+    duplicates = {name for name in names if names.count(name) > 1}
+    if duplicates:
+        raise ValueError(
+            f"Duplicate model names in {directory}: {sorted(duplicates)}. "
+            "Delete the stale result files and re-run the experiments."
+        )
+
+    if include_baseline:
+        rows.append(
+            {
+                "model": "SetFit (NLBSE'24 baseline)",
+                **SETFIT_BASELINE,
+                "overall": SETFIT_OVERALL,
+                "AUC": None,
+                "vs SetFit": 0.0,
+            }
+        )
+
+    frame = (
+        pd.DataFrame(rows)
+        .set_index("model")
+        .sort_values("overall", ascending=False)
+        .round(4)
+    )
+    frame.columns = [
+        column.split("/")[-1] if "/" in column else column for column in frame.columns
+    ]
+    return frame

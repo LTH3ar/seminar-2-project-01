@@ -220,23 +220,48 @@ class MultinomialNaiveBayes:
             self.log_unseen_[label] = math.log(self.alpha / denominator)
         return self
 
+    def _log_posteriors(self, text: str) -> dict[str, float]:
+        """Unnormalised log posterior of every class for one text."""
+        tokens = [t for t in _tokenize(text) if t in self.vocabulary_]
+        return {
+            label: log_prior
+            + sum(
+                self.log_likelihood_[label].get(t, self.log_unseen_[label])
+                for t in tokens
+            )
+            for label, log_prior in self.log_prior_.items()
+        }
+
     def predict(self, X: Sequence[str]) -> list[str]:
         """Return the maximum a posteriori class for each text."""
         if not self.log_prior_:
             raise RuntimeError("Call fit() before predict().")
+        return [
+            max(self._log_posteriors(text).items(), key=lambda kv: kv[1])[0]
+            for text in X
+        ]
 
-        predictions = []
+    def predict_proba(self, X: Sequence[str]) -> list[dict[str, float]]:
+        """Return normalised class probabilities, so ROC and AUC can be computed.
+
+        The log posteriors are converted with a numerically stable softmax:
+        the maximum is subtracted before exponentiating, because a document of
+        a few hundred tokens produces log scores far below the underflow point
+        of ``exp``.
+        """
+        if not self.log_prior_:
+            raise RuntimeError("Call fit() before predict_proba().")
+
+        probabilities = []
         for text in X:
-            tokens = [t for t in _tokenize(text) if t in self.vocabulary_]
-            best_label, best_score = None, -math.inf
-            for label, log_prior in self.log_prior_.items():
-                likelihoods = self.log_likelihood_[label]
-                unseen = self.log_unseen_[label]
-                score = log_prior + sum(likelihoods.get(t, unseen) for t in tokens)
-                if score > best_score:
-                    best_label, best_score = label, score
-            predictions.append(best_label)
-        return predictions
+            posteriors = self._log_posteriors(text)
+            highest = max(posteriors.values())
+            exponentiated = {
+                label: math.exp(value - highest) for label, value in posteriors.items()
+            }
+            total = sum(exponentiated.values()) or 1.0
+            probabilities.append({k: v / total for k, v in exponentiated.items()})
+        return probabilities
 
 
 #: Factories for every reference model, ready to hand to the evaluation runners.

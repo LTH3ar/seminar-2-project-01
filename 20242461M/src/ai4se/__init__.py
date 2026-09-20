@@ -40,6 +40,17 @@ __all__ = [
     "CompetitionResult",
     "SETFIT_BASELINE",
     "SETFIT_OVERALL",
+    "grid_search",
+    "roc_curve",
+    "roc_auc_ovr",
+    # models
+    "CLASSICAL_MODELS",
+    "TUNED_MODELS",
+    "TUNED_PREPROCESSING",
 ]
+
+# Track C (torch) and Track D2 (sentence-transformers) are imported on demand
+# rather than here: they pull in heavy optional dependencies, and the data and
+# evaluation layers must stay usable without them.
 
 __version__ = "0.1.0"

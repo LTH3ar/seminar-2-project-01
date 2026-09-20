@@ -75,10 +75,18 @@ class Scores:
     confusion: dict[str, dict[str, int]]
     n: int
     labels: tuple[str, ...] = field(default=())
+    #: One-vs-rest ROC AUC per class. Populated only when the model exposed
+    #: class probabilities; ``None`` for a model that returns hard labels.
+    per_class_auc: dict[str, float] | None = None
+    macro_auc: float | None = None
 
     def f1(self, label: str) -> float:
         """F1 of a single class."""
         return self.per_class[label].f1
+
+    def auc(self, label: str) -> float | None:
+        """One-vs-rest ROC AUC of a single class, if probabilities were given."""
+        return None if self.per_class_auc is None else self.per_class_auc[label]
 
     def as_dict(self) -> dict:
         """Serialise to a JSON-compatible dictionary."""
@@ -90,7 +98,9 @@ class Scores:
             "macro_f1": self.macro_f1,
             "micro_f1": self.micro_f1,
             "weighted_f1": self.weighted_f1,
+            "macro_auc": self.macro_auc,
             "per_class": {k: v.as_dict() for k, v in self.per_class.items()},
+            "per_class_auc": self.per_class_auc,
             "confusion": self.confusion,
         }
 
@@ -105,6 +115,11 @@ class Scores:
                 "recall": score.recall,
                 "f1": score.f1,
                 "support": score.support,
+                **(
+                    {"auc": self.per_class_auc[score.label]}
+                    if self.per_class_auc
+                    else {}
+                ),
             }
             for score in self.per_class.values()
         ]
@@ -115,6 +130,7 @@ class Scores:
                 "recall": self.macro_recall,
                 "f1": self.macro_f1,
                 "support": self.n,
+                **({"auc": self.macro_auc} if self.per_class_auc else {}),
             }
         )
         return pd.DataFrame(rows).set_index("class").round(4)
@@ -184,6 +200,7 @@ def evaluate(
     y_true: Sequence[str],
     y_pred: Sequence[str],
     labels: Sequence[str] | None = None,
+    y_score: Sequence[dict[str, float]] | None = None,
 ) -> Scores:
     """Compute the full set of metrics for one set of predictions.
 
@@ -191,6 +208,10 @@ def evaluate(
         y_true: Ground-truth labels.
         y_pred: Predicted labels.
         labels: Label order. Inferred from the data when omitted.
+        y_score: Optional per-sample mapping from class to predicted
+            probability. When given, one-vs-rest ROC AUC is computed as well;
+            when omitted, the AUC fields stay ``None`` rather than being
+            approximated from the hard labels.
 
     Returns:
         A :class:`Scores` object.
@@ -239,6 +260,10 @@ def evaluate(
 
     weighted_f1 = _safe_divide(sum(s.f1 * s.support for s in per_class.values()), total)
 
+    per_class_auc, macro_auc = (
+        roc_auc_ovr(y_true, y_score, order) if y_score is not None else (None, None)
+    )
+
     return Scores(
         per_class=per_class,
         accuracy=_safe_divide(pooled_tp, total),
@@ -250,4 +275,138 @@ def evaluate(
         confusion=matrix,
         n=total,
         labels=tuple(order),
+        per_class_auc=per_class_auc,
+        macro_auc=macro_auc,
     )
+
+
+# --------------------------------------------------------------------------- #
+# ROC and AUC
+#
+# The course lists AUC and ROC alongside accuracy, precision, recall and F1, so
+# they are reported wherever a model can produce class probabilities. A model
+# that only returns hard labels (the keyword rules, for instance) simply has no
+# AUC, and the corresponding fields stay None rather than being faked from the
+# predicted labels.
+#
+# The task is multi-class, so ROC is computed one-vs-rest: for each class in
+# turn, that class is the positive one and the other two are pooled as
+# negative. The macro AUC is the unweighted mean over the three curves.
+# --------------------------------------------------------------------------- #
+
+
+def roc_curve(
+    y_true: Sequence[int],
+    y_score: Sequence[float],
+) -> tuple[list[float], list[float], list[float]]:
+    """Compute a receiver operating characteristic curve.
+
+    Samples are sorted by descending score and the decision threshold is swept
+    from "predict nothing positive" down through every observed score. At each
+    threshold the true positive rate is plotted against the false positive
+    rate; a perfect ranking reaches the top-left corner.
+
+    Args:
+        y_true: Binary ground truth, 1 for the positive class and 0 otherwise.
+        y_score: Score or probability assigned to the positive class.
+
+    Returns:
+        ``(fpr, tpr, thresholds)``, each a list of equal length, starting at
+        the ``(0, 0)`` origin.
+
+    Raises:
+        ValueError: If the inputs differ in length.
+    """
+    if len(y_true) != len(y_score):
+        raise ValueError(
+            f"Length mismatch: {len(y_true)} labels, {len(y_score)} scores."
+        )
+
+    positives = sum(y_true)
+    negatives = len(y_true) - positives
+    if positives == 0 or negatives == 0:
+        # One class is absent, so the curve is undefined. Return the diagonal.
+        return [0.0, 1.0], [0.0, 1.0], [float("inf"), float("-inf")]
+
+    ordered = sorted(zip(y_score, y_true, strict=True), key=lambda p: -p[0])
+
+    fpr: list[float] = [0.0]
+    tpr: list[float] = [0.0]
+    thresholds: list[float] = [float("inf")]
+
+    true_positives = 0
+    false_positives = 0
+    previous_score = None
+
+    for score, label in ordered:
+        # Samples sharing a score cannot be separated by any threshold, so the
+        # curve only gains a point when the score actually changes.
+        if previous_score is not None and score != previous_score:
+            fpr.append(false_positives / negatives)
+            tpr.append(true_positives / positives)
+            thresholds.append(previous_score)
+        if label:
+            true_positives += 1
+        else:
+            false_positives += 1
+        previous_score = score
+
+    fpr.append(false_positives / negatives)
+    tpr.append(true_positives / positives)
+    thresholds.append(previous_score if previous_score is not None else 0.0)
+    return fpr, tpr, thresholds
+
+
+def auc(x: Sequence[float], y: Sequence[float]) -> float:
+    """Area under a curve, by the trapezoidal rule.
+
+    Args:
+        x: Monotonically non-decreasing x coordinates.
+        y: Corresponding y coordinates.
+
+    Returns:
+        The area, 0.0 when fewer than two points are given.
+    """
+    if len(x) < 2:
+        return 0.0
+    return sum(
+        (x[i] - x[i - 1]) * (y[i] + y[i - 1]) / 2.0 for i in range(1, len(x))
+    )
+
+
+def roc_auc_ovr(
+    y_true: Sequence[str],
+    y_score: Sequence[dict[str, float]],
+    labels: Sequence[str] | None = None,
+) -> tuple[dict[str, float], float]:
+    """One-vs-rest ROC AUC per class, and the macro average.
+
+    Args:
+        y_true: Ground-truth labels.
+        y_score: Per-sample mapping from class label to predicted probability.
+        labels: Label order. Inferred from the data when omitted.
+
+    Returns:
+        ``(per_class_auc, macro_auc)``.
+
+    Example:
+        >>> scores = [{"bug": 0.9, "feature": 0.1}, {"bug": 0.2, "feature": 0.8}]
+        >>> per_class, macro = roc_auc_ovr(["bug", "feature"], scores)
+        >>> macro
+        1.0
+    """
+    if len(y_true) != len(y_score):
+        raise ValueError(
+            f"Length mismatch: {len(y_true)} labels, {len(y_score)} score maps."
+        )
+    order = list(labels) if labels is not None else sorted(set(y_true))
+
+    per_class: dict[str, float] = {}
+    for label in order:
+        binary = [1 if true == label else 0 for true in y_true]
+        scores = [probabilities.get(label, 0.0) for probabilities in y_score]
+        false_positive_rate, true_positive_rate, _ = roc_curve(binary, scores)
+        per_class[label] = auc(false_positive_rate, true_positive_rate)
+
+    macro = sum(per_class.values()) / (len(per_class) or 1)
+    return per_class, macro
