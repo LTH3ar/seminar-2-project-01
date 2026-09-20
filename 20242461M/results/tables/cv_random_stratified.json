@@ -1,0 +1,520 @@
+{
+  "model": "random (stratified)",
+  "scope": "all projects",
+  "k": 10,
+  "mean_macro_f1": 0.3626037752513087,
+  "std_macro_f1": 0.014501812689364419,
+  "mean_macro_auc": null,
+  "folds": [
+    {
+      "n": 150,
+      "accuracy": 0.36666666666666664,
+      "macro_precision": 0.36920546818789185,
+      "macro_recall": 0.3666666666666667,
+      "macro_f1": 0.3670914025114815,
+      "micro_f1": 0.36666666666666664,
+      "weighted_f1": 0.3670914025114815,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3333333333333333,
+          "recall": 0.38,
+          "f1": 0.3551401869158878,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3829787234042553,
+          "recall": 0.36,
+          "f1": 0.37113402061855666,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.391304347826087,
+          "recall": 0.36,
+          "f1": 0.37499999999999994,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 19,
+          "feature": 14,
+          "question": 17
+        },
+        "feature": {
+          "bug": 21,
+          "feature": 18,
+          "question": 11
+        },
+        "question": {
+          "bug": 17,
+          "feature": 15,
+          "question": 18
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.36666666666666664,
+      "macro_precision": 0.36547273209233383,
+      "macro_recall": 0.3666666666666667,
+      "macro_f1": 0.36516443459549724,
+      "micro_f1": 0.36666666666666664,
+      "weighted_f1": 0.3651644345954973,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.38596491228070173,
+          "recall": 0.44,
+          "f1": 0.411214953271028,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3191489361702128,
+          "recall": 0.3,
+          "f1": 0.30927835051546393,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.391304347826087,
+          "recall": 0.36,
+          "f1": 0.37499999999999994,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 22,
+          "feature": 14,
+          "question": 14
+        },
+        "feature": {
+          "bug": 21,
+          "feature": 15,
+          "question": 14
+        },
+        "question": {
+          "bug": 14,
+          "feature": 18,
+          "question": 18
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.38666666666666666,
+      "macro_precision": 0.38674932783701466,
+      "macro_recall": 0.38666666666666666,
+      "macro_f1": 0.3857829912965282,
+      "micro_f1": 0.38666666666666666,
+      "weighted_f1": 0.3857829912965282,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.38596491228070173,
+          "recall": 0.44,
+          "f1": 0.411214953271028,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3829787234042553,
+          "recall": 0.36,
+          "f1": 0.37113402061855666,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.391304347826087,
+          "recall": 0.36,
+          "f1": 0.37499999999999994,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 22,
+          "feature": 12,
+          "question": 16
+        },
+        "feature": {
+          "bug": 20,
+          "feature": 18,
+          "question": 12
+        },
+        "question": {
+          "bug": 15,
+          "feature": 17,
+          "question": 18
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.3333333333333333,
+      "macro_precision": 0.33623296601046243,
+      "macro_recall": 0.3333333333333333,
+      "macro_f1": 0.33401178662041947,
+      "micro_f1": 0.3333333333333333,
+      "weighted_f1": 0.3340117866204194,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.2982456140350877,
+          "recall": 0.34,
+          "f1": 0.31775700934579443,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3191489361702128,
+          "recall": 0.3,
+          "f1": 0.30927835051546393,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.391304347826087,
+          "recall": 0.36,
+          "f1": 0.37499999999999994,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 17,
+          "feature": 15,
+          "question": 18
+        },
+        "feature": {
+          "bug": 25,
+          "feature": 15,
+          "question": 10
+        },
+        "question": {
+          "bug": 15,
+          "feature": 17,
+          "question": 18
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.36,
+      "macro_precision": 0.3622674478363655,
+      "macro_recall": 0.36000000000000004,
+      "macro_f1": 0.360290142488572,
+      "micro_f1": 0.36,
+      "weighted_f1": 0.360290142488572,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3333333333333333,
+          "recall": 0.38,
+          "f1": 0.3551401869158878,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3404255319148936,
+          "recall": 0.32,
+          "f1": 0.32989690721649484,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.41304347826086957,
+          "recall": 0.38,
+          "f1": 0.39583333333333337,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 19,
+          "feature": 13,
+          "question": 18
+        },
+        "feature": {
+          "bug": 25,
+          "feature": 16,
+          "question": 9
+        },
+        "question": {
+          "bug": 13,
+          "feature": 18,
+          "question": 19
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.35333333333333333,
+      "macro_precision": 0.35517524925480526,
+      "macro_recall": 0.35333333333333333,
+      "macro_f1": 0.35341729025489504,
+      "micro_f1": 0.35333333333333333,
+      "weighted_f1": 0.35341729025489504,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3333333333333333,
+          "recall": 0.38,
+          "f1": 0.3551401869158878,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3191489361702128,
+          "recall": 0.3,
+          "f1": 0.30927835051546393,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.41304347826086957,
+          "recall": 0.38,
+          "f1": 0.39583333333333337,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 19,
+          "feature": 15,
+          "question": 16
+        },
+        "feature": {
+          "bug": 24,
+          "feature": 15,
+          "question": 11
+        },
+        "question": {
+          "bug": 14,
+          "feature": 17,
+          "question": 19
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.36666666666666664,
+      "macro_precision": 0.3695138246479597,
+      "macro_recall": 0.3666666666666667,
+      "macro_f1": 0.3672345869330164,
+      "micro_f1": 0.36666666666666664,
+      "weighted_f1": 0.3672345869330164,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3333333333333333,
+          "recall": 0.38,
+          "f1": 0.3551401869158878,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3404255319148936,
+          "recall": 0.32,
+          "f1": 0.32989690721649484,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.43478260869565216,
+          "recall": 0.4,
+          "f1": 0.41666666666666663,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 19,
+          "feature": 16,
+          "question": 15
+        },
+        "feature": {
+          "bug": 23,
+          "feature": 16,
+          "question": 11
+        },
+        "question": {
+          "bug": 15,
+          "feature": 15,
+          "question": 20
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.36,
+      "macro_precision": 0.3591622441858578,
+      "macro_recall": 0.36000000000000004,
+      "macro_f1": 0.3587191283681794,
+      "micro_f1": 0.36,
+      "weighted_f1": 0.3587191283681794,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3684210526315789,
+          "recall": 0.42,
+          "f1": 0.3925233644859813,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3829787234042553,
+          "recall": 0.36,
+          "f1": 0.37113402061855666,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.32608695652173914,
+          "recall": 0.3,
+          "f1": 0.31250000000000006,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 21,
+          "feature": 11,
+          "question": 18
+        },
+        "feature": {
+          "bug": 19,
+          "feature": 18,
+          "question": 13
+        },
+        "question": {
+          "bug": 17,
+          "feature": 18,
+          "question": 15
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.35333333333333333,
+      "macro_precision": 0.35641949461999123,
+      "macro_recall": 0.35333333333333333,
+      "macro_f1": 0.3540596128935564,
+      "micro_f1": 0.35333333333333333,
+      "weighted_f1": 0.3540596128935565,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3157894736842105,
+          "recall": 0.36,
+          "f1": 0.3364485981308411,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3404255319148936,
+          "recall": 0.32,
+          "f1": 0.32989690721649484,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.41304347826086957,
+          "recall": 0.38,
+          "f1": 0.39583333333333337,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 18,
+          "feature": 16,
+          "question": 16
+        },
+        "feature": {
+          "bug": 23,
+          "feature": 16,
+          "question": 11
+        },
+        "question": {
+          "bug": 16,
+          "feature": 15,
+          "question": 19
+        }
+      }
+    },
+    {
+      "n": 150,
+      "accuracy": 0.38,
+      "macro_precision": 0.3822997982158603,
+      "macro_recall": 0.38000000000000006,
+      "macro_f1": 0.38026637655094153,
+      "micro_f1": 0.38,
+      "weighted_f1": 0.38026637655094153,
+      "macro_auc": null,
+      "per_class": {
+        "bug": {
+          "label": "bug",
+          "precision": 0.3508771929824561,
+          "recall": 0.4,
+          "f1": 0.37383177570093457,
+          "support": 50
+        },
+        "feature": {
+          "label": "feature",
+          "precision": 0.3829787234042553,
+          "recall": 0.36,
+          "f1": 0.37113402061855666,
+          "support": 50
+        },
+        "question": {
+          "label": "question",
+          "precision": 0.41304347826086957,
+          "recall": 0.38,
+          "f1": 0.39583333333333337,
+          "support": 50
+        }
+      },
+      "per_class_auc": null,
+      "confusion": {
+        "bug": {
+          "bug": 20,
+          "feature": 12,
+          "question": 18
+        },
+        "feature": {
+          "bug": 23,
+          "feature": 18,
+          "question": 9
+        },
+        "question": {
+          "bug": 14,
+          "feature": 17,
+          "question": 19
+        }
+      }
+    }
+  ]
+}

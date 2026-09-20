@@ -1,0 +1,262 @@
+{
+  "logistic_regression": [
+    {
+      "C": 10.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7481,
+      "std": 0.0293,
+      "macro_auc": 0.902
+    },
+    {
+      "C": 5.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7472,
+      "std": 0.0287,
+      "macro_auc": 0.9018
+    },
+    {
+      "C": 10.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7471,
+      "std": 0.0252,
+      "macro_auc": 0.9027
+    },
+    {
+      "C": 25.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7464,
+      "std": 0.0245,
+      "macro_auc": 0.9036
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.7463,
+      "std": 0.0215,
+      "macro_auc": 0.8887
+    },
+    {
+      "C": 5.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7454,
+      "std": 0.0242,
+      "macro_auc": 0.9025
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7452,
+      "std": 0.0244,
+      "macro_auc": 0.8893
+    },
+    {
+      "C": 25.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7442,
+      "std": 0.0313,
+      "macro_auc": 0.9
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7425,
+      "std": 0.025,
+      "macro_auc": 0.8982
+    },
+    {
+      "C": 5.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.7401,
+      "std": 0.0289,
+      "macro_auc": 0.8893
+    },
+    {
+      "C": 10.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.738,
+      "std": 0.0252,
+      "macro_auc": 0.887
+    },
+    {
+      "C": 25.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.7359,
+      "std": 0.026,
+      "macro_auc": 0.8838
+    },
+    {
+      "C": 5.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7321,
+      "std": 0.0302,
+      "macro_auc": 0.8853
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7239,
+      "std": 0.033,
+      "macro_auc": 0.8914
+    },
+    {
+      "C": 10.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7226,
+      "std": 0.0273,
+      "macro_auc": 0.8812
+    },
+    {
+      "C": 25.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7205,
+      "std": 0.0249,
+      "macro_auc": 0.8769
+    }
+  ],
+  "linear_svm": [
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7484,
+      "std": 0.0287,
+      "macro_auc": null
+    },
+    {
+      "C": 0.5,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7466,
+      "std": 0.0295,
+      "macro_auc": null
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7461,
+      "std": 0.0304,
+      "macro_auc": null
+    },
+    {
+      "C": 0.25,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7439,
+      "std": 0.0287,
+      "macro_auc": null
+    },
+    {
+      "C": 0.5,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7435,
+      "std": 0.0336,
+      "macro_auc": null
+    },
+    {
+      "C": 0.25,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.743,
+      "std": 0.0256,
+      "macro_auc": null
+    },
+    {
+      "C": 2.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7424,
+      "std": 0.0318,
+      "macro_auc": null
+    },
+    {
+      "C": 2.0,
+      "ngram_range": "(1, 2)",
+      "min_df": 2,
+      "macro_f1": 0.7408,
+      "std": 0.0296,
+      "macro_auc": null
+    },
+    {
+      "C": 0.5,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.736,
+      "std": 0.0194,
+      "macro_auc": null
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.7338,
+      "std": 0.0248,
+      "macro_auc": null
+    },
+    {
+      "C": 0.25,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7332,
+      "std": 0.02,
+      "macro_auc": null
+    },
+    {
+      "C": 0.25,
+      "ngram_range": "(1, 2)",
+      "min_df": 1,
+      "macro_f1": 0.7328,
+      "std": 0.0288,
+      "macro_auc": null
+    },
+    {
+      "C": 2.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 1,
+      "macro_f1": 0.7299,
+      "std": 0.0227,
+      "macro_auc": null
+    },
+    {
+      "C": 0.5,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7299,
+      "std": 0.0216,
+      "macro_auc": null
+    },
+    {
+      "C": 1.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.7173,
+      "std": 0.0223,
+      "macro_auc": null
+    },
+    {
+      "C": 2.0,
+      "ngram_range": "(1, 1)",
+      "min_df": 2,
+      "macro_f1": 0.708,
+      "std": 0.0191,
+      "macro_auc": null
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "confusions": [
+    {
+      "true": "bug",
+      "predicted": "question",
+      "count": 96,
+      "share of errors %": 26.7,
+      "share of all %": 6.4
+    },
+    {
+      "true": "question",
+      "predicted": "feature",
+      "count": 70,
+      "share of errors %": 19.5,
+      "share of all %": 4.7
+    },
+    {
+      "true": "feature",
+      "predicted": "question",
+      "count": 57,
+      "share of errors %": 15.9,
+      "share of all %": 3.8
+    },
+    {
+      "true": "bug",
+      "predicted": "feature",
+      "count": 53,
+      "share of errors %": 14.8,
+      "share of all %": 3.5
+    },
+    {
+      "true": "question",
+      "predicted": "bug",
+      "count": 49,
+      "share of errors %": 13.6,
+      "share of all %": 3.3
+    },
+    {
+      "true": "feature",
+      "predicted": "bug",
+      "count": 34,
+      "share of errors %": 9.5,
+      "share of all %": 2.3
+    }
+  ],
+  "by_length": [
+    {
+      "bucket": "(0.999, 69.8]",
+      "issues": "300",
+      "accuracy": "0.7467",
+      "median_words": "41.0"
+    },
+    {
+      "bucket": "(69.8, 127.0]",
+      "issues": "307",
+      "accuracy": "0.7655",
+      "median_words": "103.0"
+    },
+    {
+      "bucket": "(127.0, 178.0]",
+      "issues": "297",
+      "accuracy": "0.8148",
+      "median_words": "152.0"
+    },
+    {
+      "bucket": "(178.0, 280.2]",
+      "issues": "296",
+      "accuracy": "0.7601",
+      "median_words": "218.5"
+    },
+    {
+      "bucket": "(280.2, 5050.0]",
+      "issues": "300",
+      "accuracy": "0.7167",
+      "median_words": "394.0"
+    }
+  ],
+  "worst": [
+    {
+      "repository": "facebook/react",
+      "true": "feature",
+      "predicted": "bug",
+      "confidence": 0.9880221048896598,
+      "title": "[DevTools] Manifest version 2 is deprecated",
+      "words": 99,
+      "excerpt": "### Website or app  https://developer.chrome.com/blog/mv2-transition/  ### Repro steps  Use latest React DevTools with Electron (Chromium) (18.2.0 / Chromium 10"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "bug",
+      "predicted": "question",
+      "confidence": 0.979604212077491,
+      "title": "[Bug] Tela preta no terminal do VS Code",
+      "words": 199,
+      "excerpt": "Type: <b>Bug</b>\r \r o meu terminal do vscode ficou todo preto derrepente, ele esta normal e quando fui abri-lo estava preto, nao consigo resolver e nao posso vo"
+    },
+    {
+      "repository": "bitcoin/bitcoin",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.9699631499666049,
+      "title": "`sendtoaddress` tries to use unspendable UTXOs and fails",
+      "words": 158,
+      "excerpt": "**Is your feature request related to a problem? Please describe.**\r <!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when "
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.9639861573888082,
+      "title": "Allow webview context menus triggered by primary click",
+      "words": 224,
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "bug",
+      "predicted": "question",
+      "confidence": 0.960836537362867,
+      "title": "Forders not opening",
+      "words": 174,
+      "excerpt": "Type: <b>Bug</b>  When I open new window VS Code, showing me \"Recent\" part. In this part has a menu More.... When I press More... menu nothing is happend. This "
+    },
+    {
+      "repository": "tensorflow/tensorflow",
+      "true": "question",
+      "predicted": "bug",
+      "confidence": 0.9570575334072082,
+      "title": "Error when runnning tensorflow.python.ops.sparse_ops.sparse_to_dense",
+      "words": 517,
+      "excerpt": "<details><summary>Click to expand!</summary>     ### Issue Type  Bug  ### Have you reproduced the bug with TF nightly?  No  ### Source  binary  ### Tensorflow V"
+    },
+    {
+      "repository": "opencv/opencv",
+      "true": "feature",
+      "predicted": "question",
+      "confidence": 0.9395635693806452,
+      "title": "How to use opencv to erase text from images and restore the background",
+      "words": 48,
+      "excerpt": "### Describe the feature and motivation  How to use opencv to erase text from images and restore the background  ### Additional context  How to use opencv to er"
+    },
+    {
+      "repository": "opencv/opencv",
+      "true": "question",
+      "predicted": "bug",
+      "confidence": 0.9323696534648903,
+      "title": "ANN_MLP - large dataset results in stack overflow and other errors",
+      "words": 486,
+      "excerpt": "### System Information  OpenCV version: 4.5.5\r Operating system: Windows 11\r Compiler: latest Visual Studio 2017   ### Detailed description  Increasing input da"
+    },
+    {
+      "repository": "bitcoin/bitcoin",
+      "true": "question",
+      "predicted": "bug",
+      "confidence": 0.9300132010042019,
+      "title": "Intermittent issue in p2p_ibd_stalling.py                                        self.wait_until(lambda: self.",
+      "words": 85,
+      "excerpt": "```\r wget https://drahtbot.space/temp_scratch/p2p_ibd_stalling_96.tar.xz\r tar -xvf p2p_ibd_stalling_96.tar.xz\r test/functional/combine_logs.py -c  ./p2p_ibd_sta"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.9289559666866974,
+      "title": "please allow for multiple tunnels on same machine",
+      "words": 176,
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-"
+    },
+    {
+      "repository": "bitcoin/bitcoin",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.8934428071025621,
+      "title": "Increase trust through Wallet Aliases and Transfer Confirmations",
+      "words": 401,
+      "excerpt": "**Is your feature request related to a problem? Please describe.**\r \r Users still fear doing bitcoin transactions, scared that something might go wrong. This fe"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.891631571742803,
+      "title": "[Feature Request] Add workbench action to split editor terminal below",
+      "words": 108,
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-"
+    },
+    {
+      "repository": "facebook/react",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.871244919180644,
+      "title": "Hook for forwardRef",
+      "words": 153,
+      "excerpt": "**Do you want to request a *feature* or report a *bug*?**\r   feature\r **What is the current behavior?**\r Today we use forwardRef as a HOC around functional comp"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "feature",
+      "predicted": "question",
+      "confidence": 0.8647457347524939,
+      "title": ".ipynb wrap cell output at fixed character limit",
+      "words": 157,
+      "excerpt": "Type: <b>Bug</b>  ```python '1' * 1000 ``` The output is a single line that goes off my screen to the right. I would prefer to have options: - single line, no w"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "feature",
+      "predicted": "bug",
+      "confidence": 0.8643111460447341,
+      "title": "DOM renderer does not show selection over regular background colors",
+      "words": 23,
+      "excerpt": "When gpuAcceleration = 'off', the yellow text background should be blue here:  ![image](https://user-images.githubusercontent.com/2193314/188175658-0b95600f-70f"
+    },
+    {
+      "repository": "tensorflow/tensorflow",
+      "true": "bug",
+      "predicted": "question",
+      "confidence": 0.8637031425570975,
+      "title": "I need TensorFlow 2.2.0 but it is removed how to find it?",
+      "words": 671,
+      "excerpt": "I need to install TensorFlow 2.2.0 \r \r why? because this repo (https://github.com/GantMan/nsfw_model) is requesting it and now matter what I tried can't make it"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "bug",
+      "predicted": "question",
+      "confidence": 0.8543599711606359,
+      "title": "Debug console is not working",
+      "words": 216,
+      "excerpt": "Type: <b>Bug</b>\r \r After updating yesterday, I encountered an issue with my VS code where I set a breakpoint and attempted to enter a variable in the debug con"
+    },
+    {
+      "repository": "bitcoin/bitcoin",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.8463165572979714,
+      "title": "Alternative read only paths for -blocksdir",
+      "words": 212,
+      "excerpt": "### Please describe the feature you'd like to see added.  The Blockchain is growing in size over the years. It would be nice to be able to store it accross mult"
+    },
+    {
+      "repository": "opencv/opencv",
+      "true": "feature",
+      "predicted": "question",
+      "confidence": 0.8445435154172611,
+      "title": "[request] New parameter to imwrite JPEG to disable chroma subsampling",
+      "words": 554,
+      "excerpt": "##### System information (version)\r <!-- Example\r - OpenCV => 4.2\r - Operating System / Platform => Windows 64 Bit\r - Compiler => Visual Studio 2017\r -->\r \r - O"
+    },
+    {
+      "repository": "microsoft/vscode",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.8427910464952927,
+      "title": "Inform user about workspace tsdk.",
+      "words": 376,
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r \r ### Problem\r \r Due to security restrictions, we cannot overwrite the tsdk without user consen"
+    },
+    {
+      "repository": "tensorflow/tensorflow",
+      "true": "question",
+      "predicted": "bug",
+      "confidence": 0.8421311923196172,
+      "title": "tf.numpy_function in tf.data.Dataset.map causes CUDA_ERROR_OUT_OF_MEMORY after hundreds of epochs",
+      "words": 209,
+      "excerpt": "### Issue Type\r \r Bug\r \r ### Source\r \r source\r \r ### Tensorflow Version\r \r 2.10.0\r \r ### Custom Code\r \r No\r \r ### OS Platform and Distribution\r \r Linux Ubuntu 2"
+    },
+    {
+      "repository": "facebook/react",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.8390539284417794,
+      "title": "Limitations of React.createContext",
+      "words": 241,
+      "excerpt": "**Do you want to request a *feature* or report a *bug*?**\r \r feature\r \r **What is the current behavior?**\r \r The current behavior requires end users to use `cre"
+    },
+    {
+      "repository": "facebook/react",
+      "true": "question",
+      "predicted": "feature",
+      "confidence": 0.8379589307251119,
+      "title": "`react-dom/server.renderStaticMarkup()` returns empty string server-side",
+      "words": 223,
+      "excerpt": "**Do you want to request a *feature* or report a *bug*?**\r \r **bug**\r \r **What is the current behavior?**\r \r I'm trying to extract the initial HTML from react c"
+    },
+    {
+      "repository": "opencv/opencv",
+      "true": "bug",
+      "predicted": "feature",
+      "confidence": 0.8346800562593077,
+      "title": "feat: add typing stub for redirectError",
+      "words": 153,
+      "excerpt": "`redirectError` is defined in `cv2_util.cpp` and manually exported in `cv2.cpp`\r \r Python interface for `redirectError`:\r \r ```python\r def redirectError(\r     o"
+    },
+    {
+      "repository": "opencv/opencv",
+      "true": "feature",
+      "predicted": "question",
+      "confidence": 0.8338018564321044,
+      "title": "Unable to load model ONNX 4.5.5 or 4.6.0",
+      "words": 412,
+      "excerpt": "##### System information (version)\r \r - OpenCV => 4.5.5/4.6.0\r - Operating System / Platform => MacOS 12.4 (21F79) Apple M1 Pro\r - Compiler => Visual Studio Cod"
+    }
+  ]
+}

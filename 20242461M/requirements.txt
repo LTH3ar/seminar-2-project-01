@@ -1,0 +1,36 @@
+# Core -- Track A (data & persistence) and Track D (evaluation)
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+nltk>=3.8
+
+# Track B -- classical machine learning.
+# Also used by the test suite to cross-check the hand-written metrics and the
+# fold splitter; nothing in src/ai4se/metrics.py or evaluation.py imports it.
+scikit-learn>=1.3
+scipy>=1.11
+
+# Track C -- neural networks. Install the CPU build to avoid a ~2 GB CUDA
+# download where no GPU is present:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch>=2.0
+
+# Track D2 -- sentence-transformer baselines.
+sentence-transformers>=2.2
+transformers>=4.35
+
+# The full SetFit reproduction needs a GPU in practice; install on demand:
+#   pip install -e ".[setfit]"
+# setfit>=1.0
+# datasets>=2.14
+# accelerate>=0.25
+
+# Notebook environment
+jupyterlab>=4.0
+ipykernel>=6.0
+nbformat>=5.9
+nbconvert>=7.0
+
+# Tooling
+pytest>=7.4
+ruff>=0.5

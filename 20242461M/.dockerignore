@@ -1,0 +1,35 @@
+# The dev container builds with the repository root as its context, so keep
+# the context small: without this, the cached dataset (~30 MB) and every
+# notebook output would be sent to the Docker daemon on each build.
+
+.git/
+.github/
+
+# Data is downloaded on demand by ai4se.loader, never baked into the image.
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+
+# Build and cache artefacts
+**/__pycache__/
+**/*.py[cod]
+**/.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Outputs
+results/
+report/*.aux
+report/*.log
+report/*.pdf
+
+# Only requirements.txt is COPYed during the build; the source tree is
+# bind-mounted by the dev container at runtime.
+notebooks/
+tests/
+src/
+Makefile
+README.md
