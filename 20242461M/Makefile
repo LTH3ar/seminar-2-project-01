@@ -1,11 +1,28 @@
-.PHONY: help install data eda evaluate models results notebooks experiments lab test check lint clean tree report
+.PHONY: help install install-core install-gpu venv data eda evaluate models results notebooks experiments lab test check lint clean tree report
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[1m%-10s\033[0m %s\n", $$1, $$2}'
 
-install:  ## Install the package in editable mode with dev extras
-	pip install -e ".[dev]"
+venv:  ## Create a virtual environment (alternative to the dev container)
+	python3 -m venv .venv
+	@echo
+	@echo "  Now activate it and install:"
+	@echo "    source .venv/bin/activate      # Windows: .venv\\Scripts\\activate"
+	@echo "    make install"
+
+install:  ## Install everything: all tracks + dev tools + NLTK corpora
+	pip install -e ".[all]"
+	python -m nltk.downloader stopwords wordnet omw-1.4
+	@echo "\n  Installed. Verify with: make test"
+
+install-core:  ## Install without torch or sentence-transformers (Tracks A, B, D)
+	pip install -e ".[dev,ml]"
+	python -m nltk.downloader stopwords wordnet omw-1.4
+	@echo "\n  Tracks C and D2 will skip. Add them later with: make install"
+
+install-gpu:  ## Install with the CUDA build of torch and the SetFit extra
+	pip install -e ".[all,setfit]"
 	python -m nltk.downloader stopwords wordnet omw-1.4
 
 data:  ## Download and cache the NLBSE'24 dataset

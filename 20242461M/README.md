@@ -154,11 +154,49 @@ Two build arguments in `devcontainer.json`:
 | `PYTHON_VERSION` | `3.11` | Newest version with prebuilt wheels for torch, transformers and setfit on both architectures. Change it and rebuild to move to 3.12 or 3.13. |
 | `INSTALL_LATEX` | `true` | Installs `latexmk` + TeX Live, roughly 1 GB. Set to `false` if you are not the one compiling the report. |
 
-### Without the dev container
+### Without the dev container (plain virtualenv)
+
+The dev container is a convenience, not a requirement — a virtualenv works
+exactly as well, and this path is verified:
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-make install          # pip install -e ".[dev]" + NLTK corpora
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+
+make install                       # everything, all four tracks
+# or:
+make install-core                  # no torch, no sentence-transformers
+make install-gpu                   # CUDA torch + the full SetFit extra
+make test
+```
+
+Requires Python 3.10 or newer (3.11 recommended, matching the container).
+
+**The optional extras really are optional.** `import ai4se` needs only pandas,
+matplotlib and NLTK; the data, preprocessing, metrics and evaluation layers all
+work with nothing else installed. Tracks B, C and D2 live in submodules that
+are imported on demand, and their tests skip cleanly when the dependency is
+absent:
+
+```
+55 passed, 8 skipped        # with only .[dev] installed
+63 passed                   # with everything
+```
+
+So a member who cannot install torch is not blocked from any other part of the
+project. The only cost is that `ai4se.neural` is unavailable to them.
+
+| Command | Installs | Tracks available |
+|---|---|---|
+| `make install-core` | scikit-learn | A, B, D |
+| `make install` | + torch, sentence-transformers | A, B, C, D, D2 (frozen) |
+| `make install-gpu` | + setfit, accelerate | all, including the SetFit reproduction |
+
+If torch is the problem specifically, install the CPU wheel explicitly — it is
+a few hundred MB rather than the ~2 GB CUDA default:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### Common commands
