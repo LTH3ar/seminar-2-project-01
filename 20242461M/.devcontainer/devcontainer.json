@@ -116,5 +116,8 @@
   // Requires the NVIDIA Container Toolkit on the host.
   // "hostRequirements": { "gpu": "optional" },
   // "runArgs": ["--gpus", "all", "--shm-size=2g"],
+  "runArgs": [
+    "--network=host",
+  ],
   "waitFor": "postCreateCommand"
 }
