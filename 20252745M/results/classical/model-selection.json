@@ -1,0 +1,22 @@
+{
+  "selection_metric": "cross_repository_macro_f1",
+  "selected_model": "logistic_regression",
+  "ranking": [
+    {
+      "model": "logistic_regression",
+      "cross_repository_macro_f1": 0.722603831388179
+    },
+    {
+      "model": "linear_svm",
+      "cross_repository_macro_f1": 0.7144613615803771
+    },
+    {
+      "model": "random_forest",
+      "cross_repository_macro_f1": 0.7095234752510589
+    },
+    {
+      "model": "naive_bayes",
+      "cross_repository_macro_f1": 0.6855376023798603
+    }
+  ]
+}

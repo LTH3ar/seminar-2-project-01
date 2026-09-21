@@ -1,0 +1,22 @@
+# Track A -- data & persistence
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+nltk>=3.8
+
+# Notebook environment
+jupyterlab>=4.0
+ipykernel>=6.0
+
+# Testing
+pytest>=7.4
+
+# Track B -- classical machine learning
+scikit-learn>=1.3
+scipy>=1.11
+
+# Added by later track C (deep learning)
+# torch>=2.0
+# transformers>=4.35
+# setfit>=1.0
+# sentence-transformers>=2.2
