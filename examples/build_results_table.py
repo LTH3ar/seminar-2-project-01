@@ -44,6 +44,7 @@ def main() -> None:
     result_paths = args.results or [
         *DEFAULT_RESULTS,
         *sorted(Path("results/classical").glob("*-official-holdout.json")),
+        *sorted(Path("results/deep_learning").glob("*-official-holdout.json")),
     ]
     rows = load_result_rows(result_paths)
     csv_path, markdown_path = write_result_tables(rows, args.output_directory)

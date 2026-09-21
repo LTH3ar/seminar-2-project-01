@@ -70,8 +70,7 @@ def write_result_tables(
         )
         writer.writeheader()
         writer.writerows(
-            {column: row.get(column, "") for column in TABLE_COLUMNS}
-            for row in rows
+            {column: row.get(column, "") for column in TABLE_COLUMNS} for row in rows
         )
 
     with markdown_path.open("w", encoding="utf-8") as handle:
@@ -79,8 +78,7 @@ def write_result_tables(
         handle.write("| " + " | ".join("---" for _ in TABLE_COLUMNS) + " |\n")
         for row in rows:
             values = [
-                _format_table_value(row.get(column, ""))
-                for column in TABLE_COLUMNS
+                _format_table_value(row.get(column, "")) for column in TABLE_COLUMNS
             ]
             handle.write("| " + " | ".join(values) + " |\n")
     return csv_path, markdown_path

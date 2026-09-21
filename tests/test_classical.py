@@ -46,9 +46,7 @@ def test_every_classical_pipeline_fits_and_predicts(model_name, small_tfidf):
     """All four required model families satisfy the shared contract."""
 
     overrides = (
-        {"n_estimators": 20, "n_jobs": 1}
-        if model_name == "random_forest"
-        else None
+        {"n_estimators": 20, "n_jobs": 1} if model_name == "random_forest" else None
     )
     model = build_classical_pipeline(
         model_name,

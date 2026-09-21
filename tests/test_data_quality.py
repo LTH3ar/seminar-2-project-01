@@ -14,7 +14,6 @@ from ai4se.preprocessing import clean_text, structural_features
 from ai4se.service import IssueDataService
 from ai4se.validation import validate_issues
 
-
 DATA_DIRECTORY = Path(__file__).resolve().parents[1] / "data" / "raw"
 
 
@@ -92,9 +91,7 @@ def test_folds_are_stratified_and_duplicate_safe(train):
         validation_ids = []
         for fold in folds:
             train_groups = {duplicate_group(issue) for issue in fold.train}
-            validation_groups = {
-                duplicate_group(issue) for issue in fold.validation
-            }
+            validation_groups = {duplicate_group(issue) for issue in fold.validation}
             assert train_groups.isdisjoint(validation_groups)
             assert set(Counter(issue.label for issue in fold.validation)) == {
                 "bug",

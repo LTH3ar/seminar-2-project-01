@@ -26,9 +26,10 @@ python examples/classical_ml.py --mode all
 It performs these steps:
 
 1. load Track A's official training split through `IssueDataService`;
-2. apply full cleaning, retain at most 1,000 words, and repeat the title twice;
-3. evaluate all four classifiers using five duplicate-safe stratified folds;
-4. rank models by cross-repository macro-F1;
+2. use raw normalized text, retain at most 400 words, and repeat the title three
+   times, as selected by the training-only preprocessing ablation;
+3. evaluate all four classifiers with five duplicate-safe folds over five seeds;
+4. rank models by the competition's cross-repository weighted-F1;
 5. select the best model without reading official test labels;
 6. retrain that model on each repository's full training subset;
 7. evaluate it once on the corresponding official test subset;
@@ -53,8 +54,16 @@ python examples/classical_ml.py --mode official --models svm lr
 
 The `--word-only` option removes character n-grams for an ablation. Other
 important reproducibility options are `--cleaning-level`, `--max-words`,
-`--title-weight`, `--n-splits`, and `--random-state`. Use `--plots` to create
-per-repository and pooled confusion matrices.
+`--title-weight`, `--n-splits`, and `--seeds`. Use `--plots` to create
+per-repository and pooled confusion matrices. The official result also records
+a project-stratified bootstrap confidence interval, error analysis, and a
+matched random-versus-time-aware robustness check.
+
+Recompute the preprocessing decision without touching the test set:
+
+```bash
+python examples/classical_ablation.py
+```
 
 ## Default hyperparameters
 
@@ -70,18 +79,31 @@ per-repository and pooled confusion matrices.
 These settings are fixed before official holdout evaluation. Model-family
 selection is based only on grouped cross-validation over the training split.
 
+The preprocessing ablation compared 36 configurations under the same grouped
+folds. Its best configuration was raw normalized text, title weight 3,
+400-word truncation, and word+character TF-IDF with a CV F1 of 0.7543. The old
+full-cleaning configuration removed useful modal and software-specific terms.
+
 ## Current reproducible result
 
-With the defaults above, grouped cross-validation selected logistic regression:
+The five-seed grouped-CV result is:
 
-| Model | Cross-repository CV macro-F1 |
-|---|---:|
-| Logistic regression | 0.7226 |
-| Linear SVM | 0.7145 |
-| Random forest | 0.7095 |
-| Complement Naive Bayes | 0.6855 |
+| Model | Mean cross-repository weighted F1 | Standard deviation |
+|---|---:|---:|
+| Logistic regression | 0.7506 | 0.0061 |
+| Linear SVM | 0.7472 | 0.0057 |
+| Random forest | 0.7149 | 0.0026 |
+| Complement Naive Bayes | 0.6929 | 0.0074 |
 
-The selected logistic-regression model obtained **0.7502** cross-repository
-macro-F1 on the official holdout split. This is below the locally reproduced
-SetFit baseline (0.8240), which is expected evidence that pretrained semantic
-representations outperform these bag-of-words methods on the small dataset.
+Logistic regression leads linear SVM by only 0.0034, so it is the operational
+winner rather than evidence of a statistically meaningful superiority. The
+selected model obtains **0.7548** cross-repository weighted F1 on the official
+holdout, with a project-stratified 95% bootstrap interval of **[0.7329,
+0.7763]**. It remains below the locally reproduced SetFit baseline (0.8240).
+
+The matched random robustness split scores 0.7757, while the chronological
+split scores 0.6733, a decline of 0.1024. The error analysis records 365
+mistakes; the most frequent direction is bug to question, and accuracy is
+lowest in the longest-text quintile. These findings support reporting the
+temporal check and inspecting long reports rather than relying on one aggregate
+score alone.

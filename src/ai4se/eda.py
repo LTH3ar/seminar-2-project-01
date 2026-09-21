@@ -64,8 +64,10 @@ def length_statistics(repository: IssueRepository) -> pd.DataFrame:
     """
     frame = repository.to_dataframe()
     frame["words"] = (
-        frame["title"].fillna("") + " " + frame["body"].fillna("")
-    ).str.split().str.len()
+        (frame["title"].fillna("") + " " + frame["body"].fillna(""))
+        .str.split()
+        .str.len()
+    )
     stats = frame.groupby("label")["words"].describe()
     overall = frame["words"].describe().to_frame().T
     overall.index = ["overall"]
@@ -133,9 +135,7 @@ def cleaning_impact(
     return summary
 
 
-def top_terms(
-    repository: IssueRepository, label: str, n: int = 20
-) -> pd.DataFrame:
+def top_terms(repository: IssueRepository, label: str, n: int = 20) -> pd.DataFrame:
     """Most frequent cleaned terms for one class.
 
     Requires the preprocessing pipeline to have been applied first, otherwise
@@ -240,8 +240,11 @@ def plot_length_distribution(repository: IssueRepository, clip: int = 800):
     plt = _pyplot()
     frame = repository.to_dataframe()
     frame["words"] = (
-        frame["title"].fillna("") + " " + frame["body"].fillna("")
-    ).str.split().str.len().clip(upper=clip)
+        (frame["title"].fillna("") + " " + frame["body"].fillna(""))
+        .str.split()
+        .str.len()
+        .clip(upper=clip)
+    )
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
     for label in [c for c in LABELS if c in set(frame["label"])]:

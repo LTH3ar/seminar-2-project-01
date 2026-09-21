@@ -11,7 +11,6 @@ from hashlib import sha256
 
 from .model import IssueReport
 
-
 _WHITESPACE = re.compile(r"\s+")
 
 

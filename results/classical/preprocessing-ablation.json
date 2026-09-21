@@ -1,0 +1,341 @@
+{
+  "selection_split": "official_training_only",
+  "model": "logistic_regression",
+  "n_splits": 5,
+  "random_state": 42,
+  "best": {
+    "cleaning_level": "raw",
+    "title_weight": 3,
+    "max_words": 400,
+    "use_character_ngrams": true,
+    "cross_repository_weighted_f1": 0.7542624103122856,
+    "fold_mean": 0.7534294664748195,
+    "fold_standard_deviation": 0.009117721317503547
+  },
+  "configurations": [
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7542624103122856,
+      "fold_mean": 0.7534294664748195,
+      "fold_standard_deviation": 0.009117721317503547
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7499771551099933,
+      "fold_mean": 0.7492389080336832,
+      "fold_standard_deviation": 0.007187635515741041
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7482691317186491,
+      "fold_mean": 0.7474234172230175,
+      "fold_standard_deviation": 0.013738753940615994
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.747138446342568,
+      "fold_mean": 0.7459810209593226,
+      "fold_standard_deviation": 0.012426774826933025
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7470521592139628,
+      "fold_mean": 0.7462301786462279,
+      "fold_standard_deviation": 0.015022662998332634
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7458485485083921,
+      "fold_mean": 0.7452268384933247,
+      "fold_standard_deviation": 0.013477325347063989
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7450272603376576,
+      "fold_mean": 0.7443573924369987,
+      "fold_standard_deviation": 0.015029686831247906
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7444880860666399,
+      "fold_mean": 0.7433985933148062,
+      "fold_standard_deviation": 0.01254629310396469
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7434567957943463,
+      "fold_mean": 0.7429178829595197,
+      "fold_standard_deviation": 0.01640558616420862
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7429792691019717,
+      "fold_mean": 0.7420591359344418,
+      "fold_standard_deviation": 0.016048095956782613
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7428076503655041,
+      "fold_mean": 0.741849003089769,
+      "fold_standard_deviation": 0.021375319768728838
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7414651226691682,
+      "fold_mean": 0.7406998141091364,
+      "fold_standard_deviation": 0.01244970292431075
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7409045918743944,
+      "fold_mean": 0.7396821042898529,
+      "fold_standard_deviation": 0.025514418057505456
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7402462101002494,
+      "fold_mean": 0.7390520408355655,
+      "fold_standard_deviation": 0.02758439372582311
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7395302596827839,
+      "fold_mean": 0.7382174242165003,
+      "fold_standard_deviation": 0.01881931227442619
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7395162931738635,
+      "fold_mean": 0.7390234207989759,
+      "fold_standard_deviation": 0.009470589730437778
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7393071623996567,
+      "fold_mean": 0.7379126851492813,
+      "fold_standard_deviation": 0.032997685917127144
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7381831859450618,
+      "fold_mean": 0.7363846043707293,
+      "fold_standard_deviation": 0.03291829979019988
+    },
+    {
+      "cleaning_level": "raw",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7380236315200397,
+      "fold_mean": 0.7377767232342344,
+      "fold_standard_deviation": 0.01304641301581212
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7373692833235418,
+      "fold_mean": 0.735965427273533,
+      "fold_standard_deviation": 0.03260117745507718
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7373413842242633,
+      "fold_mean": 0.7356924959545532,
+      "fold_standard_deviation": 0.035738984817045294
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7332684381281331,
+      "fold_mean": 0.7317571741076956,
+      "fold_standard_deviation": 0.02826333538859918
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.731866338945543,
+      "fold_mean": 0.7303095103797976,
+      "fold_standard_deviation": 0.03515686595707158
+    },
+    {
+      "cleaning_level": "light",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7310289671026987,
+      "fold_mean": 0.7293583803470903,
+      "fold_standard_deviation": 0.03465547280278627
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7275086368881604,
+      "fold_mean": 0.7264206293265054,
+      "fold_standard_deviation": 0.02021293979765206
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7242300308697442,
+      "fold_mean": 0.7225962704742247,
+      "fold_standard_deviation": 0.01858461694687252
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7239485158467595,
+      "fold_mean": 0.7226613235594983,
+      "fold_standard_deviation": 0.019894618638540827
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7222834590037159,
+      "fold_mean": 0.7209762558363095,
+      "fold_standard_deviation": 0.023940686039233064
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7213371563396782,
+      "fold_mean": 0.7200402115990165,
+      "fold_standard_deviation": 0.023642385155854432
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7203843154907903,
+      "fold_mean": 0.7185844070247216,
+      "fold_standard_deviation": 0.01844008908541466
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7197957293938423,
+      "fold_mean": 0.7176783288018194,
+      "fold_standard_deviation": 0.021944976986544754
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": true,
+      "cross_repository_weighted_f1": 0.7184166751427881,
+      "fold_mean": 0.7164154020545568,
+      "fold_standard_deviation": 0.016521976613645684
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": 400,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7175773349446729,
+      "fold_mean": 0.7159605920094252,
+      "fold_standard_deviation": 0.022626634046466886
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 3,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7169252735918873,
+      "fold_mean": 0.7158341039504151,
+      "fold_standard_deviation": 0.02400376941071633
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": null,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7164532498626071,
+      "fold_mean": 0.7145869403946472,
+      "fold_standard_deviation": 0.02228770037733011
+    },
+    {
+      "cleaning_level": "full",
+      "title_weight": 1,
+      "max_words": 200,
+      "use_character_ngrams": false,
+      "cross_repository_weighted_f1": 0.7158281843356834,
+      "fold_mean": 0.7143556415832607,
+      "fold_standard_deviation": 0.019925573085609976
+    }
+  ]
+}

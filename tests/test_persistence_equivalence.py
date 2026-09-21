@@ -79,9 +79,7 @@ def test_round_trip_through_csv_and_json():
 
             reloaded = make_repository("file", path=path)
             assert len(reloaded) == len(original)
-            assert [i.to_dict() for i in reloaded] == [
-                i.to_dict() for i in original
-            ]
+            assert [i.to_dict() for i in reloaded] == [i.to_dict() for i in original]
 
 
 def test_repository_switch_is_one_argument():
@@ -108,9 +106,7 @@ def test_repository_switch_is_one_argument():
 
     # Both are usable through the interface without any type check.
     for implementation in (memory, file_backed):
-        implementation.add(
-            IssueReport("facebook/react", "2023-01-01", "bug", "t", "b")
-        )
+        implementation.add(IssueReport("facebook/react", "2023-01-01", "bug", "t", "b"))
         assert len(implementation) == 1
         assert implementation.label_distribution() == {"bug": 1}
 

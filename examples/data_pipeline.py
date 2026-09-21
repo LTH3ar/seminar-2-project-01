@@ -44,12 +44,7 @@ def main() -> None:
             "clean_text_preview": prepared[0].clean_text[:160],
         }
     )
-    print(
-        {
-            repo: len(folds)
-            for repo, folds in service.make_folds().items()
-        }
-    )
+    print({repo: len(folds) for repo, folds in service.make_folds().items()})
 
 
 if __name__ == "__main__":

@@ -1,11 +1,15 @@
-.PHONY: help install data eda pipeline classical classical-cv classical-holdout lab test check lint clean report results setfit setfit-cv
+.PHONY: help install install-dl data eda pipeline classical-ablation classical classical-cv classical-holdout deep deep-neural deep-transformer deep-cv lab test check lint clean report report-tables results setfit setfit-cv
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[1m%-10s\033[0m %s\n", $$1, $$2}'
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[1m%-20s\033[0m %s\n", $$1, $$2}'
 
 install:  ## Install the package in editable mode with dev extras
 	pip install -e ".[dev]"
+	python -m nltk.downloader stopwords wordnet omw-1.4
+
+install-dl:  ## Install development tools and Track C deep-learning dependencies
+	pip install -e ".[dev,ml,dl]"
 	python -m nltk.downloader stopwords wordnet omw-1.4
 
 data:  ## Download and cache the NLBSE'24 dataset
@@ -20,6 +24,9 @@ eda:  ## Execute the Track A notebook end to end
 pipeline:  ## Run validation, leakage audits, cleaning and fold generation
 	python examples/data_pipeline.py
 
+classical-ablation:  ## Select Track B preprocessing on training folds only
+	python examples/classical_ablation.py
+
 classical:  ## Select classical models by CV, then test only the winner
 	python examples/classical_ml.py --mode all
 
@@ -28,6 +35,19 @@ classical-cv:  ## Compare all Track B models with grouped cross-validation
 
 classical-holdout:  ## Evaluate requested Track B models on the official split
 	python examples/classical_ml.py --mode official
+
+deep:  ## Evaluate FFNN, TextCNN, and DistilBERT on the official split
+	python examples/deep_learning.py --mode official
+
+deep-neural:  ## Evaluate the CPU-friendly FFNN and TextCNN models
+	python examples/deep_learning.py --mode official --models ffnn cnn
+
+deep-transformer:  ## Fine-tune DistilBERT (a GPU is strongly recommended)
+	python examples/deep_learning.py --mode official --models distilbert
+
+deep-cv:  ## Run grouped CV for FFNN/CNN (set DEEP_MODELS to override)
+	python examples/deep_learning.py --mode cross-validation \
+		--models $(or $(DEEP_MODELS),ffnn cnn)
 
 results:  ## Build report-ready baseline result tables and comparison plot
 	python examples/build_results_table.py
@@ -43,16 +63,19 @@ lab:  ## Start Jupyter Lab on port 8888
 	jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --ServerApp.token=''
 
 test:  ## Run the test suite
-	python -m pytest tests/ -v
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest tests/ -v
 
 check:  ## Print the persistence-layer equivalence table for the report
 	python tests/test_persistence_equivalence.py
 
 lint:  ## Lint and format with ruff
-	ruff check src tests examples
+	ruff check --fix src tests examples
 	ruff format src tests examples
 
-report:  ## Compile the LaTeX report
+report-tables:  ## Generate LaTeX tables from saved experiment results
+	python examples/build_report_tables.py
+
+report: report-tables  ## Compile the LaTeX report
 	cd report && latexmk -pdf -interaction=nonstopmode report.tex
 
 clean:  ## Remove caches and generated data (raw data re-downloads on demand)
