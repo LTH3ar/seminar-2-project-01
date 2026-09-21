@@ -6,7 +6,7 @@ Course project based on the [NLBSE'24 tool competition on issue report classific
 
 Classify GitHub issue reports into one of three types: `bug`, `feature`, `question`.
 
-The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — collected between January 2022 and September 2023. It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
+The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — collected between March 2016 and September 2023. It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
 
 **The task is multi-class, not multi-label.** Issues carrying more than one label were excluded by the organisers, so every issue has exactly one class. The course brief describes the task as multi-label; this discrepancy has been raised with the lecturer.
 
@@ -36,8 +36,8 @@ instead of presenting them as the same run.
 | C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer |
 | D — Baseline & evaluation | *(name)* | SetFit reproduction, k-fold harness, metrics, results tables |
 
-Tracks A, B, and D are implemented. Track B consumes the same cleaned
-`IssueReport` objects produced by A and uses D's shared evaluator.
+Tracks A, B, C, and D are implemented. Both modelling tracks consume the same
+cleaned `IssueReport` objects produced by A and use D's shared evaluator.
 
 ## Layout
 
@@ -53,7 +53,11 @@ src/ai4se/
     audit.py           Duplicate and train/test leakage analysis
     folds.py           Per-project stratified group folds
     classical.py       TF-IDF + NB, logistic regression, SVM, random forest
+    deep_learning.py   FFNN, TextCNN, and DistilBERT fine-tuning
     evaluation.py      Shared metrics, grouped CV, holdout evaluation, plots
+    statistical_analysis.py  Confidence intervals, paired tests, power analysis
+    error_analysis.py  Confusion, length, and high-confidence error summaries
+    splits.py          Duplicate-safe random and chronological robustness splits
     reporting.py       CSV/Markdown result tables and model comparison plots
     setfit_baseline.py SetFit adapter matching the supplied notebook
     service.py         Unified application workflow
@@ -64,6 +68,7 @@ notebooks/
     03_roberta_baseline.ipynb
     04_fasttext_baseline.ipynb
     05_classical_ml.ipynb
+    06_deep_learning.ipynb
 tests/
     test_persistence_equivalence.py
     test_data_quality.py
@@ -72,6 +77,7 @@ data/raw/              Cached competition CSVs (git-ignored, downloaded on deman
 data/processed/        Cleaned datasets handed to tracks B, C, and D
 results/baselines/     Reproduced SetFit, RoBERTa, and fastText metrics
 results/classical/     Track B CV, selection, and official-holdout metrics
+results/deep_learning/ Track C CV and official-holdout metrics
 results/figures/       Figures referenced by the LaTeX report
 results/tables/        Shared model comparison tables
 docs/                  Competition reference and dataset notes
@@ -112,7 +118,7 @@ are provided so the ablation study can be run by changing one string:
 | <code>conservative</code> | replaces URLs and code blocks while preserving versions, numbers, and punctuation | software-aware default |
 | `raw` | whitespace normalisation only | control condition |
 | `light` | removes code, stack traces, Markdown markup, URLs, paths, SHAs, mentions | transformer models |
-| `full` | `light` + lowercasing, punctuation removal, stop words, lemmatisation | TF-IDF models |
+| `full` | `light` + lowercasing, punctuation removal, stop words, lemmatisation | aggressive ablation |
 
 Run the EDA or integrated pipeline to compare retained text across all four
 levels on the current dataset.
@@ -157,9 +163,15 @@ make help     # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
 make pipeline # validate, audit, prepare and generate grouped folds
+make classical-ablation # select preprocessing using training folds only
 make classical # select Track B model by CV, then evaluate the winner once
 make classical-cv # compare all classical models without touching test labels
 make classical-holdout # explicit official evaluation of Track B models
+make install-dl # install PyTorch and Transformers for Track C
+make deep-neural # run FFNN and TextCNN (CPU-friendly)
+make deep-transformer # fine-tune DistilBERT (GPU recommended)
+make deep       # run all Track C official evaluations
+make deep-cv    # duplicate-safe grouped CV for Track C (expensive)
 make results  # build shared baseline tables and comparison plot
 make setfit   # reproduce SetFit on the official test split
 make setfit-cv # run duplicate-safe grouped cross-validation for SetFit
@@ -167,6 +179,7 @@ make lab      # start Jupyter Lab on port 8888
 make test     # run the test suite
 make check    # print the persistence-equivalence table for the report
 make lint     # ruff check + format
+make report-tables # regenerate LaTeX tables from saved JSON results
 make report   # compile report/report.tex
 ```
 
@@ -231,8 +244,15 @@ Track B is implemented in `ai4se.classical`. Every model is a complete
 scikit-learn pipeline containing word/character TF-IDF and one classifier, so
 the vectorizer is fitted independently inside every fold. The default workflow
 compares Complement Naive Bayes, logistic regression, linear SVM, and random
-forest with five-fold grouped cross-validation, selects by cross-repository
-macro-F1, and evaluates only the winner on the official test split.
+forest across five seeds of five-fold grouped cross-validation, selects by
+cross-repository weighted F1, and evaluates only the winner on the official
+test split. Raw text, title weight 3, and 400-word truncation were selected by
+a 36-configuration training-only ablation.
+
+The current run selects logistic regression at `0.7506 +/- 0.0061` repeated-CV
+weighted F1 and obtains `0.7548` on the official holdout (95% bootstrap CI
+`[0.7329, 0.7763]`). The matched chronological check scores `0.6733`, compared
+with `0.7757` for its random-split control.
 
 Run it with:
 
@@ -241,3 +261,18 @@ Run it with:
 
 See `docs/classical_ml.md` for hyperparameters, ablations, outputs, and the
 model-selection protocol.
+
+## Deep learning
+
+Track C adds a feed-forward network over training-only TF-IDF features, a
+TextCNN over learned word embeddings, and full fine-tuning of
+`distilbert-base-uncased`. Every model uses a duplicate-safe internal validation
+split for early stopping; the FFNN vectorizer and CNN vocabulary are fitted
+only after that split. Training histories, probabilities, timings, confusion
+matrices, and shared metrics are retained in the same result schema as Track B.
+
+DistilBERT is used rather than RoBERTa because the assignment requires one of
+the two and DistilBERT is more practical on Colab while still transferring a
+pretrained contextual representation. Start with `make deep-neural`, then run
+`make deep-transformer` with a GPU. See `docs/deep_learning.md` for the full
+protocol and hyperparameters.

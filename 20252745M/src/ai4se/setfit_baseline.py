@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from .evaluation import EstimatorFactory
 from .model import LABELS
@@ -22,6 +23,7 @@ class SetFitConfig:
     prediction_batch_size: int = 8
     num_epochs: int = 1
     num_iterations: int = 20
+    max_sequence_length: int = 384
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-serialisable experiment metadata."""
@@ -43,7 +45,7 @@ class SetFitTextClassifier:
         self,
         texts: Sequence[str],
         labels: Sequence[str],
-    ) -> "SetFitTextClassifier":
+    ) -> SetFitTextClassifier:
         """Fine-tune SetFit using the original notebook hyperparameters."""
 
         try:
@@ -55,13 +57,18 @@ class SetFitTextClassifier:
             ) from exc
 
         self.output_directory.mkdir(parents=True, exist_ok=True)
-        train_dataset = Dataset.from_dict(
-            {"text": list(texts), "label": list(labels)}
-        )
+        train_dataset = Dataset.from_dict({"text": list(texts), "label": list(labels)})
         self.model = SetFitModel.from_pretrained(
             self.config.model_id,
             labels=list(LABELS),
         )
+        model_body = getattr(self.model, "model_body", None)
+        if model_body is None:
+            raise RuntimeError(
+                "The installed SetFit version does not expose model_body; "
+                "cannot enforce the encoder sequence limit safely"
+            )
+        model_body.max_seq_length = self.config.max_sequence_length
         arguments = TrainingArguments(
             output_dir=str(self.output_directory),
             save_strategy="no",

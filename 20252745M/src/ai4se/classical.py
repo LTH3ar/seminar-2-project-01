@@ -139,7 +139,7 @@ def build_classical_pipeline(
     except ImportError as exc:
         raise ImportError(
             "Track B requires scikit-learn; install it with "
-            "`python -m pip install -e \".[ml]\"`"
+            '`python -m pip install -e ".[ml]"`'
         ) from exc
 
     canonical_name = normalise_model_name(model_name)

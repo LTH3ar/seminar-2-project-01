@@ -27,9 +27,9 @@ from __future__ import annotations
 import html
 import re
 import unicodedata
+from collections.abc import Callable, Iterable
 from dataclasses import replace
 from functools import lru_cache
-from typing import Callable, Iterable
 
 from .model import IssueReport
 
@@ -82,12 +82,45 @@ RE_QUESTION_WORD = re.compile(
 #: and therefore carry no discriminative signal.
 DOMAIN_STOPWORDS = frozenset(
     {
-        "issue", "github", "repo", "repository", "please", "thanks", "thank",
-        "hi", "hello", "would", "could", "also", "using", "use", "used",
-        "code", "line", "file", "version", "system", "info", "information",
-        "description", "describe", "steps", "step", "reproduce", "expected",
-        "actual", "behaviour", "behavior", "current", "screenshot",
-        "screenshots", "log", "logs", "output", "example", "checklist",
+        "issue",
+        "github",
+        "repo",
+        "repository",
+        "please",
+        "thanks",
+        "thank",
+        "hi",
+        "hello",
+        "would",
+        "could",
+        "also",
+        "using",
+        "use",
+        "used",
+        "code",
+        "line",
+        "file",
+        "version",
+        "system",
+        "info",
+        "information",
+        "description",
+        "describe",
+        "steps",
+        "step",
+        "reproduce",
+        "expected",
+        "actual",
+        "behaviour",
+        "behavior",
+        "current",
+        "screenshot",
+        "screenshots",
+        "log",
+        "logs",
+        "output",
+        "example",
+        "checklist",
     }
 )
 

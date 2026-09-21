@@ -12,9 +12,9 @@
   "metadata": {
     "track": "B",
     "model": "linear_svm",
-    "cleaning_level": "full",
-    "max_words": 1000,
-    "title_weight": 2,
+    "cleaning_level": "raw",
+    "max_words": 400,
+    "title_weight": 3,
     "tfidf": {
       "word_ngram_range": [
         1,
@@ -37,60 +37,67 @@
       "dual": true,
       "random_state": 42
     },
+    "cross_validation_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
     "known_train_test_overlap_groups": 3
   },
   "repositories": {
     "bitcoin/bitcoin": {
       "sample_count": 300,
       "metrics": {
-        "accuracy": 0.64,
+        "accuracy": 0.6933333333333334,
         "per_label": {
           "bug": {
-            "precision": 0.5894736842105263,
-            "recall": 0.56,
-            "f1": 0.5743589743589743,
+            "precision": 0.6976744186046512,
+            "recall": 0.6,
+            "f1": 0.6451612903225806,
             "support": 100
           },
           "feature": {
-            "precision": 0.7428571428571429,
-            "recall": 0.78,
-            "f1": 0.7609756097560976,
+            "precision": 0.7142857142857143,
+            "recall": 0.85,
+            "f1": 0.776255707762557,
             "support": 100
           },
           "question": {
-            "precision": 0.58,
-            "recall": 0.58,
-            "f1": 0.58,
+            "precision": 0.6631578947368421,
+            "recall": 0.63,
+            "f1": 0.6461538461538462,
             "support": 100
           }
         },
         "macro_average": {
-          "precision": 0.6374436090225565,
-          "recall": 0.64,
-          "f1": 0.6384448613716907,
+          "precision": 0.6917060092090691,
+          "recall": 0.6933333333333334,
+          "f1": 0.6891902814129947,
           "support": 300
         },
         "weighted_average": {
-          "precision": 0.6374436090225564,
-          "recall": 0.64,
-          "f1": 0.6384448613716907,
+          "precision": 0.6917060092090692,
+          "recall": 0.6933333333333334,
+          "f1": 0.6891902814129945,
           "support": 300
         },
         "confusion_matrix": [
           [
-            56,
-            13,
-            31
+            60,
+            16,
+            24
           ],
           [
-            11,
-            78,
-            11
+            7,
+            85,
+            8
           ],
           [
-            28,
-            14,
-            58
+            19,
+            18,
+            63
           ]
         ]
       },
@@ -99,155 +106,39 @@
           "fold": 1,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14298870507627726,
+          "duration_seconds": 0.4665677002631128,
           "metrics": {
-            "accuracy": 0.6333333333333333,
+            "accuracy": 0.65,
             "per_label": {
               "bug": {
-                "precision": 0.5454545454545454,
-                "recall": 0.6,
-                "f1": 0.5714285714285714,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.8235294117647058,
-                "recall": 0.7,
-                "f1": 0.7567567567567568,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.5714285714285714,
-                "recall": 0.6,
-                "f1": 0.5853658536585366,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.6468041762159409,
-              "recall": 0.6333333333333333,
-              "f1": 0.637850393947955,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.6468041762159409,
-              "recall": 0.6333333333333333,
-              "f1": 0.637850393947955,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                12,
-                1,
-                7
-              ],
-              [
-                4,
-                14,
-                2
-              ],
-              [
-                6,
-                2,
-                12
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 2,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.14492696011438966,
-          "metrics": {
-            "accuracy": 0.6166666666666667,
-            "per_label": {
-              "bug": {
-                "precision": 0.5217391304347826,
-                "recall": 0.6,
-                "f1": 0.5581395348837209,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.7619047619047619,
-                "recall": 0.8,
-                "f1": 0.7804878048780488,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.5625,
-                "recall": 0.45,
-                "f1": 0.5,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.6153812974465148,
-              "recall": 0.6166666666666666,
-              "f1": 0.6128757799205898,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.6153812974465148,
-              "recall": 0.6166666666666667,
-              "f1": 0.6128757799205898,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                12,
-                3,
-                5
-              ],
-              [
-                2,
-                16,
-                2
-              ],
-              [
-                9,
-                2,
-                9
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 3,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.143705315887928,
-          "metrics": {
-            "accuracy": 0.6333333333333333,
-            "per_label": {
-              "bug": {
-                "precision": 0.625,
+                "precision": 0.5882352941176471,
                 "recall": 0.5,
-                "f1": 0.5555555555555556,
+                "f1": 0.5405405405405406,
                 "support": 20
               },
               "feature": {
-                "precision": 0.7368421052631579,
+                "precision": 0.7,
                 "recall": 0.7,
-                "f1": 0.717948717948718,
+                "f1": 0.7,
                 "support": 20
               },
               "question": {
-                "precision": 0.56,
-                "recall": 0.7,
-                "f1": 0.6222222222222222,
+                "precision": 0.6521739130434783,
+                "recall": 0.75,
+                "f1": 0.6976744186046512,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.6406140350877193,
-              "recall": 0.6333333333333333,
-              "f1": 0.6319088319088318,
+              "precision": 0.6468030690537084,
+              "recall": 0.65,
+              "f1": 0.6460716530483972,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.6406140350877193,
-              "recall": 0.6333333333333333,
-              "f1": 0.631908831908832,
+              "precision": 0.6468030690537084,
+              "recall": 0.65,
+              "f1": 0.6460716530483972,
               "support": 60
             },
             "confusion_matrix": [
@@ -257,83 +148,25 @@
                 7
               ],
               [
-                2,
-                14,
-                4
-              ],
-              [
-                4,
-                2,
-                14
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 4,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.14299052022397518,
-          "metrics": {
-            "accuracy": 0.6333333333333333,
-            "per_label": {
-              "bug": {
-                "precision": 0.6111111111111112,
-                "recall": 0.55,
-                "f1": 0.5789473684210527,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.6666666666666666,
-                "recall": 0.8,
-                "f1": 0.7272727272727273,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.6111111111111112,
-                "recall": 0.55,
-                "f1": 0.5789473684210527,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.6296296296296297,
-              "recall": 0.6333333333333334,
-              "f1": 0.6283891547049442,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.6296296296296297,
-              "recall": 0.6333333333333333,
-              "f1": 0.6283891547049443,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                11,
-                4,
-                5
-              ],
-              [
-                2,
-                16,
-                2
-              ],
-              [
                 5,
-                4,
-                11
+                14,
+                1
+              ],
+              [
+                2,
+                3,
+                15
               ]
             ]
           }
         },
         {
-          "fold": 5,
+          "fold": 2,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.1432759938761592,
+          "duration_seconds": 0.46911632362753153,
           "metrics": {
-            "accuracy": 0.6833333333333333,
+            "accuracy": 0.7,
             "per_label": {
               "bug": {
                 "precision": 0.6875,
@@ -342,53 +175,227 @@
                 "support": 20
               },
               "feature": {
-                "precision": 0.75,
-                "recall": 0.9,
-                "f1": 0.8181818181818182,
+                "precision": 0.8095238095238095,
+                "recall": 0.85,
+                "f1": 0.8292682926829268,
                 "support": 20
               },
               "question": {
-                "precision": 0.6,
-                "recall": 0.6,
-                "f1": 0.6,
+                "precision": 0.6086956521739131,
+                "recall": 0.7,
+                "f1": 0.6511627906976745,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.6791666666666667,
-              "recall": 0.6833333333333335,
-              "f1": 0.6764309764309765,
+              "precision": 0.7019064872325741,
+              "recall": 0.6999999999999998,
+              "f1": 0.6971807314972374,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.6791666666666667,
-              "recall": 0.6833333333333333,
-              "f1": 0.6764309764309765,
+              "precision": 0.7019064872325742,
+              "recall": 0.7,
+              "f1": 0.6971807314972375,
               "support": 60
             },
             "confusion_matrix": [
               [
                 11,
-                2,
-                7
+                3,
+                6
+              ],
+              [
+                0,
+                17,
+                3
+              ],
+              [
+                5,
+                1,
+                14
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 3,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.497452394105494,
+          "metrics": {
+            "accuracy": 0.6833333333333333,
+            "per_label": {
+              "bug": {
+                "precision": 0.6842105263157895,
+                "recall": 0.65,
+                "f1": 0.6666666666666666,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.7272727272727273,
+                "recall": 0.8,
+                "f1": 0.7619047619047619,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.631578947368421,
+                "recall": 0.6,
+                "f1": 0.6153846153846154,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.6810207336523127,
+              "recall": 0.6833333333333335,
+              "f1": 0.6813186813186812,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.6810207336523125,
+              "recall": 0.6833333333333333,
+              "f1": 0.6813186813186812,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                13,
+                3,
+                4
               ],
               [
                 1,
-                18,
+                16,
+                3
+              ],
+              [
+                5,
+                3,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 4,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.49068770883604884,
+          "metrics": {
+            "accuracy": 0.75,
+            "per_label": {
+              "bug": {
+                "precision": 0.7777777777777778,
+                "recall": 0.7,
+                "f1": 0.7368421052631579,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.7037037037037037,
+                "recall": 0.95,
+                "f1": 0.8085106382978723,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.8,
+                "recall": 0.6,
+                "f1": 0.6857142857142857,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.7604938271604939,
+              "recall": 0.75,
+              "f1": 0.7436890097584387,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.7604938271604939,
+              "recall": 0.75,
+              "f1": 0.7436890097584387,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                14,
+                3,
+                3
+              ],
+              [
+                1,
+                19,
+                0
+              ],
+              [
+                3,
+                5,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 5,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.4958663391880691,
+          "metrics": {
+            "accuracy": 0.6833333333333333,
+            "per_label": {
+              "bug": {
+                "precision": 0.75,
+                "recall": 0.6,
+                "f1": 0.6666666666666666,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.6551724137931034,
+                "recall": 0.95,
+                "f1": 0.7755102040816326,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.6666666666666666,
+                "recall": 0.5,
+                "f1": 0.5714285714285714,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.6906130268199234,
+              "recall": 0.6833333333333332,
+              "f1": 0.6712018140589567,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.6906130268199233,
+              "recall": 0.6833333333333333,
+              "f1": 0.6712018140589568,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                12,
+                4,
+                4
+              ],
+              [
+                0,
+                19,
                 1
               ],
               [
                 4,
-                4,
-                12
+                6,
+                10
               ]
             ]
           }
         }
       ],
       "fold_summary": {
-        "macro_f1_mean": 0.6374910273826595,
-        "macro_f1_std": 0.02114882586046831
+        "macro_f1_mean": 0.6878923779363423,
+        "macro_f1_std": 0.032466287359296554
       },
       "predictions": [
         {
@@ -465,21 +472,21 @@
           "issue_id": "46f3759f4f2db264cae85f6cedcb891133725615212bcc26a0d87e30303aeca1",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "5f1cf6f87c72f055781d4581a3fede4552506ae359bc3e620472217c52298d3f",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "1bdcb5f0e5f006c0c4d4cde1d04ae7ef1beeec35657523b9b9b761efbfd75052",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -493,7 +500,7 @@
           "issue_id": "93af1eb6b02d3c39213846465788b6f8c68fe5c312fa36045d7902d327080d18",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -549,7 +556,7 @@
           "issue_id": "da7f818f19a595853ffe4bba5be72af36be7e1491bbaea5cef95e7bb2cecf181",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -584,7 +591,7 @@
           "issue_id": "2d0bf25cfb1be35f5f2bd7448fdfa55155cb4aa0815dc1e409c435248299d2c6",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -598,7 +605,7 @@
           "issue_id": "c81f324d9dc0d7184a0abbed0a21cb49d2c283366151de37d5e5ae5c6f36452f",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -626,14 +633,14 @@
           "issue_id": "0cc501308728fd25f1660342132729c0641e020bd3c54e1a21e10b1386598419",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
           "issue_id": "ed428ad21f7af284c0127f8637052961ceed070a8d22dc0e622e131931747784",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -647,7 +654,7 @@
           "issue_id": "f499e03415a7d2d897f2f1444830a805e7193012f2faef2722b6427618a92148",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -668,7 +675,7 @@
           "issue_id": "0e727c4d5f9b0c1bf64b43d5231eda780cba8cee53aded2fb3f43c32b86b8c8e",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -682,7 +689,7 @@
           "issue_id": "5ae4b5d84ba125c551d9e98a6bf8dcb2466025533ed8d380c85db60d183c410b",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -703,7 +710,7 @@
           "issue_id": "6cc5ee2fce1f69badc6c3c4bb539a053dced86c087c379014fce46d92adee4c1",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -717,14 +724,14 @@
           "issue_id": "ea5d71dacce1aa0751ccfb14eccad7503eb3a44e3c42ad3ab9f0c295f031c72f",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "d10501f4a76112685e865007c4c08c2e7222a03511e46456025d3e43a4ced2c1",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -745,7 +752,7 @@
           "issue_id": "d4789401cd7e20513623f767d5f617c9398a7573d752d809c058eec1ed562b0a",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -787,7 +794,7 @@
           "issue_id": "2cd93f967fb7e15cfba96e24d6ca4eebb642cc1fa33d9edcfb298250b07c5bff",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -871,7 +878,7 @@
           "issue_id": "35c28681357cf7df99102fcaf8ef24379b6da841aed7511c352f75adc52de443",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -885,7 +892,7 @@
           "issue_id": "591c47fd55ef54c17f34995acf3600c91ed6e67a055cd5b0d9d9627f1e207173",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -906,7 +913,7 @@
           "issue_id": "fb6148c646f0dfc45aad7c73cba14c29408d62c30a477d5f2c072e96485d820f",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -934,7 +941,7 @@
           "issue_id": "76d226ae5d91d67525f9d82942104192239255fac080b8a0879c283b2edcb3e8",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -955,7 +962,7 @@
           "issue_id": "c238b7bb3146da25f3d3d1dd7ef5ff41d0e7df9d6949b25cdfd7c8ff98dd7151",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -990,14 +997,14 @@
           "issue_id": "177878d1057141615114224f35a1b712c29867e6b8d0df4a85cdda1c03de9b4b",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
           "issue_id": "a85b8690d92800f1f8f17bedfbccd6f61c94446d53dff3a63486d0206344f398",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -1011,7 +1018,7 @@
           "issue_id": "b9b34ad751dcfacc609bd9239f5e2cf1cb048db500a09ad7d0cc237632bd80dc",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -1039,14 +1046,14 @@
           "issue_id": "7cdea7280a2f2a4d5b54d89fddcf15faf1bec8073549fb1ab44a179bb741b031",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
           "issue_id": "b7af514eb2126d7295a1355fcfb72938d3f0a70d750f8909c25b4549e02e31b2",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -1081,7 +1088,7 @@
           "issue_id": "4a4475cded16af304f6defdea6762812426f1b5783f906d22bc9c25b0925acd4",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -1109,7 +1116,7 @@
           "issue_id": "9cadb23d334dd4f190fc5cec68a859eb1f5abbab2d08f92ba64c332d2cb5d098",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -1123,21 +1130,21 @@
           "issue_id": "5d8ed8f1563009b0d38c8a0c0b2cef67b4e53813ead3d63a1b20abe188ebbfc0",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
           "issue_id": "50bed9ad14b6acf9a54b41035d2dcab2a409090ee157b3e2653f1eee9dafccc9",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
           "issue_id": "6c27c7b3a46bc87674a73ee690c2b7df314b0dec24fb649bbed14c1a7551c588",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -1207,7 +1214,7 @@
           "issue_id": "7e56a6118359dfd724a9f7f91ebc825ccde7e9694c3f5cf19d25d6494cc19c3c",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -1298,7 +1305,7 @@
           "issue_id": "971bb7546e775a4269c59b6f09af342fb1d6e17f678e71219c5f6a621abba811",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -1326,14 +1333,14 @@
           "issue_id": "25ee164edc43a213a87b799c220f6b36b739017d48f13ba802db4f1e1ea051c4",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "6bcba3ec8c2e04b8b1125b155bacb480bd2830991ba4e56eaaf3ed2817b19396",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -1347,14 +1354,14 @@
           "issue_id": "daeba85dd675349d3ff50c11f3ccff59b9fcc34582a0cc2265d182a42a56d801",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "574618202ac09b4e2b88ed4c1a21fbfdc54244f736ecfef07b372c8b958014df",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -1382,21 +1389,21 @@
           "issue_id": "1ba41c30980d8e853a87b5fc1962544ef6e60003653f216df6c824f9f9704c5a",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "6efcc9c917bfdfe130eb3082ae14aa106ebb0dfd70e36cf68a20117809b69e07",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "f23ec65fafe2dbb103b53b0de0c4cf0e7cbaa9d686799809ef3acc45592aaf50",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -1452,7 +1459,7 @@
           "issue_id": "b5260ab635b29a5dbffc5b7cbdd0ed8381b2980bc23b9ed9675905970eade725",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -1466,14 +1473,14 @@
           "issue_id": "3d218846c1fce3af14423b308f4e612935181fd086f032a230744041091b69a4",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "250d834cda24149908df9b9668eb81cccfc63697254554d57f888d0042096154",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -1522,7 +1529,7 @@
           "issue_id": "33581fa7cf94431af5a7991c0953a754dbd6f91f86d8c2ea4cb7e31ca6e298e2",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -1536,14 +1543,14 @@
           "issue_id": "69124dc181fffdc16956248f2c2053c81e392628df0e92494a8a1b2669e6fc0b",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "14931b3012303dafef1f9f56c1aaadc0cc403b4a80808c21ea41f566267a6871",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -1592,7 +1599,7 @@
           "issue_id": "fc88ec85b4c8255e856a0d5a6f82052a2512cc2b549948ea6642188cca92663d",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -1606,7 +1613,7 @@
           "issue_id": "d4e9876ce8376603f26d3edec0e6a8a04ee7b8e3c707003a5b33db7e2d22aead",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -1627,14 +1634,14 @@
           "issue_id": "5c13eb7f2c0d289cd7c946efe7e7ca2c4fcbe46a37f6adec10b6a950d4b4e3d7",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "895775f36fe07c1f9a0c4d96891196f542663312d5c9b152d9368f3f7a6ace48",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -1732,7 +1739,7 @@
           "issue_id": "750b0f84e8b444059a7818b075a258fb350e16ff6cca48a7f98864a31e9a6772",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -1767,7 +1774,7 @@
           "issue_id": "583a124d410a8b92b3c498ff4eb0c6beab74ff49ff60e3ff1274068ffb3ecd75",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -1781,7 +1788,7 @@
           "issue_id": "f2fc67d458c380091044fed2b01ef9db5cb8dda7063758bc4e36256130d4b918",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -1795,7 +1802,7 @@
           "issue_id": "3569c5e38cd4cc994d5024742203d621d1fe0892f024d51ebfdfe85d090a97b0",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -1809,7 +1816,7 @@
           "issue_id": "ee67aac6cb7741e56253d9c1d94962684fe15e24b706f4278e6132eb2c9b2dae",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -1837,7 +1844,7 @@
           "issue_id": "a4781bba2b25df44c274b2217ba594439f560aaffb331a42fa1e1173ac37a1ce",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -1858,14 +1865,14 @@
           "issue_id": "972bb2781c4dd0352da118ba16cc5e043299eff6d03af1a46a945d29a47bc6a1",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
           "issue_id": "e6ae3dd7db31605f3e87dfd2c2a9642165e4432af45b43f8e4d771b38e10bb4b",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -1879,14 +1886,14 @@
           "issue_id": "f52660b808d1a74e8f48d89b147d03f3666c3cb9a42ca9fda38c5d0434132e7e",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
           "issue_id": "799c4bc75b26430b185532a53c1c27063ec5b000088952ccc06ff091475e3499",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -1942,7 +1949,7 @@
           "issue_id": "995eb13772556d2f7863d6ced0b84f5bde7b146f1ce72638321ae7016b251f36",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -1963,7 +1970,7 @@
           "issue_id": "f25e2969e0d53553f7d47dcf546f8b160c4cb8a04d3f0a7ca4cc4b58c24a8c41",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -2054,7 +2061,7 @@
           "issue_id": "8f69a2a808f205e6cf286783fb08eb02c64588fb2b7e3697192488d4353e2668",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -2145,7 +2152,7 @@
           "issue_id": "0d19f4899c36096ddd08d3b6752b983e0ac817221b4816450285ff7af6aad5f5",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -2187,7 +2194,7 @@
           "issue_id": "1f4bcfa366c7535e64d114fca2157d0ff7693744144ac84f5bdcb653c804a408",
           "repository": "bitcoin/bitcoin",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -2215,7 +2222,7 @@
           "issue_id": "0c9a5a51319bad8e679a0b2b90c0a93d5158286e4a59a4f11a76ff2d59383715",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -2250,7 +2257,7 @@
           "issue_id": "7fb83832a66ecf48802583f507677a29f64cf406a661797eb65140f482c7a745",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -2299,7 +2306,7 @@
           "issue_id": "d1cdc61e1a2c5c4a95da3e4c31d33e1fcc611e78308ce43378f5d54052ea8cd6",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -2320,7 +2327,7 @@
           "issue_id": "0161d3a44f1b6080587a78bd3339ce4ca90b7b6d19c66b1388ddf190038016c1",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -2334,14 +2341,14 @@
           "issue_id": "f59d4ba749cdddb56dceed9a33836d3850d27ac250817d89f2dccc15c1c187a0",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
           "issue_id": "ce021971e5e6cbae7618edfdfc3cd0da4dce61ffb0aa8a7b462ba0f9e4f9b7c9",
           "repository": "bitcoin/bitcoin",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -2355,7 +2362,7 @@
           "issue_id": "40b3fc048f25c1cc574b8bc33cb2638a9203b4a92e127e76869c41d28b3401d8",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -2369,28 +2376,28 @@
           "issue_id": "e3db4e5fc3388bbc89e44a7469e58255dff70f4eb4bad95a4366bc68244b2535",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
           "issue_id": "ba5bd6d7838f7109175c4c22ffe48cce1121d9f30c09111d32664fa891aca4ae",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
           "issue_id": "89fdc9b3277315f604429d7520fa5f01f6f3ead6a0a79a9fdf5233ea97bb9e7e",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
           "issue_id": "d01f06e905de1c5208f075fc51b8b0f4f096f5c6653be553485a2cb826be951c",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -2432,7 +2439,7 @@
           "issue_id": "e4bbcbef6ea2192e9726883c029b4d975fee0f00fbbf674fac638be6bb9be953",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -2453,7 +2460,7 @@
           "issue_id": "23af6742a214d38d3761aee6ceeee46ea310370c8c013e949ea0fce7893affad",
           "repository": "bitcoin/bitcoin",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -2496,54 +2503,54 @@
     "facebook/react": {
       "sample_count": 300,
       "metrics": {
-        "accuracy": 0.76,
+        "accuracy": 0.7966666666666666,
         "per_label": {
           "bug": {
-            "precision": 0.9555555555555556,
-            "recall": 0.86,
-            "f1": 0.9052631578947369,
+            "precision": 0.9574468085106383,
+            "recall": 0.9,
+            "f1": 0.9278350515463918,
             "support": 100
           },
           "feature": {
-            "precision": 0.7019230769230769,
-            "recall": 0.73,
-            "f1": 0.7156862745098039,
+            "precision": 0.7222222222222222,
+            "recall": 0.78,
+            "f1": 0.75,
             "support": 100
           },
           "question": {
-            "precision": 0.6509433962264151,
-            "recall": 0.69,
-            "f1": 0.6699029126213593,
+            "precision": 0.7244897959183674,
+            "recall": 0.71,
+            "f1": 0.7171717171717171,
             "support": 100
           }
         },
         "macro_average": {
-          "precision": 0.7694740095683491,
-          "recall": 0.7599999999999999,
-          "f1": 0.7636174483419667,
+          "precision": 0.8013862755504094,
+          "recall": 0.7966666666666667,
+          "f1": 0.798335589572703,
           "support": 300
         },
         "weighted_average": {
-          "precision": 0.7694740095683492,
-          "recall": 0.76,
-          "f1": 0.7636174483419668,
+          "precision": 0.8013862755504093,
+          "recall": 0.7966666666666666,
+          "f1": 0.7983355895727029,
           "support": 300
         },
         "confusion_matrix": [
           [
-            86,
-            2,
-            12
+            90,
+            3,
+            7
           ],
           [
             2,
-            73,
-            25
+            78,
+            20
           ],
           [
             2,
-            29,
-            69
+            27,
+            71
           ]
         ]
       },
@@ -2552,14 +2559,14 @@
           "fold": 1,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12943363096565008,
+          "duration_seconds": 0.4031904595904052,
           "metrics": {
-            "accuracy": 0.8166666666666667,
+            "accuracy": 0.8333333333333334,
             "per_label": {
               "bug": {
                 "precision": 1.0,
-                "recall": 0.9,
-                "f1": 0.9473684210526315,
+                "recall": 0.95,
+                "f1": 0.9743589743589743,
                 "support": 20
               },
               "feature": {
@@ -2569,29 +2576,29 @@
                 "support": 20
               },
               "question": {
-                "precision": 0.7142857142857143,
+                "precision": 0.75,
                 "recall": 0.75,
-                "f1": 0.7317073170731707,
+                "f1": 0.75,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.8253968253968255,
-              "recall": 0.8166666666666668,
-              "f1": 0.819854514334617,
+              "precision": 0.8373015873015873,
+              "recall": 0.8333333333333334,
+              "f1": 0.834948926412341,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.8253968253968255,
-              "recall": 0.8166666666666667,
-              "f1": 0.819854514334617,
+              "precision": 0.8373015873015873,
+              "recall": 0.8333333333333334,
+              "f1": 0.8349489264123411,
               "support": 60
             },
             "confusion_matrix": [
               [
-                18,
+                19,
                 0,
-                2
+                1
               ],
               [
                 0,
@@ -2610,56 +2617,56 @@
           "fold": 2,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.13284897711127996,
+          "duration_seconds": 0.4010268170386553,
           "metrics": {
-            "accuracy": 0.7333333333333333,
+            "accuracy": 0.8333333333333334,
             "per_label": {
               "bug": {
-                "precision": 0.8888888888888888,
-                "recall": 0.8,
-                "f1": 0.8421052631578947,
+                "precision": 0.8571428571428571,
+                "recall": 0.9,
+                "f1": 0.8780487804878049,
                 "support": 20
               },
               "feature": {
-                "precision": 0.6666666666666666,
-                "recall": 0.7,
-                "f1": 0.6829268292682927,
+                "precision": 0.8,
+                "recall": 0.8,
+                "f1": 0.8,
                 "support": 20
               },
               "question": {
-                "precision": 0.6666666666666666,
-                "recall": 0.7,
-                "f1": 0.6829268292682927,
+                "precision": 0.8421052631578947,
+                "recall": 0.8,
+                "f1": 0.8205128205128205,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7407407407407406,
-              "recall": 0.7333333333333334,
-              "f1": 0.7359863072314935,
+              "precision": 0.8330827067669172,
+              "recall": 0.8333333333333334,
+              "f1": 0.8328538670002086,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7407407407407407,
-              "recall": 0.7333333333333333,
-              "f1": 0.7359863072314935,
+              "precision": 0.8330827067669172,
+              "recall": 0.8333333333333334,
+              "f1": 0.8328538670002085,
               "support": 60
             },
             "confusion_matrix": [
               [
-                16,
+                18,
                 1,
-                3
+                1
               ],
               [
                 2,
-                14,
-                4
+                16,
+                2
               ],
               [
-                0,
-                6,
-                14
+                1,
+                3,
+                16
               ]
             ]
           }
@@ -2668,9 +2675,9 @@
           "fold": 3,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12929260125383735,
+          "duration_seconds": 0.39630911173298955,
           "metrics": {
-            "accuracy": 0.7666666666666667,
+            "accuracy": 0.8,
             "per_label": {
               "bug": {
                 "precision": 1.0,
@@ -2679,40 +2686,40 @@
                 "support": 20
               },
               "feature": {
-                "precision": 0.7,
-                "recall": 0.7,
-                "f1": 0.7,
+                "precision": 0.6956521739130435,
+                "recall": 0.8,
+                "f1": 0.7441860465116279,
                 "support": 20
               },
               "question": {
-                "precision": 0.6521739130434783,
+                "precision": 0.75,
                 "recall": 0.75,
-                "f1": 0.6976744186046512,
+                "f1": 0.75,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7840579710144927,
-              "recall": 0.7666666666666666,
-              "f1": 0.7721977791745234,
+              "precision": 0.8152173913043478,
+              "recall": 0.7999999999999999,
+              "f1": 0.8043683218101823,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7840579710144927,
-              "recall": 0.7666666666666667,
-              "f1": 0.7721977791745235,
+              "precision": 0.8152173913043478,
+              "recall": 0.8,
+              "f1": 0.8043683218101823,
               "support": 60
             },
             "confusion_matrix": [
               [
                 17,
-                1,
-                2
+                2,
+                1
               ],
               [
                 0,
-                14,
-                6
+                16,
+                4
               ],
               [
                 0,
@@ -2726,9 +2733,9 @@
           "fold": 4,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.13274556631222367,
+          "duration_seconds": 0.4060273370705545,
           "metrics": {
-            "accuracy": 0.7833333333333333,
+            "accuracy": 0.7666666666666667,
             "per_label": {
               "bug": {
                 "precision": 0.95,
@@ -2737,28 +2744,28 @@
                 "support": 20
               },
               "feature": {
-                "precision": 0.7368421052631579,
+                "precision": 0.7,
                 "recall": 0.7,
-                "f1": 0.717948717948718,
+                "f1": 0.7,
                 "support": 20
               },
               "question": {
-                "precision": 0.6666666666666666,
-                "recall": 0.7,
-                "f1": 0.6829268292682927,
+                "precision": 0.65,
+                "recall": 0.65,
+                "f1": 0.65,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.784502923976608,
-              "recall": 0.7833333333333332,
-              "f1": 0.7836251824056703,
+              "precision": 0.7666666666666666,
+              "recall": 0.7666666666666666,
+              "f1": 0.7666666666666666,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7845029239766083,
-              "recall": 0.7833333333333333,
-              "f1": 0.7836251824056703,
+              "precision": 0.7666666666666667,
+              "recall": 0.7666666666666667,
+              "f1": 0.7666666666666667,
               "support": 60
             },
             "confusion_matrix": [
@@ -2774,8 +2781,8 @@
               ],
               [
                 1,
-                5,
-                14
+                6,
+                13
               ]
             ]
           }
@@ -2784,64 +2791,64 @@
           "fold": 5,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12939789425581694,
+          "duration_seconds": 0.4007388879545033,
           "metrics": {
-            "accuracy": 0.7,
+            "accuracy": 0.75,
             "per_label": {
               "bug": {
-                "precision": 0.9411764705882353,
-                "recall": 0.8,
-                "f1": 0.8648648648648649,
+                "precision": 1.0,
+                "recall": 0.85,
+                "f1": 0.918918918918919,
                 "support": 20
               },
               "feature": {
-                "precision": 0.6521739130434783,
-                "recall": 0.75,
-                "f1": 0.6976744186046512,
+                "precision": 0.6666666666666666,
+                "recall": 0.8,
+                "f1": 0.7272727272727273,
                 "support": 20
               },
               "question": {
-                "precision": 0.55,
-                "recall": 0.55,
-                "f1": 0.55,
+                "precision": 0.631578947368421,
+                "recall": 0.6,
+                "f1": 0.6153846153846154,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7144501278772379,
-              "recall": 0.7000000000000001,
-              "f1": 0.7041797611565054,
+              "precision": 0.7660818713450291,
+              "recall": 0.75,
+              "f1": 0.7538587538587539,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7144501278772378,
-              "recall": 0.7,
-              "f1": 0.7041797611565054,
+              "precision": 0.7660818713450293,
+              "recall": 0.75,
+              "f1": 0.7538587538587539,
               "support": 60
             },
             "confusion_matrix": [
               [
-                16,
+                17,
                 0,
+                3
+              ],
+              [
+                0,
+                16,
                 4
               ],
               [
                 0,
-                15,
-                5
-              ],
-              [
-                1,
                 8,
-                11
+                12
               ]
             ]
           }
         }
       ],
       "fold_summary": {
-        "macro_f1_mean": 0.7631687088605619,
-        "macro_f1_std": 0.039829262791155166
+        "macro_f1_mean": 0.7985393071496305,
+        "macro_f1_std": 0.03331469302948026
       },
       "predictions": [
         {
@@ -2904,7 +2911,7 @@
           "issue_id": "e8d2fcf8911399908eb67c33e02c79ee4bf95b6fc65487543e25329644afd35d",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -2988,7 +2995,7 @@
           "issue_id": "0f540ce5ec54116474caa3c7ccfaf8518456949f13f64084d791843cafd405f7",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -3030,7 +3037,7 @@
           "issue_id": "88240aee01f3aa4dbf7188f2a080625323c2753e558aa09e42fa264610c374cf",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -3058,7 +3065,7 @@
           "issue_id": "031cf351d9489487d09b87557d71229ba588785408f189f807c253a5304b9321",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -3072,7 +3079,7 @@
           "issue_id": "b6f7907f5f60e8dc42989e27b55a37b2f0d8000d2be27cf563f01663b0dd6c06",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -3114,14 +3121,14 @@
           "issue_id": "e838923f07c4578f82ce103f6a90f619d6439e726ffebec023eab294fdb4c2d7",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "fac6634f2281cd27530d66980e3319c035276ec9a093f93c3d133eed92574a72",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -3184,7 +3191,7 @@
           "issue_id": "71191123bd4bff577cdef52a283b7177fcb8a85ccf51525ff7f172e8817b7361",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -3205,7 +3212,7 @@
           "issue_id": "756ba3856b73d17409c330c0b371f39f3dc05261a2dd7bef81cddfaf5d872571",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -3219,7 +3226,7 @@
           "issue_id": "c6dc7ada56909018946413e80e2d771f8293b8515018b82cd5b3d7e0770b9c92",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -3240,7 +3247,7 @@
           "issue_id": "f97536c2a82c5ebfd180bb383dce6b8e2f31a319146646c6e5fbfdb68535d3ca",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -3338,7 +3345,7 @@
           "issue_id": "703bf1536a2b14a1013b520833546c135b1d6ab49e804d317a611693be2d3234",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -3387,7 +3394,7 @@
           "issue_id": "64b210274030323895c9ad23e6e388d999ccb5616d263265ed26414d845b0b5a",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -3471,7 +3478,7 @@
           "issue_id": "ec33d36199c021b673bbc3e0e910e735040431fdd6e85717d0004379492d675a",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -3485,7 +3492,7 @@
           "issue_id": "e69152579620b3830f32845c408add5074a2eee1e90a0cbead166ac23bf764e5",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -3499,7 +3506,7 @@
           "issue_id": "0d995389178fda71e7e32c811769da2a1bb1e573c92d8668707c1d36a2de487b",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -3527,7 +3534,7 @@
           "issue_id": "a5e47e6466a8c2e1501fd4e8934728891a212d971aa51ddd14b0c475cb629f2a",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -3583,7 +3590,7 @@
           "issue_id": "4ada7d715d2131c2fe5af9ed578d43dfdea6d8696b6accf682eaf501386d8493",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -3653,7 +3660,7 @@
           "issue_id": "9c524d3333448e274a9b5252f9c987280bfad78060a0e332754bfd55603cea1c",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -3681,7 +3688,7 @@
           "issue_id": "0489f1282ec632238d041b2379ec34911ea8618adbab0b3b4e06fcc850e099de",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -3744,14 +3751,14 @@
           "issue_id": "588e912fed9152eebfd17bf3a120ad5237241f9c131fc42bf13c4c9c8d6f8742",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "7715f09a802e61d01e7eed9522cde20a39c9dd91743fd43a036f7a85627758e1",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -3765,7 +3772,7 @@
           "issue_id": "eaeb7c2073c84d4564dea11ae018672f771874bab104c4f67bcd1dc307504220",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -3800,7 +3807,7 @@
           "issue_id": "4aa79a027be6fb34f213ab6675464791d56a72877b3df8ccc4b29462dcf612b9",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -3821,7 +3828,7 @@
           "issue_id": "3acbe142abeda3523a47cdb4f9220e620548a1f2b9c42c138b7a80234406c442",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -3926,7 +3933,7 @@
           "issue_id": "2c090764e5db032b01b6334609a930512c895f1e56c52ce9ea29f2ffe47be00a",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -3954,7 +3961,7 @@
           "issue_id": "74719048047790ccdfa863d6c815feb29903ff4bdd956ea28ed667c9b8403828",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -3968,7 +3975,7 @@
           "issue_id": "aee560f0187c713515d7b0c633777d552ff0b4db9a7859d4a69d320351119813",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -3982,7 +3989,7 @@
           "issue_id": "8806f48aa95830214748c6d73d6ae3d47ea2433dc3fe35c8d08d127f1e10b696",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -4045,7 +4052,7 @@
           "issue_id": "9d446ee6a1f122c0571fedb387a5dd4a3f87c51f3b8427cb1b0bcb6a224e4e4e",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -4059,14 +4066,14 @@
           "issue_id": "4f2bee9d96d97d420269ad2ad0b9b7395948c496cc320d37ca9a2bda698b3b32",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "6159ebef20138a09194f0e863750053c17e357f36d4f6c1b8dd97505e5508504",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -4094,7 +4101,7 @@
           "issue_id": "e0246d8d775388890d8501b14dd6311401468b1cfef5e8f5bef1cbdbb1920a72",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -4262,7 +4269,7 @@
           "issue_id": "ef3257f0281d39d9d949101e1aa353ebbc33864d81d2f0c78a29ee4d57a178b1",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -4304,7 +4311,7 @@
           "issue_id": "0fff163af946a523ab979e8413633a1380da250f1065155ac03e3d321581137a",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -4416,7 +4423,7 @@
           "issue_id": "ac9c5546c9944736dda9f10621f3ba5d4d8b822c06a68520bab10a6148eaf0f1",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -4458,7 +4465,7 @@
           "issue_id": "c421602cc931afac7af53bd18a98bf3437a9bab6c7b05cdfb819e68fc718d72e",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -4514,7 +4521,7 @@
           "issue_id": "27abda878ed52242cb964bb730d5146836de5a4e40e44bacca92d1b449e94e2a",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -4563,7 +4570,7 @@
           "issue_id": "b16b4ea1ba5eb44201bc43ed6dd8f8ed635c2c69999f9028191bd46b9fef7d1b",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -4584,7 +4591,7 @@
           "issue_id": "e4158ae7bf9c47804ffdfcdef16a6aea71d38de7985bbc8e63a65d44d5784042",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -4647,7 +4654,7 @@
           "issue_id": "7d21d98b0aea753ad61bb79168ee8ce92c8b13a30b8357c77be69b9e7362d083",
           "repository": "facebook/react",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -4773,7 +4780,7 @@
           "issue_id": "31d87124b1073dccdc012ae5c64c36feb874ee7c1a5f6591e2390384bcb10e51",
           "repository": "facebook/react",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -4829,7 +4836,7 @@
           "issue_id": "c005150311cd83c25e0d01cd69e52f40a644c54962bcc7badce807869004c2c3",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -4843,7 +4850,7 @@
           "issue_id": "8c4ab47632553d85ec9e75c9b3c4b13c1d3dacf242112dbd4a7512b798297b0e",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -4878,7 +4885,7 @@
           "issue_id": "ea628d37f2ea8d0142be2c7966b4d33cea97f01563ef1ba32c028d8998f54f6d",
           "repository": "facebook/react",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -4949,54 +4956,54 @@
     "microsoft/vscode": {
       "sample_count": 300,
       "metrics": {
-        "accuracy": 0.6966666666666667,
+        "accuracy": 0.7366666666666667,
         "per_label": {
           "bug": {
-            "precision": 0.6391752577319587,
-            "recall": 0.62,
-            "f1": 0.6294416243654822,
+            "precision": 0.723404255319149,
+            "recall": 0.68,
+            "f1": 0.7010309278350515,
             "support": 100
           },
           "feature": {
-            "precision": 0.6513761467889908,
+            "precision": 0.7029702970297029,
             "recall": 0.71,
-            "f1": 0.6794258373205742,
+            "f1": 0.7064676616915423,
             "support": 100
           },
           "question": {
-            "precision": 0.8085106382978723,
-            "recall": 0.76,
-            "f1": 0.7835051546391752,
+            "precision": 0.780952380952381,
+            "recall": 0.82,
+            "f1": 0.8,
             "support": 100
           }
         },
         "macro_average": {
-          "precision": 0.6996873476062739,
-          "recall": 0.6966666666666667,
-          "f1": 0.6974575387750771,
+          "precision": 0.7357756444337443,
+          "recall": 0.7366666666666667,
+          "f1": 0.7358328631755313,
           "support": 300
         },
         "weighted_average": {
-          "precision": 0.6996873476062739,
-          "recall": 0.6966666666666667,
-          "f1": 0.6974575387750772,
+          "precision": 0.7357756444337443,
+          "recall": 0.7366666666666667,
+          "f1": 0.7358328631755313,
           "support": 300
         },
         "confusion_matrix": [
           [
-            62,
-            26,
-            12
+            68,
+            16,
+            16
           ],
           [
-            23,
+            22,
             71,
-            6
+            7
           ],
           [
-            12,
-            12,
-            76
+            4,
+            14,
+            82
           ]
         ]
       },
@@ -5005,51 +5012,51 @@
           "fold": 1,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12960423296317458,
+          "duration_seconds": 0.6040926720015705,
           "metrics": {
-            "accuracy": 0.6666666666666666,
+            "accuracy": 0.6833333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.6470588235294118,
-                "recall": 0.55,
-                "f1": 0.5945945945945946,
+                "precision": 0.7058823529411765,
+                "recall": 0.6,
+                "f1": 0.6486486486486487,
                 "support": 20
               },
               "feature": {
-                "precision": 0.5714285714285714,
+                "precision": 0.6666666666666666,
                 "recall": 0.6,
-                "f1": 0.5853658536585366,
+                "f1": 0.631578947368421,
                 "support": 20
               },
               "question": {
-                "precision": 0.7727272727272727,
+                "precision": 0.68,
                 "recall": 0.85,
-                "f1": 0.8095238095238095,
+                "f1": 0.7555555555555555,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.663738222561752,
-              "recall": 0.6666666666666666,
-              "f1": 0.6631614192589802,
+              "precision": 0.6841830065359478,
+              "recall": 0.6833333333333332,
+              "f1": 0.6785943838575417,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.663738222561752,
-              "recall": 0.6666666666666666,
-              "f1": 0.6631614192589802,
+              "precision": 0.6841830065359478,
+              "recall": 0.6833333333333333,
+              "f1": 0.6785943838575418,
               "support": 60
             },
             "confusion_matrix": [
               [
-                11,
-                7,
-                2
+                12,
+                4,
+                4
               ],
               [
-                5,
+                4,
                 12,
-                3
+                4
               ],
               [
                 1,
@@ -5063,46 +5070,46 @@
           "fold": 2,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.13160455180332065,
+          "duration_seconds": 0.5108655109070241,
           "metrics": {
-            "accuracy": 0.65,
+            "accuracy": 0.7,
             "per_label": {
               "bug": {
-                "precision": 0.5333333333333333,
-                "recall": 0.4,
-                "f1": 0.45714285714285713,
+                "precision": 0.6470588235294118,
+                "recall": 0.55,
+                "f1": 0.5945945945945946,
                 "support": 20
               },
               "feature": {
-                "precision": 0.56,
+                "precision": 0.6363636363636364,
                 "recall": 0.7,
-                "f1": 0.6222222222222222,
+                "f1": 0.6666666666666666,
                 "support": 20
               },
               "question": {
-                "precision": 0.85,
+                "precision": 0.8095238095238095,
                 "recall": 0.85,
-                "f1": 0.85,
+                "f1": 0.8292682926829268,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.6477777777777778,
-              "recall": 0.65,
-              "f1": 0.6431216931216931,
+              "precision": 0.6976487564722859,
+              "recall": 0.7000000000000001,
+              "f1": 0.6968431846480626,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.6477777777777778,
-              "recall": 0.65,
-              "f1": 0.6431216931216931,
+              "precision": 0.697648756472286,
+              "recall": 0.7,
+              "f1": 0.6968431846480627,
               "support": 60
             },
             "confusion_matrix": [
               [
-                8,
-                10,
-                2
+                11,
+                6,
+                3
               ],
               [
                 5,
@@ -5110,8 +5117,8 @@
                 1
               ],
               [
-                2,
                 1,
+                2,
                 17
               ]
             ]
@@ -5121,56 +5128,56 @@
           "fold": 3,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12892501568421721,
+          "duration_seconds": 0.6371723399497569,
           "metrics": {
-            "accuracy": 0.6666666666666666,
+            "accuracy": 0.75,
             "per_label": {
               "bug": {
-                "precision": 0.6086956521739131,
-                "recall": 0.7,
-                "f1": 0.6511627906976745,
+                "precision": 0.8,
+                "recall": 0.6,
+                "f1": 0.6857142857142857,
                 "support": 20
               },
               "feature": {
-                "precision": 0.7647058823529411,
-                "recall": 0.65,
-                "f1": 0.7027027027027027,
+                "precision": 0.7391304347826086,
+                "recall": 0.85,
+                "f1": 0.7906976744186046,
                 "support": 20
               },
               "question": {
-                "precision": 0.65,
-                "recall": 0.65,
-                "f1": 0.65,
+                "precision": 0.7272727272727273,
+                "recall": 0.8,
+                "f1": 0.7619047619047619,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.6744671781756181,
-              "recall": 0.6666666666666666,
-              "f1": 0.6679551644667924,
+              "precision": 0.7554677206851119,
+              "recall": 0.75,
+              "f1": 0.7461055740125507,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.6744671781756181,
-              "recall": 0.6666666666666666,
-              "f1": 0.6679551644667925,
+              "precision": 0.755467720685112,
+              "recall": 0.75,
+              "f1": 0.7461055740125507,
               "support": 60
             },
             "confusion_matrix": [
               [
-                14,
-                1,
-                5
+                12,
+                2,
+                6
               ],
               [
-                5,
-                13,
-                2
-              ],
-              [
-                4,
                 3,
-                13
+                17,
+                0
+              ],
+              [
+                0,
+                4,
+                16
               ]
             ]
           }
@@ -5179,56 +5186,56 @@
           "fold": 4,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12588959699496627,
+          "duration_seconds": 0.6088717002421618,
           "metrics": {
-            "accuracy": 0.75,
+            "accuracy": 0.7666666666666667,
             "per_label": {
               "bug": {
-                "precision": 0.6666666666666666,
-                "recall": 0.8,
-                "f1": 0.7272727272727273,
+                "precision": 0.7083333333333334,
+                "recall": 0.85,
+                "f1": 0.7727272727272727,
                 "support": 20
               },
               "feature": {
-                "precision": 0.7142857142857143,
-                "recall": 0.75,
-                "f1": 0.7317073170731707,
+                "precision": 0.7222222222222222,
+                "recall": 0.65,
+                "f1": 0.6842105263157895,
                 "support": 20
               },
               "question": {
-                "precision": 0.9333333333333333,
-                "recall": 0.7,
-                "f1": 0.8,
+                "precision": 0.8888888888888888,
+                "recall": 0.8,
+                "f1": 0.8421052631578947,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7714285714285714,
-              "recall": 0.75,
-              "f1": 0.7529933481152993,
+              "precision": 0.7731481481481483,
+              "recall": 0.7666666666666666,
+              "f1": 0.766347687400319,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7714285714285716,
-              "recall": 0.75,
-              "f1": 0.7529933481152994,
+              "precision": 0.7731481481481483,
+              "recall": 0.7666666666666667,
+              "f1": 0.766347687400319,
               "support": 60
             },
             "confusion_matrix": [
               [
-                16,
-                3,
+                17,
+                2,
                 1
               ],
               [
-                5,
-                15,
-                0
+                6,
+                13,
+                1
               ],
               [
+                1,
                 3,
-                3,
-                14
+                16
               ]
             ]
           }
@@ -5237,64 +5244,64 @@
           "fold": 5,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.12896729772910476,
+          "duration_seconds": 0.5945713287219405,
           "metrics": {
-            "accuracy": 0.75,
+            "accuracy": 0.7833333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.7222222222222222,
-                "recall": 0.65,
-                "f1": 0.6842105263157895,
+                "precision": 0.7619047619047619,
+                "recall": 0.8,
+                "f1": 0.7804878048780488,
                 "support": 20
               },
               "feature": {
-                "precision": 0.68,
-                "recall": 0.85,
-                "f1": 0.7555555555555555,
+                "precision": 0.75,
+                "recall": 0.75,
+                "f1": 0.75,
                 "support": 20
               },
               "question": {
-                "precision": 0.8823529411764706,
-                "recall": 0.75,
-                "f1": 0.8108108108108109,
+                "precision": 0.8421052631578947,
+                "recall": 0.8,
+                "f1": 0.8205128205128205,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.761525054466231,
-              "recall": 0.75,
-              "f1": 0.7501922975607186,
+              "precision": 0.7846700083542189,
+              "recall": 0.7833333333333333,
+              "f1": 0.7836668751302898,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.761525054466231,
-              "recall": 0.75,
-              "f1": 0.7501922975607187,
+              "precision": 0.7846700083542189,
+              "recall": 0.7833333333333333,
+              "f1": 0.7836668751302898,
               "support": 60
             },
             "confusion_matrix": [
               [
-                13,
-                5,
+                16,
+                2,
                 2
               ],
               [
-                3,
-                17,
-                0
+                4,
+                15,
+                1
               ],
               [
-                2,
+                1,
                 3,
-                15
+                16
               ]
             ]
           }
         }
       ],
       "fold_summary": {
-        "macro_f1_mean": 0.6954847845046968,
-        "macro_f1_std": 0.04657192315709904
+        "macro_f1_mean": 0.7343115410097527,
+        "macro_f1_std": 0.040273172772329516
       },
       "predictions": [
         {
@@ -5322,14 +5329,14 @@
           "issue_id": "f0d804161f2364244c6e3fb630eba78468ae805a366ea899b27ee29d96022093",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "cefcd782dad1bd29e8ae21a7d68a9ba1d6120a859d1f07d93016c5cafcd4882a",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -5378,14 +5385,14 @@
           "issue_id": "8493821f5038f28f9c26f14c782fec452dd7a449e87f63247c230fc2f9e63550",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
           "issue_id": "737b24867ef7eebdb6cc8a20e09e190a85d0b1a3d13616dd6245aa50f045b44f",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -5399,7 +5406,7 @@
           "issue_id": "877995e8f43040adbdd6eaef655a477d8f5e7ca624dcb7e9fbc34a4ce2078f5e",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -5413,7 +5420,7 @@
           "issue_id": "4e92f5b0ad74985e5f8a7184782a4151f2a91c36643c95ed47c9851b613b148d",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -5448,7 +5455,7 @@
           "issue_id": "91fd6fd1e22aa6da8cc8c38329aade65448d72d9ad54cfd79a4aa8e27d31ba58",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -5483,7 +5490,7 @@
           "issue_id": "930bf368b9b25e4a5f9cb4552dea9b4b79d04b83b659d72cb0e178ddfea95784",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -5497,7 +5504,7 @@
           "issue_id": "49e0475b201a5b366f7a06c57c9f6fe4b23133c22657a8c4b8defcd5ca3895cd",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -5518,7 +5525,7 @@
           "issue_id": "69c4ff7f48afde425c7227c625bc48cd00701ffda4cf8d3c068734437a906ace",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -5532,21 +5539,21 @@
           "issue_id": "2bfefee2d62cf12ea5986bf95ac8f9499e34e9f953be58262cd0675091165e62",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "bb49063e87b224b31165e2237924a7e0df2b4c6c09467a794bb5bc14514ca99c",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "a3e2f7e8ed248a277e90692a240adc16bd0e5e78eab4faa1ff99aceea2fdf858",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -5616,7 +5623,7 @@
           "issue_id": "3976c0c717c38c424f0bd6f031fdf099062330de2be4caa686a18e38a5983afd",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -5714,7 +5721,7 @@
           "issue_id": "a22f3e51d47ef035933693ac9022742ec0ae202bb68e36e7358081bf7a674ad8",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -5728,14 +5735,14 @@
           "issue_id": "4c8a740d7aee18dd0c54576fdf133f620f0461615693085d1fd245fb76285516",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
           "issue_id": "60bf110d2a4c1caf73fd72459dd24105ab70ef92352095360b255e06f2c3ffe2",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5756,14 +5763,14 @@
           "issue_id": "33aeb3fac1c050afffa98bc3877bde7ad0ffa97573926649388ab9f78c08646c",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
           "issue_id": "47b0897dbd6eda96df9300f84579c6232ce966b0702c13f31e9a29f2ace77165",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5777,14 +5784,14 @@
           "issue_id": "b8b29257207e78e3ab71a6900a8badc9657a397648d39108967c46b150992ee9",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
           "issue_id": "29319a00255d8ff71822574268db0f690524bc05d1006d469e64ee0af295f0bf",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5812,7 +5819,7 @@
           "issue_id": "4d043f2fe86e4cefa4235de05a5e8de12db5ad388f7896e638d85d3216872bdd",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -5826,7 +5833,7 @@
           "issue_id": "a082c228aa1ab93c1f054419776590b00d50fab357ab74385c2e2a8173bc00d5",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5847,7 +5854,7 @@
           "issue_id": "e9ae1206ba576a467ec4011c2f0d38142ca0e924c741e54bf134eed02a7dcca8",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5875,7 +5882,7 @@
           "issue_id": "1b4472ef2c7370cca1a78989965538747168e8e5d28fe9ef93fd6ff1587ec5aa",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5896,7 +5903,7 @@
           "issue_id": "0ae29702375c7b60131ed2dbad531ff5c2fd2461240babea44b62d7ac4c1ea72",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -5966,7 +5973,7 @@
           "issue_id": "c8ffbd6d7ab1ebe488916a6bb9b98c0a4c751281c292992a4fc3448c6f1df2cb",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -5980,7 +5987,7 @@
           "issue_id": "6c965050b653fe23d65005d6df0285a12467dd693b20e25f6ecdccf49fb6109a",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -6064,7 +6071,7 @@
           "issue_id": "71bf20520c1bc47ba4d44e4a22c4b5ca2bf2d6f3659b7794a32784cf9b48c625",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -6183,7 +6190,7 @@
           "issue_id": "aabe3d7852a9497ddd082d82bb00ad8421afa9fd936fbef15a03846056601bde",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -6267,7 +6274,7 @@
           "issue_id": "ffbb7c832b90dd5255d1da71d55d053181efb2c647a484d0ce3e831e4ba676da",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6337,7 +6344,7 @@
           "issue_id": "aa33a6c5f074c46cf0fa98287d8edcd21f2829d6b8c76279a3a470732eb51885",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6372,14 +6379,14 @@
           "issue_id": "8a504abab39fb587f889c1ce1e3ab96f775b6dbade4e9fc5d5abfb4fd20fe02e",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
           "issue_id": "804889ba40a15f0e84517481c6cbfe058b24d1f6c3c479bd7c05a7d1797fa6df",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6400,21 +6407,21 @@
           "issue_id": "8417f4121ef301f72bea4d2af28b4de6430832f5887a1d927bc1070079bf2c78",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
           "issue_id": "906df73f41aea82504826b20aa328c33d3373447e7607705702e9b78567586ac",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "22d541d1b31e8611291e081a135d86ccdd812ea2c37b294dd28ccedcc916e849",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6463,7 +6470,7 @@
           "issue_id": "6cdcc810eb1375335fab1524445e784a31e2e52f491e78fa2b6ab21a42cde2c3",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -6512,7 +6519,7 @@
           "issue_id": "1afdd61c0e08d0d9a8922476c560c6d9d85b347f0eda7feb157d53b81e70d86c",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6526,21 +6533,21 @@
           "issue_id": "9f69f4f9bae70a49c65039e32bf1b6ba3b2031ceb59317e0f7941e4ded331974",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "d422abb23b8007bda0bd11b8b3dd31d8b66c2a6c99310eda388d1f00c1b5b397",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "f711bfbf7fa8d2ea9a93667a4e4c7f48dfc02f13f7f46d7fd1df5e26fe3a81bf",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -6554,7 +6561,7 @@
           "issue_id": "84e13de782f5f43376415453fc673074cc1b3c19780c3a37cd537d7649c2a3af",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -6589,7 +6596,7 @@
           "issue_id": "0e75c1a30cb00d421d33f182c6ca837c02dc1826e7fac5e07c515bf37ab40c42",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -6715,7 +6722,7 @@
           "issue_id": "e865701752ecfa51497d8a3e46640a5c2fa30b3ad26de9d74d54a70784642d5e",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -6729,7 +6736,7 @@
           "issue_id": "8eca781bb3799b2520242f6fc3c7ef0d66271d96efbe3165597da37f9c5198d9",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -6771,14 +6778,14 @@
           "issue_id": "121ed342b44cd839b36e9f4a3523db5393b056eaa453d98218542aa0940516a5",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
           "issue_id": "a3b9977456c986dd96b9ef5d762417cff8d20ca314faa7feb1310aaab3d5a743",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -6799,7 +6806,7 @@
           "issue_id": "c14d1a289fc53b96fcd515902c589200b38196898c0ab2464766786d93194fad",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -6855,7 +6862,7 @@
           "issue_id": "8efb85c66a25b5142c140a8c8a84c74edeb390db0ac3f1fec0727b55d60c62bf",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -6869,7 +6876,7 @@
           "issue_id": "6878c8fcfa7d9220b6b42adfef3952f5c9deb4913352421a8cc1c1c4e1063efe",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -6911,7 +6918,7 @@
           "issue_id": "19af4208246f5dd7547fed3c8bf40ada51872eff25323b231ef37e3b7765ad95",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -7016,14 +7023,14 @@
           "issue_id": "004bad7c7281fa5ef394e67a8dc34e491441c62a8b1564d244376d9b0a2fce27",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
           "issue_id": "8dc56b060bf3905217b117840c33667db494525b5cb8e32113daa1a0c0748d0c",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7037,14 +7044,14 @@
           "issue_id": "053c061679f29b41a996d9e8077fb5c96a430ead935e345279b709713903a430",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
           "issue_id": "8400f296afe80aeefe12064439341379dd1a6fd445c10ee171031cf6411160f8",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -7058,7 +7065,7 @@
           "issue_id": "1f0248ebf533e010ed67377f35f2807e40f1f6eacd41d900a3a0c6571992af62",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7072,7 +7079,7 @@
           "issue_id": "32ea5e2f246ca7df091122e29585d63a7f4ba47d759ebb7d113fde66a4592b4e",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7100,7 +7107,7 @@
           "issue_id": "1057ac193dffc037fe5357d50e0fa49ef93268e0f3ec87352820e6d548e6c29b",
           "repository": "microsoft/vscode",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -7121,7 +7128,7 @@
           "issue_id": "264d7d934dc92eadbcfb91f76544805cc97057e45bb2dc7da9fd4265164be2ce",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -7135,7 +7142,7 @@
           "issue_id": "a42f2c6ca5c226d2f40457c5fe46bf91aba3e7def972f237ec0d432b92c97646",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7163,7 +7170,7 @@
           "issue_id": "9ac7468fc75d027817e136030ccc447701c3e4f0d7bdae4a5e61c9b3ad250449",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -7240,7 +7247,7 @@
           "issue_id": "9e15071f296d3a91836987a87f61b8ae5a5338cc487925cf0c91d8c0116a0f3b",
           "repository": "microsoft/vscode",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7261,7 +7268,7 @@
           "issue_id": "7da4024c130a558ada3e0714aaddda99159355981fd77398284518e1e7178381",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -7338,7 +7345,7 @@
           "issue_id": "ba9b417d3243b1ee6855776d53d8e13a6d4b50d5f37198fb690d42296cfe8bc6",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -7394,7 +7401,7 @@
           "issue_id": "c10814fbcefc9271138562a1b3275308a42701b3efa42d7cc6e8239be9cdc6be",
           "repository": "microsoft/vscode",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         }
       ]
@@ -7402,54 +7409,54 @@
     "opencv/opencv": {
       "sample_count": 300,
       "metrics": {
-        "accuracy": 0.7566666666666667,
+        "accuracy": 0.76,
         "per_label": {
           "bug": {
-            "precision": 0.7009345794392523,
-            "recall": 0.75,
-            "f1": 0.7246376811594203,
+            "precision": 0.711340206185567,
+            "recall": 0.69,
+            "f1": 0.700507614213198,
             "support": 100
           },
           "feature": {
-            "precision": 0.8043478260869565,
-            "recall": 0.74,
-            "f1": 0.7708333333333334,
+            "precision": 0.7777777777777778,
+            "recall": 0.84,
+            "f1": 0.8076923076923077,
             "support": 100
           },
           "question": {
-            "precision": 0.7722772277227723,
-            "recall": 0.78,
-            "f1": 0.7761194029850746,
+            "precision": 0.7894736842105263,
+            "recall": 0.75,
+            "f1": 0.7692307692307693,
             "support": 100
           }
         },
         "macro_average": {
-          "precision": 0.7591865444163272,
-          "recall": 0.7566666666666667,
-          "f1": 0.7571968058259427,
+          "precision": 0.7595305560579572,
+          "recall": 0.7599999999999999,
+          "f1": 0.7591435637120916,
           "support": 300
         },
         "weighted_average": {
-          "precision": 0.759186544416327,
-          "recall": 0.7566666666666667,
-          "f1": 0.7571968058259428,
+          "precision": 0.759530556057957,
+          "recall": 0.76,
+          "f1": 0.7591435637120917,
           "support": 300
         },
         "confusion_matrix": [
           [
-            75,
-            14,
-            11
+            69,
+            17,
+            14
           ],
           [
-            14,
-            74,
-            12
+            10,
+            84,
+            6
           ],
           [
             18,
-            4,
-            78
+            7,
+            75
           ]
         ]
       },
@@ -7458,56 +7465,56 @@
           "fold": 1,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14308104990050197,
+          "duration_seconds": 0.5491788210347295,
           "metrics": {
-            "accuracy": 0.8,
+            "accuracy": 0.7833333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.7619047619047619,
-                "recall": 0.8,
-                "f1": 0.7804878048780488,
+                "precision": 0.7142857142857143,
+                "recall": 0.75,
+                "f1": 0.7317073170731707,
                 "support": 20
               },
               "feature": {
-                "precision": 0.8421052631578947,
-                "recall": 0.8,
-                "f1": 0.8205128205128205,
+                "precision": 0.8333333333333334,
+                "recall": 0.75,
+                "f1": 0.7894736842105263,
                 "support": 20
               },
               "question": {
-                "precision": 0.8,
-                "recall": 0.8,
-                "f1": 0.8,
+                "precision": 0.8095238095238095,
+                "recall": 0.85,
+                "f1": 0.8292682926829268,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.8013366750208855,
-              "recall": 0.8000000000000002,
-              "f1": 0.8003335417969565,
+              "precision": 0.7857142857142857,
+              "recall": 0.7833333333333333,
+              "f1": 0.7834830979888746,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.8013366750208856,
-              "recall": 0.8,
-              "f1": 0.8003335417969564,
+              "precision": 0.7857142857142858,
+              "recall": 0.7833333333333333,
+              "f1": 0.7834830979888746,
               "support": 60
             },
             "confusion_matrix": [
               [
-                16,
+                15,
                 2,
-                2
+                3
+              ],
+              [
+                4,
+                15,
+                1
               ],
               [
                 2,
-                16,
-                2
-              ],
-              [
-                3,
                 1,
-                16
+                17
               ]
             ]
           }
@@ -7516,14 +7523,130 @@
           "fold": 2,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14298799727112055,
+          "duration_seconds": 0.5348338331095874,
           "metrics": {
-            "accuracy": 0.7166666666666667,
+            "accuracy": 0.7833333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.6521739130434783,
+                "precision": 0.75,
                 "recall": 0.75,
-                "f1": 0.6976744186046512,
+                "f1": 0.75,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.8095238095238095,
+                "recall": 0.85,
+                "f1": 0.8292682926829268,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.7894736842105263,
+                "recall": 0.75,
+                "f1": 0.7692307692307693,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.7829991645781119,
+              "recall": 0.7833333333333333,
+              "f1": 0.7828330206378986,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.7829991645781119,
+              "recall": 0.7833333333333333,
+              "f1": 0.7828330206378987,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                15,
+                2,
+                3
+              ],
+              [
+                2,
+                17,
+                1
+              ],
+              [
+                3,
+                2,
+                15
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 3,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.5131265372037888,
+          "metrics": {
+            "accuracy": 0.7333333333333333,
+            "per_label": {
+              "bug": {
+                "precision": 0.6363636363636364,
+                "recall": 0.7,
+                "f1": 0.6666666666666666,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.7307692307692307,
+                "recall": 0.95,
+                "f1": 0.8260869565217391,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.9166666666666666,
+                "recall": 0.55,
+                "f1": 0.6875,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.7612665112665112,
+              "recall": 0.7333333333333334,
+              "f1": 0.7267512077294686,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.7612665112665112,
+              "recall": 0.7333333333333333,
+              "f1": 0.7267512077294686,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                14,
+                6,
+                0
+              ],
+              [
+                0,
+                19,
+                1
+              ],
+              [
+                8,
+                1,
+                11
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 4,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.5245817620307207,
+          "metrics": {
+            "accuracy": 0.6666666666666666,
+            "per_label": {
+              "bug": {
+                "precision": 0.5789473684210527,
+                "recall": 0.55,
+                "f1": 0.5641025641025641,
                 "support": 20
               },
               "feature": {
@@ -7533,155 +7656,39 @@
                 "support": 20
               },
               "question": {
-                "precision": 0.7777777777777778,
-                "recall": 0.7,
-                "f1": 0.7368421052631579,
+                "precision": 0.6818181818181818,
+                "recall": 0.75,
+                "f1": 0.7142857142857143,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7222645986948045,
-              "recall": 0.7166666666666667,
-              "f1": 0.7174884139388423,
+              "precision": 0.6658692185007974,
+              "recall": 0.6666666666666666,
+              "f1": 0.6654456654456654,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7222645986948046,
-              "recall": 0.7166666666666667,
-              "f1": 0.7174884139388423,
+              "precision": 0.6658692185007974,
+              "recall": 0.6666666666666666,
+              "f1": 0.6654456654456654,
               "support": 60
             },
             "confusion_matrix": [
               [
-                15,
+                11,
                 4,
-                1
-              ],
-              [
-                3,
-                14,
-                3
-              ],
-              [
-                5,
-                1,
-                14
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 3,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.13974486384540796,
-          "metrics": {
-            "accuracy": 0.7166666666666667,
-            "per_label": {
-              "bug": {
-                "precision": 0.5714285714285714,
-                "recall": 0.8,
-                "f1": 0.6666666666666666,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.875,
-                "recall": 0.7,
-                "f1": 0.7777777777777778,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.8125,
-                "recall": 0.65,
-                "f1": 0.7222222222222222,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.7529761904761904,
-              "recall": 0.7166666666666667,
-              "f1": 0.7222222222222222,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.7529761904761905,
-              "recall": 0.7166666666666667,
-              "f1": 0.7222222222222221,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                16,
-                2,
-                2
-              ],
-              [
-                5,
-                14,
-                1
-              ],
-              [
-                7,
-                0,
-                13
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 4,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.13884650310501456,
-          "metrics": {
-            "accuracy": 0.7166666666666667,
-            "per_label": {
-              "bug": {
-                "precision": 0.7058823529411765,
-                "recall": 0.6,
-                "f1": 0.6486486486486487,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.8,
-                "recall": 0.6,
-                "f1": 0.6857142857142857,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.6785714285714286,
-                "recall": 0.95,
-                "f1": 0.7916666666666666,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.7281512605042018,
-              "recall": 0.7166666666666667,
-              "f1": 0.7086765336765337,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.7281512605042018,
-              "recall": 0.7166666666666667,
-              "f1": 0.7086765336765336,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                12,
-                3,
                 5
               ],
               [
                 4,
-                12,
-                4
+                14,
+                2
               ],
               [
+                4,
                 1,
-                0,
-                19
+                15
               ]
             ]
           }
@@ -7690,71 +7697,71 @@
           "fold": 5,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14226687932386994,
+          "duration_seconds": 0.5438847132027149,
           "metrics": {
             "accuracy": 0.8333333333333334,
             "per_label": {
               "bug": {
-                "precision": 0.8888888888888888,
-                "recall": 0.8,
-                "f1": 0.8421052631578947,
+                "precision": 0.9333333333333333,
+                "recall": 0.7,
+                "f1": 0.8,
                 "support": 20
               },
               "feature": {
-                "precision": 0.782608695652174,
-                "recall": 0.9,
-                "f1": 0.8372093023255814,
+                "precision": 0.7916666666666666,
+                "recall": 0.95,
+                "f1": 0.8636363636363636,
                 "support": 20
               },
               "question": {
-                "precision": 0.8421052631578947,
-                "recall": 0.8,
-                "f1": 0.8205128205128205,
+                "precision": 0.8095238095238095,
+                "recall": 0.85,
+                "f1": 0.8292682926829268,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.8378676158996524,
+              "precision": 0.84484126984127,
               "recall": 0.8333333333333334,
-              "f1": 0.833275795332099,
+              "f1": 0.8309682187730968,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.8378676158996524,
+              "precision": 0.8448412698412698,
               "recall": 0.8333333333333334,
-              "f1": 0.8332757953320988,
+              "f1": 0.8309682187730968,
               "support": 60
             },
             "confusion_matrix": [
               [
-                16,
+                14,
                 3,
-                1
+                3
               ],
               [
                 0,
-                18,
-                2
+                19,
+                1
               ],
               [
+                1,
                 2,
-                2,
-                16
+                17
               ]
             ]
           }
         }
       ],
       "fold_summary": {
-        "macro_f1_mean": 0.7563993013933308,
-        "macro_f1_std": 0.05059605767621919
+        "macro_f1_mean": 0.7578962421150008,
+        "macro_f1_std": 0.05680346148378709
       },
       "predictions": [
         {
           "issue_id": "3f3468eccea5ad1043fc088c059145d270b71e62547debce9a9df8536093f5b9",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -7817,7 +7824,7 @@
           "issue_id": "1f97ca4d46ee4037e1f70927dac52c45fde983ce01c222b8df9271e79fd6e50f",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -7845,14 +7852,14 @@
           "issue_id": "5919c7f75458763d3d7cda36fe4087878eb96d3c416d3d1140721be1d9cb75f0",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
           "issue_id": "bf6223594cca890052e0f6b0c7e123255dd07339d36f1282afe350bd245d5d72",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -7866,7 +7873,7 @@
           "issue_id": "d454af5e4b8c949a6e67f4739b139abeeea9a43be535a9851c7cda9c8e878a57",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -7901,7 +7908,7 @@
           "issue_id": "cbe7e46bf320847e28a005588d82c327fd14e3e5b72bd365ddcc3c61366025eb",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -7915,7 +7922,7 @@
           "issue_id": "9d671c3a7d6d7f319f92280bfdab4a33892e478ab05729e5c7d17165a57af826",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -7943,14 +7950,14 @@
           "issue_id": "0e82e07f2a131ccfef36fc370c8e4400001db66aaef8e925e15a4398ee4d884d",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
           "issue_id": "6b52430d97a53d8e6d9b9173322db74f31a741f40f2a7b6af69e94de04479763",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -8006,7 +8013,7 @@
           "issue_id": "fd58f23fe251a4dcd66cf098d2ab96fbe1cb8a104504c9def3dd55080ae57e80",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -8048,14 +8055,14 @@
           "issue_id": "56cdb1ce7dd6b7575525dff672c15ee02ddd3e98002f1aa9647f2bf9f6773580",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "253746beb62eb63dbfef8ae0dc97699b408962ff32a5cf45bd6b708cb56ea13d",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -8083,7 +8090,7 @@
           "issue_id": "53b6ee84e53ac592e8124a3b56ce7e0ce6899ea41027a94de6996bd3b9ea9458",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -8111,7 +8118,7 @@
           "issue_id": "d2840406a4f6820d57106e9ca1b00e383c48dcd0320b6a915e5d7f7bc70f9bc9",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -8160,14 +8167,14 @@
           "issue_id": "871fa8734be014c73bbe73d9d2c60b4e67a0b69ac9440100d8b035a38e5aef13",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "2b62807ad1fd1ebb2623da797c3568e7be0cf97aa230327d2ec5d5a7801bf13f",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -8181,7 +8188,7 @@
           "issue_id": "1e0fed90e7e353e2f5889e679feeaea851b77dbf6e3a31d99509090ea209bdc6",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -8195,14 +8202,14 @@
           "issue_id": "174edda1336df661cc83570308d969fdab58552ed6babe10f24b60509b98404b",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
           "issue_id": "c64ef234fb8f72b64bdad8fbaaacb10195468f612b428b58a021b47b6af4fde5",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -8223,7 +8230,7 @@
           "issue_id": "8535b1d8d1698ceb094d9426e5489c9f4a1bfb5862c3491b846e4dfa3ce61f91",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -8237,14 +8244,14 @@
           "issue_id": "a8e559fc96dbc04f241df2a9d4ce7820f0e37f2ecf92e7567ed336b28e964e07",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
           "issue_id": "406a328e7e55d223ee10e9a9da49b9bd3ffbbbd17b31c65c342137d4616428d4",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -8279,7 +8286,7 @@
           "issue_id": "8f25778de0dc14efbcd8d83dd372076e2a9ab8f2353ee11d32406ac6f4d8556c",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -8307,7 +8314,7 @@
           "issue_id": "9dc15b0a74f1d1573f73f26c7077e29aff1a3da4c982209f82d81d5db334cb32",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -8335,14 +8342,14 @@
           "issue_id": "089326e06fad3d880d9ab74ecc231a1e7f1abaf431ee9f617047807328820c17",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
           "issue_id": "b0b57f7664b2afdf87d5ee7238a516c2534b42cc85c3ee6e881ec520554a9426",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -8419,7 +8426,7 @@
           "issue_id": "9a0a8af551ee0125039fbf7774ca69082dc3639a442a5a9cd2d9f19af347ae68",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -8468,7 +8475,7 @@
           "issue_id": "d285ffdc10066b1478a3b95f9e8d10f52e5a0c4c2c870d41b7e2d6612b59cc70",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -8517,7 +8524,7 @@
           "issue_id": "b244dd7e919773f172a383c71975bce22dbf160d396b28d5c49f2af2435ea6ea",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -8559,7 +8566,7 @@
           "issue_id": "40a67904911c9706882e124b221dbfc64e5585b7f88623b45279c8e7c77b5a8f",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -8608,7 +8615,7 @@
           "issue_id": "a626e781dd73e0fd036f3e00c3f5e6523768a85923b10d215006bda15e6bbcfe",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8636,7 +8643,7 @@
           "issue_id": "83ddfc74f84a7e56aaf45184855cc5c9451bdf38f74150a7d8a09129fbf2e399",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -8657,7 +8664,7 @@
           "issue_id": "f1d86d77f3d601249d384391bb6960e343062378cbf61fa263b9f4c04fdab047",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8685,21 +8692,21 @@
           "issue_id": "e1e63e879326b171786f92fd6cafd1ba530fb1b5f303c64c4e77cc52a5194585",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "1d0597082755571eba2806a24469435963d77e8795c9b3e6ce49ec248d424d10",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "aedbf4c6b5d320079eec97335f7b0e08ed0bbc74c9a8b9a02c03fbf5ce4e4318",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8720,14 +8727,14 @@
           "issue_id": "8e9383a953eded1c37efaf20b2356576b9a527c3e197643d13d30d01bbbda5db",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
           "issue_id": "cfec954714f0cf137a2fc2eaeac2734a836f0c822d3bfb76f6af77bcac26bda2",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8741,7 +8748,7 @@
           "issue_id": "0a8ffbe0e10c6185264600e1c37255b0542f46d412513256db95ce0e09a6f9c0",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -8790,14 +8797,14 @@
           "issue_id": "aff7ad423b33bfea67c0dcca96156a5cb666d33eb20b7e6153e3107d0653e766",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "a4055ae8f502848cef0ef0a3b284099ec5c88e1cda78605e464bdbf294ea0b79",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8860,7 +8867,7 @@
           "issue_id": "55df63da39cfd417e33d6982aa3ce945e631272481360a8d86ba3406e7d0283a",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -8888,28 +8895,28 @@
           "issue_id": "353110e55d4e69761046e51da176d4ce893ec1673e856e6d7abee978d95c4ea0",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 3
         },
         {
           "issue_id": "17f0515d189b2e25710d027f95616dd3ac685186f08e948961ea876732ca9ff8",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "c63edbeaa7b7d316c0cf956600bb49a5ff5708e73aab1284c1a357c5c93bae35",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
           "issue_id": "25a308bec7b84c286e175c5690e01ba88f793060c9415915504d799b2a2418b9",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8944,7 +8951,7 @@
           "issue_id": "418dcc17f3dc1c96180679f31f9dae14f66505464191b526f0ba9a52f9327fde",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -8979,7 +8986,7 @@
           "issue_id": "08fe10704fd76338ad7b27d873f6b7b8acfea1806f15a1a2acfb155e648dea0d",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 3
         },
         {
@@ -9014,7 +9021,7 @@
           "issue_id": "e9210ef83c56b122c44e495244370184cb06644d818206543eff2716ca913d7c",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -9063,7 +9070,7 @@
           "issue_id": "ab7e9e13fef498b238ec015545d5bbd8c69d6bb75782e7a92244dbb762790145",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -9105,7 +9112,7 @@
           "issue_id": "116dca015db1f623d72d3980374c9f3fa3fab56a123ec5d8d28d3b76ce85c360",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -9161,7 +9168,7 @@
           "issue_id": "4b376a2931b9055b2cc790d87af144658ffb45ec35a39b4bccf0834db359d37f",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -9175,7 +9182,7 @@
           "issue_id": "0b1c8ce63d9f2a5923ac529eaedc5e00455898c562221d8786cac550244fffb0",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -9196,7 +9203,7 @@
           "issue_id": "31070a087f73a07728773db34563b86037116d86c4293e95033ed79b1eaeeab6",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -9280,7 +9287,7 @@
           "issue_id": "1fbb62e05d1dd6181436cae76bc0f8da6099b6c440d5b1f55879f159b95cd6b0",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -9315,21 +9322,21 @@
           "issue_id": "a7f1bae8df211b83debdc194fae853d0701af0e062f9ae926ba68cc75d748e03",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
           "issue_id": "c50c624c27c57f8415d3af27be9e0cf98e083446cca1e2be17b87837f00759d2",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 4
         },
         {
           "issue_id": "8451a58271b4de2804d921b25cc70477d94aac7b78eab2ebb38cb3ff49965172",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -9406,7 +9413,7 @@
           "issue_id": "d4a37ac177be60310649bde03ab644aad93f2151d9ccebef90b93b98084057f8",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -9448,7 +9455,7 @@
           "issue_id": "fb7b76d046ca5356e5aa60909b2e918fd8d19b1847bb2d1a067520c5481cdaf8",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9518,7 +9525,7 @@
           "issue_id": "31b3b0bc9bc0d2c3ef2dcf5fb1a0746c4bfc4c097cfa7eb84a50f90a135a049d",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9532,14 +9539,14 @@
           "issue_id": "a0750fecf5e5dffee1a27d9427d27fdcdc607d80f2e4725b653133c81141f92f",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
           "issue_id": "43a69e2f5a7e1f7b1c98f3df98a24489b303dae4ffcc44510c6c8f93d4a9f534",
           "repository": "opencv/opencv",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -9574,7 +9581,7 @@
           "issue_id": "5287e96f94ed923a1f99ca373725518a392304692b92d4beb08c933396b89400",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9602,14 +9609,14 @@
           "issue_id": "cb8eb0edc493870348660189ff3345a260db3b031c1032f54d8d9b4645a7bbf3",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
           "issue_id": "c1bb6e523595e947a109e401c314406845043191f865123533d52b5bc4bbb73b",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9623,7 +9630,7 @@
           "issue_id": "0cdc9ca26146685651860726dcbb5feb9aba4af06c3319438e5dba1bbc321d87",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -9637,7 +9644,7 @@
           "issue_id": "5e6357b7354beab7b7e6881fb620c0609e5de884ebc8cb31635c4c7af10d26f6",
           "repository": "opencv/opencv",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9763,7 +9770,7 @@
           "issue_id": "9eaf24c0753ac596ebd0f3179ded9e188c4e5782babc86b9c3f423bcc322f879",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -9784,7 +9791,7 @@
           "issue_id": "ba055a9b222a1fb1928730d7f65c573fd864f528322ccbaa0ae19a44a193fbeb",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -9812,7 +9819,7 @@
           "issue_id": "5820501c6bdc02576a10592b3eaba8439b5854ba7968c6f0b33b69abceeb1c45",
           "repository": "opencv/opencv",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -9855,54 +9862,54 @@
     "tensorflow/tensorflow": {
       "sample_count": 300,
       "metrics": {
-        "accuracy": 0.7133333333333334,
+        "accuracy": 0.77,
         "per_label": {
           "bug": {
-            "precision": 0.75,
-            "recall": 0.72,
-            "f1": 0.7346938775510204,
+            "precision": 0.8118811881188119,
+            "recall": 0.82,
+            "f1": 0.8159203980099502,
             "support": 100
           },
           "feature": {
-            "precision": 0.8085106382978723,
-            "recall": 0.76,
-            "f1": 0.7835051546391752,
+            "precision": 0.8202247191011236,
+            "recall": 0.73,
+            "f1": 0.7724867724867724,
             "support": 100
           },
           "question": {
-            "precision": 0.6,
-            "recall": 0.66,
-            "f1": 0.6285714285714286,
+            "precision": 0.6909090909090909,
+            "recall": 0.76,
+            "f1": 0.7238095238095238,
             "support": 100
           }
         },
         "macro_average": {
-          "precision": 0.7195035460992908,
-          "recall": 0.7133333333333334,
-          "f1": 0.7155901535872081,
+          "precision": 0.7743383327096754,
+          "recall": 0.7699999999999999,
+          "f1": 0.7707388981020822,
           "support": 300
         },
         "weighted_average": {
-          "precision": 0.7195035460992908,
-          "recall": 0.7133333333333334,
-          "f1": 0.7155901535872081,
+          "precision": 0.7743383327096754,
+          "recall": 0.77,
+          "f1": 0.7707388981020822,
           "support": 300
         },
         "confusion_matrix": [
           [
-            72,
-            4,
-            24
+            82,
+            3,
+            15
           ],
           [
-            4,
-            76,
-            20
+            8,
+            73,
+            19
           ],
           [
-            20,
-            14,
-            66
+            11,
+            13,
+            76
           ]
         ]
       },
@@ -9911,56 +9918,56 @@
           "fold": 1,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14426179928705096,
+          "duration_seconds": 0.605747333727777,
           "metrics": {
-            "accuracy": 0.7166666666666667,
+            "accuracy": 0.7833333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.72,
-                "recall": 0.9,
-                "f1": 0.8,
+                "precision": 0.7916666666666666,
+                "recall": 0.95,
+                "f1": 0.8636363636363636,
                 "support": 20
               },
               "feature": {
-                "precision": 0.75,
-                "recall": 0.75,
-                "f1": 0.75,
+                "precision": 0.7777777777777778,
+                "recall": 0.7,
+                "f1": 0.7368421052631579,
                 "support": 20
               },
               "question": {
-                "precision": 0.6666666666666666,
-                "recall": 0.5,
-                "f1": 0.5714285714285714,
+                "precision": 0.7777777777777778,
+                "recall": 0.7,
+                "f1": 0.7368421052631579,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7122222222222222,
-              "recall": 0.7166666666666667,
-              "f1": 0.7071428571428572,
+              "precision": 0.7824074074074074,
+              "recall": 0.7833333333333332,
+              "f1": 0.7791068580542264,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7122222222222222,
-              "recall": 0.7166666666666667,
-              "f1": 0.7071428571428572,
+              "precision": 0.7824074074074073,
+              "recall": 0.7833333333333333,
+              "f1": 0.7791068580542265,
               "support": 60
             },
             "confusion_matrix": [
               [
-                18,
+                19,
                 1,
-                1
+                0
               ],
               [
-                1,
-                15,
+                2,
+                14,
                 4
               ],
               [
-                6,
-                4,
-                10
+                3,
+                3,
+                14
               ]
             ]
           }
@@ -9969,50 +9976,50 @@
           "fold": 2,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14513465017080307,
+          "duration_seconds": 0.5821289890445769,
           "metrics": {
             "accuracy": 0.7333333333333333,
             "per_label": {
               "bug": {
-                "precision": 0.8095238095238095,
-                "recall": 0.85,
-                "f1": 0.8292682926829268,
+                "precision": 0.76,
+                "recall": 0.95,
+                "f1": 0.8444444444444444,
                 "support": 20
               },
               "feature": {
-                "precision": 0.6818181818181818,
-                "recall": 0.75,
-                "f1": 0.7142857142857143,
+                "precision": 0.6842105263157895,
+                "recall": 0.65,
+                "f1": 0.6666666666666666,
                 "support": 20
               },
               "question": {
-                "precision": 0.7058823529411765,
+                "precision": 0.75,
                 "recall": 0.6,
-                "f1": 0.6486486486486487,
+                "f1": 0.6666666666666666,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.732408114761056,
+              "precision": 0.7314035087719298,
               "recall": 0.7333333333333334,
-              "f1": 0.7307342185390966,
+              "f1": 0.7259259259259259,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7324081147610558,
+              "precision": 0.7314035087719298,
               "recall": 0.7333333333333333,
-              "f1": 0.7307342185390966,
+              "f1": 0.725925925925926,
               "support": 60
             },
             "confusion_matrix": [
               [
-                17,
-                1,
-                2
+                19,
+                0,
+                1
               ],
               [
-                2,
-                15,
+                4,
+                13,
                 3
               ],
               [
@@ -10027,56 +10034,56 @@
           "fold": 3,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14087326219305396,
+          "duration_seconds": 0.553137862123549,
           "metrics": {
-            "accuracy": 0.6833333333333333,
+            "accuracy": 0.8,
             "per_label": {
               "bug": {
-                "precision": 0.8888888888888888,
-                "recall": 0.4,
-                "f1": 0.5517241379310345,
+                "precision": 1.0,
+                "recall": 0.65,
+                "f1": 0.7878787878787878,
                 "support": 20
               },
               "feature": {
-                "precision": 0.8,
-                "recall": 0.8,
-                "f1": 0.8,
+                "precision": 0.9375,
+                "recall": 0.75,
+                "f1": 0.8333333333333334,
                 "support": 20
               },
               "question": {
-                "precision": 0.5483870967741935,
-                "recall": 0.85,
-                "f1": 0.6666666666666666,
+                "precision": 0.6451612903225806,
+                "recall": 1.0,
+                "f1": 0.7843137254901961,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.745758661887694,
-              "recall": 0.6833333333333335,
-              "f1": 0.6727969348659003,
+              "precision": 0.8608870967741935,
+              "recall": 0.7999999999999999,
+              "f1": 0.8018419489007723,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7457586618876941,
-              "recall": 0.6833333333333333,
-              "f1": 0.6727969348659004,
+              "precision": 0.8608870967741936,
+              "recall": 0.8,
+              "f1": 0.8018419489007724,
               "support": 60
             },
             "confusion_matrix": [
               [
-                8,
-                2,
-                10
+                13,
+                1,
+                6
               ],
               [
                 0,
-                16,
-                4
+                15,
+                5
               ],
               [
-                1,
-                2,
-                17
+                0,
+                0,
+                20
               ]
             ]
           }
@@ -10085,39 +10092,97 @@
           "fold": 4,
           "train_size": 240,
           "validation_size": 60,
-          "duration_seconds": 0.14964709989726543,
+          "duration_seconds": 0.5688203498721123,
           "metrics": {
-            "accuracy": 0.6833333333333333,
+            "accuracy": 0.75,
             "per_label": {
               "bug": {
-                "precision": 0.6818181818181818,
-                "recall": 0.75,
-                "f1": 0.7142857142857143,
+                "precision": 0.8,
+                "recall": 0.8,
+                "f1": 0.8,
                 "support": 20
               },
               "feature": {
-                "precision": 1.0,
-                "recall": 0.65,
-                "f1": 0.7878787878787878,
+                "precision": 0.875,
+                "recall": 0.7,
+                "f1": 0.7777777777777778,
                 "support": 20
               },
               "question": {
-                "precision": 0.52,
-                "recall": 0.65,
-                "f1": 0.5777777777777777,
+                "precision": 0.625,
+                "recall": 0.75,
+                "f1": 0.6818181818181818,
                 "support": 20
               }
             },
             "macro_average": {
-              "precision": 0.7339393939393939,
-              "recall": 0.6833333333333332,
-              "f1": 0.6933140933140933,
+              "precision": 0.7666666666666666,
+              "recall": 0.75,
+              "f1": 0.7531986531986532,
               "support": 60
             },
             "weighted_average": {
-              "precision": 0.7339393939393939,
-              "recall": 0.6833333333333333,
-              "f1": 0.6933140933140933,
+              "precision": 0.7666666666666667,
+              "recall": 0.75,
+              "f1": 0.7531986531986532,
+              "support": 60
+            },
+            "confusion_matrix": [
+              [
+                16,
+                1,
+                3
+              ],
+              [
+                0,
+                14,
+                6
+              ],
+              [
+                4,
+                1,
+                15
+              ]
+            ]
+          }
+        },
+        {
+          "fold": 5,
+          "train_size": 240,
+          "validation_size": 60,
+          "duration_seconds": 0.6080885701812804,
+          "metrics": {
+            "accuracy": 0.7833333333333333,
+            "per_label": {
+              "bug": {
+                "precision": 0.7894736842105263,
+                "recall": 0.75,
+                "f1": 0.7692307692307693,
+                "support": 20
+              },
+              "feature": {
+                "precision": 0.85,
+                "recall": 0.85,
+                "f1": 0.85,
+                "support": 20
+              },
+              "question": {
+                "precision": 0.7142857142857143,
+                "recall": 0.75,
+                "f1": 0.7317073170731707,
+                "support": 20
+              }
+            },
+            "macro_average": {
+              "precision": 0.7845864661654135,
+              "recall": 0.7833333333333333,
+              "f1": 0.7836460287679801,
+              "support": 60
+            },
+            "weighted_average": {
+              "precision": 0.7845864661654135,
+              "recall": 0.7833333333333333,
+              "f1": 0.78364602876798,
               "support": 60
             },
             "confusion_matrix": [
@@ -10127,80 +10192,22 @@
                 5
               ],
               [
-                0,
-                13,
-                7
-              ],
-              [
-                7,
-                0,
-                13
-              ]
-            ]
-          }
-        },
-        {
-          "fold": 5,
-          "train_size": 240,
-          "validation_size": 60,
-          "duration_seconds": 0.14772362727671862,
-          "metrics": {
-            "accuracy": 0.75,
-            "per_label": {
-              "bug": {
-                "precision": 0.7368421052631579,
-                "recall": 0.7,
-                "f1": 0.717948717948718,
-                "support": 20
-              },
-              "feature": {
-                "precision": 0.8947368421052632,
-                "recall": 0.85,
-                "f1": 0.8717948717948718,
-                "support": 20
-              },
-              "question": {
-                "precision": 0.6363636363636364,
-                "recall": 0.7,
-                "f1": 0.6666666666666666,
-                "support": 20
-              }
-            },
-            "macro_average": {
-              "precision": 0.7559808612440192,
-              "recall": 0.75,
-              "f1": 0.7521367521367521,
-              "support": 60
-            },
-            "weighted_average": {
-              "precision": 0.7559808612440192,
-              "recall": 0.75,
-              "f1": 0.752136752136752,
-              "support": 60
-            },
-            "confusion_matrix": [
-              [
-                14,
-                0,
-                6
-              ],
-              [
-                1,
-                17,
-                2
-              ],
-              [
-                4,
                 2,
-                14
+                17,
+                1
+              ],
+              [
+                2,
+                3,
+                15
               ]
             ]
           }
         }
       ],
       "fold_summary": {
-        "macro_f1_mean": 0.7112249711997399,
-        "macro_f1_std": 0.0278156852494024
+        "macro_f1_mean": 0.7687438829695116,
+        "macro_f1_std": 0.026457432923133146
       },
       "predictions": [
         {
@@ -10221,7 +10228,7 @@
           "issue_id": "d4b271086f84badf6295752dfd2c6b49e9155a647a06ebade33e9536f54beff1",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -10235,7 +10242,7 @@
           "issue_id": "9f88608879dfb2be29e2c1230e2f532bc68b2eeeea9e2cc35c8bd7737983f094",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -10256,21 +10263,21 @@
           "issue_id": "5887598cc04285a4fa362bd9198b8bd742e83e271cde060a6bc2dd44357746d2",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "47573b566d81ccb70dfc8eb64db2c247f043dc36b7309327ea6bdd26e0177033",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
           "issue_id": "5e6d4aab163291508a95ae9801a41fb140c29f4b40df86fc765ad95851bd76a9",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -10291,7 +10298,7 @@
           "issue_id": "8320b68c9e9c046d87fae747de7bb287dbfc767acd00bc4190d84b10738d69cc",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -10319,7 +10326,7 @@
           "issue_id": "9279600a87096ad428f1e97ffb535b24c807a19eea083927d9f265eea32e70b4",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -10333,21 +10340,21 @@
           "issue_id": "d7a3aa12f315ddd6a1ff162d4058d4297687a1251b258ae9a6486dff2a79e43e",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "73d526ce55b26ea970a10f0c70fd03978865312d17b1d6b92c22c7242a2bb01d",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
           "issue_id": "6dede68697c25a2da8bf3fd5f8b1aaa05812997134bddcb26c165563e6b0427d",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -10361,7 +10368,7 @@
           "issue_id": "148d2e5c3f2fbcfa17c8aa1b0889b8c56bc11cc25f9019ada95fdfbd670dd928",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -10438,7 +10445,7 @@
           "issue_id": "63c32b92b1e017546711e050c4295b8428d0a242638e38891cda35c25e1a1b81",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 1
         },
         {
@@ -10592,7 +10599,7 @@
           "issue_id": "90d6d88b604ca39c1ff6b27d2a26728af41f3c818beff9fa257177358213d095",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 1
         },
         {
@@ -10613,14 +10620,14 @@
           "issue_id": "b28ec002f915890c3f69d913f458ee58a9219cf0cafb0d1f96acf897406d82dc",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 1
         },
         {
           "issue_id": "376ddc96f08674873c835b2d83ed629362ffa2f485957f4c650426dd2fc1afe1",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 1
         },
         {
@@ -10634,7 +10641,7 @@
           "issue_id": "e7b0ce5d8fdb60e27f64a6b0c046df223d449552056818cc44d175649a098b64",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -10648,7 +10655,7 @@
           "issue_id": "bd8668962950decb4b5982fe24f1206d8c830ee5a299da088b600736c8bc3091",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -10669,7 +10676,7 @@
           "issue_id": "affa54099eee8156613197d43797556f81c3327736100500c7696445659aea58",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -10683,7 +10690,7 @@
           "issue_id": "368c52462ce1e99924541b0906ecf7918ad5e3b9ccf5d315c8186a8a9674d5fe",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
@@ -10718,14 +10725,14 @@
           "issue_id": "71021b0906d8e461feac12d3523e87a25c42d187470116776e52b1eae7c0771b",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 2
         },
         {
           "issue_id": "023ce55ef8e290373e29f07a46b93c444bafe0849fe64495e7fa2c84cf356896",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -10739,7 +10746,7 @@
           "issue_id": "739b1750ab465414d287ad7e4d40f7acae22b812a37c65732aff938642958ee9",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 2
         },
         {
@@ -10788,7 +10795,7 @@
           "issue_id": "342c609b13062ce3571f8b73abdbea53b493ca497ae71d153c4016cb786afbbd",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -10823,7 +10830,7 @@
           "issue_id": "b168fdbda91199ae041078673947dd7b818745ee45875fba0355aebadb32c21b",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -11005,7 +11012,7 @@
           "issue_id": "7662a8df6a5d7a9bfebdff7766c5fe2600fbe507baceb50245c8ff48ad7df335",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -11040,7 +11047,7 @@
           "issue_id": "71fdf4b3c0b19db1e0d63409692ca2d5d6be12899f6083d0556e8c56db39f6bd",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 2
         },
         {
@@ -11124,7 +11131,7 @@
           "issue_id": "6861312253e0f7477d525bb03c9edc00ae50356df418757ca560e8bcbad35a59",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -11159,14 +11166,14 @@
           "issue_id": "6cc6581108f817952fad4fecc0d3255c9398c469a659c3bb5531e4644aa34343",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "59d2cbf3d9baaa574727f72ac67e01f93c34aa8c0e47add601bceb591c42f1e1",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -11194,7 +11201,7 @@
           "issue_id": "1cbc263634d58d5eb3b483e4aa7b6b18e7f83dd1455176d4ad0b5aaf370ef3da",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
@@ -11341,21 +11348,21 @@
           "issue_id": "0458e0d5fb521ed55af61fb6ae4510ae07cf746f42162162b6775bedf9082443",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "75a5c1ac79bb3a86732cfa801cdb420200aead984ea71e1c834b346bbab97f5e",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "a134e19e6cf248998ba1aa91aba37d4691087331fd186aacf042fa784e28af85",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -11446,21 +11453,21 @@
           "issue_id": "a89bd2b88e625fe7642ea714c6e506a40b0a37d0fcfc543a01c3a69e6eefbdf6",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
           "issue_id": "db5e2dd3536d3fcf06a552a32166f001dbfa9f281420641f3a6a9b92085c2511",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 3
         },
         {
           "issue_id": "72a5df731c8e62387184ee90b87d1ce3c349dbd0a1e4c4f03815eae0e59a02ae",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 3
         },
         {
@@ -11502,7 +11509,7 @@
           "issue_id": "fb0be8ecf2b65a1fe15a90ea423e8f0cf5f630de77437849344c94493a63fa50",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -11523,7 +11530,7 @@
           "issue_id": "98454381183d77482384c8a68c852528160806ac5fbd7361c7d09f6020804702",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -11537,7 +11544,7 @@
           "issue_id": "5251ca88f49df62d0e5d0d9ff41fe5846b90b180e6a3522ff4d554cb93d69993",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -11572,14 +11579,14 @@
           "issue_id": "0bc40f4a29e5cc60454a0f344e2ae0e4aeb361a6ea05183fe35b40547ca9c9cd",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 4
         },
         {
           "issue_id": "3e46f37a8c27674fc2c0b73c90faa3f0a4b63a98b4c85d61d679f8498040e082",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -11600,7 +11607,7 @@
           "issue_id": "3f31d8617e17e39a465b4ccc02d2ef09977e6484eb4a9aafccd05c9fb0789b2b",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -11642,14 +11649,14 @@
           "issue_id": "4e0ac8d01fcb98cb2d87d3d89c7785a5f0c83ca68b3bb49eca512ef55eb3c3f7",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
           "issue_id": "5edda984d346045a1f0ab7dd330b8d8f524c4ac071c7555ffaf6ed86cb5a2a16",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -11698,7 +11705,7 @@
           "issue_id": "f67e69dfefdcbb190063d4fea66d79b1a7cd611b02771ba8d612abc92a16865a",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
@@ -11733,14 +11740,14 @@
           "issue_id": "9b2dc06ca50e52a02d283122c475819972d2610d2bc9fcd111818997ff3d2d2f",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "question",
           "fold": 4
         },
         {
           "issue_id": "f5743d7fd57439ac57a9e75e2fc0dca07b514c320d991db036e0712430769634",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -11852,7 +11859,7 @@
           "issue_id": "219999019b31c3b7d422bbdbb3885070e8d7b4e5a1f77bab3c7becad423e805c",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
@@ -11866,14 +11873,14 @@
           "issue_id": "421cc8391708a9fdbf2affb01ed9a5ee6ddb8df01de610991b3f41586a6ab99e",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 4
         },
         {
           "issue_id": "a30497ad858fa5b9212548528ca039a7071fdb0dc1b5701153dd992bd2ecb475",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 4
         },
         {
@@ -11908,21 +11915,21 @@
           "issue_id": "5b08d1c575580fa00e1c763f9069037ccb33b9bfbee9cc857d6f8127498e0c2d",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
           "issue_id": "414d7d59045077865a0e7ffce3cd443616c45d17897ab84f9047b94de68b6fdc",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
           "issue_id": "394ed9aaf8a641b23a2885efe5bac20492387bd01e11cfc0586500ba0ec0f6f6",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -11964,7 +11971,7 @@
           "issue_id": "f42e606a8359b27a0ede22c129f883f800f96b8d08464a383ee28f8526c95585",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "question",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -11992,7 +11999,7 @@
           "issue_id": "2553a8a250c4c1a16de7018972a4ff1a6787f21da9ce6088d0ac1234696331ca",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -12006,7 +12013,7 @@
           "issue_id": "e018b4f0be918a7ba4179acae55ea06f08107d8c86a386ed98de5631712069b2",
           "repository": "tensorflow/tensorflow",
           "actual": "question",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -12027,7 +12034,7 @@
           "issue_id": "853da0d98161fd3c3177a9b80c8c2431c841da3eb2582f4089376df00665340a",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "feature",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -12055,7 +12062,7 @@
           "issue_id": "39c1595796f3973bdf3cff15622ef8f37e7b2d93e94ab07f35b75df08e5c9c47",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -12125,7 +12132,7 @@
           "issue_id": "b1ac959d3e909d452181dc08a386da45dabccb75d89d32cb380cbfde1c2142de",
           "repository": "tensorflow/tensorflow",
           "actual": "feature",
-          "predicted": "bug",
+          "predicted": "feature",
           "fold": 5
         },
         {
@@ -12167,7 +12174,7 @@
           "issue_id": "7502e64c4687e85acea5886c276261960748e9a3a07e45f939d8870aa8b4c5ab",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -12244,7 +12251,7 @@
           "issue_id": "cd8d12951844030f3bd701d6e86a510b57fc34e06368471a040276ef8f7dbf3a",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -12258,7 +12265,7 @@
           "issue_id": "974c81ea8115c198bd82ed0547f0e1eef542fbf564fd940ca0ce43b3e6eabd6f",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "question",
+          "predicted": "bug",
           "fold": 5
         },
         {
@@ -12286,14 +12293,14 @@
           "issue_id": "1df2a1533056d303445be3d443b87d4e8920bb7ed0489946de045879154acc87",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
           "issue_id": "bd5fa51632c9970ab979ecd7dab4605106e3f0bfd38dd946ade87c547d154141",
           "repository": "tensorflow/tensorflow",
           "actual": "bug",
-          "predicted": "bug",
+          "predicted": "question",
           "fold": 5
         },
         {
@@ -12309,84 +12316,84 @@
   "overall": {
     "sample_count": 1500,
     "repository_average": {
-      "accuracy": 0.7133333333333334,
+      "accuracy": 0.7513333333333333,
       "per_label": {
         "bug": {
-          "precision": 0.7270278153874585,
-          "recall": 0.702,
-          "f1": 0.7136790630659269
+          "precision": 0.7803493753477635,
+          "recall": 0.738,
+          "f1": 0.7580910563854344
         },
         "feature": {
-          "precision": 0.7418029661908079,
-          "recall": 0.744,
-          "f1": 0.7420852419117968
+          "precision": 0.7474961460833082,
+          "recall": 0.782,
+          "f1": 0.7625804899266359
         },
         "question": {
-          "precision": 0.6823462524494119,
-          "recall": 0.694,
-          "f1": 0.6876197797634075
+          "precision": 0.7297965693454416,
+          "recall": 0.734,
+          "f1": 0.7312731712731713
         }
       },
       "macro_average": {
-        "precision": 0.7170590113425594,
-        "recall": 0.7133333333333334,
-        "f1": 0.7144613615803771
+        "precision": 0.7525473635921711,
+        "recall": 0.7513333333333333,
+        "f1": 0.7506482391950805
       },
       "weighted_average": {
-        "precision": 0.7170590113425594,
-        "recall": 0.7133333333333334,
-        "f1": 0.7144613615803771
+        "precision": 0.7525473635921711,
+        "recall": 0.7513333333333333,
+        "f1": 0.7506482391950805
       }
     },
     "pooled": {
-      "accuracy": 0.7133333333333334,
+      "accuracy": 0.7513333333333333,
       "per_label": {
         "bug": {
-          "precision": 0.7237113402061855,
-          "recall": 0.702,
-          "f1": 0.7126903553299493,
+          "precision": 0.7817796610169492,
+          "recall": 0.738,
+          "f1": 0.7592592592592593,
           "support": 500
         },
         "feature": {
-          "precision": 0.7380952380952381,
-          "recall": 0.744,
-          "f1": 0.7410358565737052,
+          "precision": 0.7447619047619047,
+          "recall": 0.782,
+          "f1": 0.7629268292682927,
           "support": 500
         },
         "question": {
-          "precision": 0.6790606653620352,
-          "recall": 0.694,
-          "f1": 0.6864490603363007,
+          "precision": 0.7296222664015904,
+          "recall": 0.734,
+          "f1": 0.7318045862412762,
           "support": 500
         }
       },
       "macro_average": {
-        "precision": 0.7136224145544864,
-        "recall": 0.7133333333333333,
-        "f1": 0.7133917574133184,
+        "precision": 0.7520546107268148,
+        "recall": 0.7513333333333333,
+        "f1": 0.7513302249229428,
         "support": 1500
       },
       "weighted_average": {
-        "precision": 0.7136224145544863,
-        "recall": 0.7133333333333334,
-        "f1": 0.7133917574133184,
+        "precision": 0.7520546107268148,
+        "recall": 0.7513333333333333,
+        "f1": 0.7513302249229428,
         "support": 1500
       },
       "confusion_matrix": [
         [
-          351,
-          59,
-          90
+          369,
+          55,
+          76
+        ],
+        [
+          49,
+          391,
+          60
         ],
         [
           54,
-          372,
-          74
-        ],
-        [
-          80,
-          73,
-          347
+          79,
+          367
         ]
       ]
     }

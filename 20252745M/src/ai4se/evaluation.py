@@ -141,6 +141,10 @@ def evaluate_cross_validation(
             fold_predictions = _normalise_predictions(
                 classifier.predict([issue.text for issue in fold.validation])
             )
+            fold_probabilities = _predict_probabilities(
+                classifier,
+                [issue.text for issue in fold.validation],
+            )
             duration = perf_counter() - started
             fold_references = [issue.label for issue in fold.validation]
             fold_metrics = calculate_metrics(fold_references, fold_predictions)
@@ -152,6 +156,7 @@ def evaluate_cross_validation(
                     fold.validation,
                     fold_predictions,
                     fold=fold.number,
+                    probabilities=fold_probabilities,
                 )
             )
             fold_rows.append(
@@ -161,6 +166,7 @@ def evaluate_cross_validation(
                     "validation_size": len(fold.validation),
                     "duration_seconds": duration,
                     "metrics": fold_metrics,
+                    **_training_details(classifier),
                 }
             )
 
@@ -196,9 +202,7 @@ def evaluate_holdout_by_repository(
     train_by_repository = _group_by_repository(train_issues)
     test_by_repository = _group_by_repository(test_issues)
     if set(train_by_repository) != set(test_by_repository):
-        raise ValueError(
-            "Training and test data must contain the same repositories"
-        )
+        raise ValueError("Training and test data must contain the same repositories")
 
     repositories: dict[str, dict[str, Any]] = {}
     for repository in sorted(train_by_repository):
@@ -213,6 +217,10 @@ def evaluate_holdout_by_repository(
         predictions = _normalise_predictions(
             classifier.predict([issue.text for issue in test])
         )
+        probabilities = _predict_probabilities(
+            classifier,
+            [issue.text for issue in test],
+        )
         duration = perf_counter() - started
         references = [issue.label for issue in test]
         repositories[repository] = {
@@ -220,7 +228,13 @@ def evaluate_holdout_by_repository(
             "train_size": len(train),
             "duration_seconds": duration,
             "metrics": calculate_metrics(references, predictions),
-            "predictions": _prediction_rows(test, predictions, fold=None),
+            **_training_details(classifier),
+            "predictions": _prediction_rows(
+                test,
+                predictions,
+                fold=None,
+                probabilities=probabilities,
+            ),
         }
 
     return _build_result(
@@ -270,9 +284,7 @@ def plot_confusion_matrices(
     try:
         import matplotlib.pyplot as plt
     except ImportError as exc:
-        raise ImportError(
-            "matplotlib is required to create evaluation plots"
-        ) from exc
+        raise ImportError("matplotlib is required to create evaluation plots") from exc
 
     labels = list(result["labels"])
     output_directory = Path(output_directory)
@@ -327,26 +339,76 @@ def _normalise_predictions(values: Sequence[Any]) -> list[str]:
     return predictions
 
 
+def _predict_probabilities(
+    classifier: TextClassifier,
+    texts: Sequence[str],
+) -> list[dict[str, float]] | None:
+    method = getattr(classifier, "predict_proba", None)
+    if method is None:
+        return None
+    try:
+        values = method(list(texts))
+    except (AttributeError, NotImplementedError, ValueError):
+        return None
+    if values is None or len(values) == 0:
+        return None
+
+    first = values[0]
+    if isinstance(first, Mapping):
+        return [
+            {label: float(row.get(label, 0.0)) for label in LABELS} for row in values
+        ]
+
+    classes = list(getattr(classifier, "classes_", ()))
+    if not classes:
+        return None
+    return [
+        {
+            label: float(row[classes.index(label)]) if label in classes else 0.0
+            for label in LABELS
+        }
+        for row in values
+    ]
+
+
+def _training_details(classifier: TextClassifier) -> dict[str, Any]:
+    """Collect optional model-specific training diagnostics."""
+
+    method = getattr(classifier, "training_summary", None)
+    if not callable(method):
+        return {}
+    summary = method()
+    if not isinstance(summary, Mapping):
+        raise TypeError("training_summary() must return a mapping")
+    return {"training": dict(summary)}
+
+
 def _prediction_rows(
     issues: Sequence[IssueReport],
     predictions: Sequence[str],
     *,
     fold: int | None,
+    probabilities: Sequence[Mapping[str, float]] | None = None,
 ) -> list[dict[str, Any]]:
     if len(issues) != len(predictions):
-        raise ValueError(
-            "The classifier must return exactly one prediction per issue"
-        )
-    return [
-        {
+        raise ValueError("The classifier must return exactly one prediction per issue")
+    if probabilities is not None and len(probabilities) != len(predictions):
+        raise ValueError("Probabilities must align with predictions")
+    rows = []
+    for index, (issue, prediction) in enumerate(zip(issues, predictions, strict=True)):
+        row = {
             "issue_id": issue.issue_id,
             "repository": issue.repo,
             "actual": issue.label,
             "predicted": prediction,
             "fold": fold,
         }
-        for issue, prediction in zip(issues, predictions, strict=True)
-    ]
+        if probabilities is not None:
+            scores = dict(probabilities[index])
+            row["scores"] = scores
+            row["confidence"] = scores.get(prediction)
+        rows.append(row)
+    return rows
 
 
 def _group_by_repository(
@@ -408,9 +470,7 @@ def _average_metrics(metrics: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "accuracy": mean(values["accuracy"] for values in metrics),
         "per_label": {
             label: {
-                metric: mean(
-                    values["per_label"][label][metric] for values in metrics
-                )
+                metric: mean(values["per_label"][label][metric] for values in metrics)
                 for metric in ("precision", "recall", "f1")
             }
             for label in LABELS
@@ -424,9 +484,7 @@ def _normalise_confusion_matrix(matrix: Sequence[Sequence[int]]) -> list[list[fl
     normalised: list[list[float]] = []
     for row in matrix:
         total = sum(row)
-        normalised.append(
-            [value / total if total else 0.0 for value in row]
-        )
+        normalised.append([value / total if total else 0.0 for value in row])
     return normalised
 
 

@@ -28,10 +28,14 @@ class KeywordClassifier:
     def predict(self, texts):
         """Recover the label keyword embedded in each test issue."""
 
-        return [
-            next(label for label in LABELS if label in text)
-            for text in texts
-        ]
+        return [next(label for label in LABELS if label in text) for text in texts]
+
+
+class DiagnosticKeywordClassifier(KeywordClassifier):
+    """Keyword classifier exposing optional training diagnostics."""
+
+    def training_summary(self):
+        return {"best_epoch": 2, "history": {"validation_loss": [0.5, 0.4]}}
 
 
 def make_issues(
@@ -107,6 +111,18 @@ def test_official_holdout_uses_one_model_per_repository():
     assert result["overall"]["pooled"]["accuracy"] == 1
 
 
+def test_evaluator_records_optional_training_diagnostics():
+    result = evaluate_holdout_by_repository(
+        make_issues(per_label=2),
+        make_issues(suffix="test", per_label=1),
+        lambda repository, fold: DiagnosticKeywordClassifier(),
+        model_name="diagnostic-keyword",
+    )
+
+    for repository in result["repositories"].values():
+        assert repository["training"]["best_epoch"] == 2
+
+
 def test_result_persistence_and_tables(tmp_path: Path):
     result = evaluate_holdout_by_repository(
         make_issues(per_label=2),
@@ -148,3 +164,4 @@ def test_setfit_defaults_match_the_supplied_notebook():
     assert config.body_batch_size == 16
     assert config.classifier_batch_size == 2
     assert config.prediction_batch_size == 8
+    assert config.max_sequence_length == 384

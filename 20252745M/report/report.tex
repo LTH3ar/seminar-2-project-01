@@ -1,0 +1,204 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{xcolor}
+
+\hypersetup{hidelinks}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{Issue Report Classification\\\large NLBSE'24 Project Report}
+\author{\textcolor{red}{Add student names and matriculation numbers}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This project implements a modular Python application for classifying GitHub
+issue reports as bugs, features, or questions. It provides interchangeable
+in-memory and file-backed repositories, a leakage-aware preprocessing and
+cross-validation pipeline, four classical TF--IDF classifiers, and a shared
+evaluation layer compatible with the supplied Sentence Transformer baselines.
+The deep-learning track adds a feed-forward network, a convolutional text
+classifier, and fine-tuned DistilBERT. All model selection is performed on the
+official training data before evaluation on the official test split.
+\end{abstract}
+
+\section{Problem and dataset}
+The NLBSE'24 dataset contains 3,000 labelled issues from React, TensorFlow,
+VS Code, Bitcoin, and OpenCV, spanning March 2016 to September 2023. Each
+repository contributes 100 examples of each class to both the training and
+test split. Although the course description calls the task multi-label, the
+released benchmark excludes issues with multiple labels; the implemented task
+is therefore three-class, single-label classification.
+
+The competition trains one classifier per repository. Its headline score is
+the arithmetic mean of the five per-repository weighted F1 scores. Macro F1,
+accuracy, per-class scores, and pooled metrics are retained as secondary
+diagnostics.
+
+\section{Application architecture}
+The domain entity is \code{IssueReport}. Business logic depends on the
+\code{IssueRepository} abstract interface rather than a storage technology.
+\code{InMemoryIssueRepository} stores objects in a Python list, while
+\code{FileIssueRepository} persists the same fields in CSV or JSON. Both
+implementations expose the same loading, saving, filtering, transformation,
+and tabular-conversion operations. Equivalence tests run the same workflow
+through both implementations and verify identical results and lossless file
+round trips.
+
+The \code{IssueDataService} coordinates loading, validation, preprocessing,
+auditing, and fold creation. This separation keeps persistence code out of the
+classification and evaluation modules and satisfies the requirement that the
+persistence layer can be changed with minimal application changes.
+
+\section{Data preparation}
+Validation checks the schema, allowed labels and repositories, missing text,
+cell balance, and split size. Duplicate detection hashes Unicode-normalized,
+case-folded title/body text. Stratified group folds keep every normalized
+duplicate group on one side of a fold, preventing vocabulary and label leakage.
+
+Four cleaning levels are available: raw whitespace normalization,
+software-aware conservative replacement, light Markdown/code cleanup, and
+aggressive full normalization. A training-only ablation also varies title
+weight, word truncation, and character n-grams. The best tested configuration
+uses raw normalized text, a title weight of three, a 400-word limit, and both
+word and character TF--IDF.
+
+\begin{table}[ht]
+\centering
+\caption{Top preprocessing configurations on duplicate-safe training folds.}
+\input{tables/preprocessing_ablation.tex}
+\end{table}
+
+\section{Classical models and selection}
+The four candidates are Complement Naive Bayes, logistic regression, linear
+SVM, and random forest. Each estimator is a complete scikit-learn pipeline, so
+TF--IDF vocabulary and inverse-document frequencies are learned only from the
+current training fold. Word features use unigrams and bigrams; character
+features use boundary-aware 3--5 grams.
+
+Model families are compared with five-fold stratified group cross-validation
+over five random seeds. Selection uses the mean cross-repository weighted F1.
+The first seed's complete out-of-fold predictions and all repeated-run
+summaries are saved as versioned JSON for inspection.
+
+\begin{table}[ht]
+\centering
+\caption{Repeated grouped cross-validation used for model selection.}
+\input{tables/repeated_cv.tex}
+\end{table}
+
+\section{Deep-learning models}
+Track C implements three models through the same evaluator. The feed-forward
+network consumes word unigram/bigram TF--IDF and contains hidden layers of 256
+and 64 ReLU units. The TextCNN learns 128-dimensional word embeddings and uses
+parallel convolution filters of widths 2--5 followed by global max pooling.
+Both use dropout, AdamW, gradient clipping, and validation-loss early stopping.
+
+The transformer alternative is \emph{distilbert-base-uncased}, selected instead
+of RoBERTa because the specification requires only one of the two and
+DistilBERT has lower memory and runtime requirements on Colab. The complete
+encoder and a new three-class head are fine-tuned with linear warmup.
+
+Each model makes a duplicate-safe stratified validation split from its current
+training partition. This happens before fitting the FFNN vectorizer or CNN
+vocabulary, avoiding representation leakage. The official test set is never
+used for early stopping. Per-epoch training loss, validation loss, validation
+accuracy, weighted F1, best epoch, device, and parameter count are retained in
+the result JSON.
+
+\IfFileExists{tables/deep_learning.tex}{
+\begin{table}[ht]
+\centering
+\caption{Completed Track C evaluations on the official holdout.}
+\input{tables/deep_learning.tex}
+\end{table}
+}{
+Final Track C scores are intentionally omitted until the corresponding
+experiment artifacts are generated on the target CPU or GPU environment.
+}
+
+\section{Evaluation and robustness}
+The selected classical family is retrained on the complete training subset of
+each repository and evaluated once on its matching official test subset. The shared
+evaluator records metrics, confusion matrices, timings, stable issue IDs, and
+probabilities when the estimator exposes them. A project-stratified bootstrap
+quantifies uncertainty. Error artifacts summarize confusion directions,
+performance by text-length quintile, and high-confidence mistakes.
+
+For a temporal robustness check, the combined dataset is deduplicated before
+each repository/class cell is divided into older training issues and newer test
+issues. A class- and repository-matched random split is evaluated as a control.
+This is an additional robustness analysis, not a replacement for the official
+competition split.
+
+\begin{table}[ht]
+\centering
+\caption{Selected model on the official holdout split.}
+\input{tables/official_holdout.tex}
+\end{table}
+
+The classical winner outperforms the supplied fastText baseline but remains
+below RoBERTa and the dedicated SetFit Sentence Transformer baseline. This is
+consistent with pretrained representations transferring semantic information
+that sparse features must learn from only 300 training issues per repository.
+
+\begin{table}[ht]
+\centering
+\caption{Comparison with the supplied locally reproduced baselines.}
+\input{tables/baseline_comparison.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Bootstrap interval and approximate power diagnostic.}
+\input{tables/uncertainty.tex}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Matched random and chronological robustness evaluation.}
+\input{tables/temporal_robustness.tex}
+\end{table}
+
+\section{Reproducibility}
+The repository provides a development container, pinned dependency groups,
+Jupyter notebooks, command-line experiment drivers, unit tests, and GitHub
+Actions checks. The principal commands are \code{make data},
+\code{make pipeline}, \code{make classical-ablation}, \code{make classical},
+\code{make results}, and \code{make report}. Generated JSON retains model
+settings and random seeds, allowing tables to be rebuilt without copying
+numbers manually into this document. Track C is run with
+\code{make deep-neural} and \code{make deep-transformer}; a GPU is strongly
+recommended for the transformer.
+
+\section{Limitations and conclusion}
+The benchmark is small and balanced, while real issue streams are larger,
+imbalanced, and change over time. Cross-validation folds are not independent,
+and the minimum-detectable-difference calculation is an approximate paired
+accuracy diagnostic rather than a formal confidence bound for weighted F1.
+The temporal split also changes the training distribution and is intended as a
+sensitivity analysis. Within these limits, the project supplies a complete,
+modular, leakage-aware comparison of classical, neural, and pretrained
+transformer models, with an auditable path from raw data to reported results.
+
+\begin{thebibliography}{9}
+\bibitem{nlbse24}
+Kallis et al. \emph{The NLBSE'24 Tool Competition on Issue Report
+Classification}. NLBSE, 2024.
+
+\bibitem{setfit}
+Tunstall et al. \emph{Efficient Few-Shot Learning Without Prompts}. 2022.
+
+\bibitem{distilbert}
+Sanh et al. \emph{DistilBERT, a distilled version of BERT: smaller, faster,
+cheaper and lighter}. 2019.
+\end{thebibliography}
+
+\end{document}

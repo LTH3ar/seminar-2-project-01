@@ -31,8 +31,8 @@ import json
 import sys
 from abc import ABC, abstractmethod
 from collections import Counter
+from collections.abc import Callable, Iterable, Iterator, Sequence
 from pathlib import Path
-from typing import Callable, Iterable, Iterator, Sequence
 
 from .model import IssueReport
 
@@ -52,7 +52,7 @@ class IssueRepository(ABC):
     # ---------------------------------------------------------------- core --
 
     @abstractmethod
-    def load(self) -> "IssueRepository":
+    def load(self) -> IssueRepository:
         """Populate the repository from its backing store. Returns self."""
 
     @abstractmethod
@@ -159,7 +159,7 @@ class InMemoryIssueRepository(IssueRepository):
     def __init__(self, issues: Sequence[IssueReport] | None = None) -> None:
         self._issues: list[IssueReport] = list(issues or [])
 
-    def load(self) -> "InMemoryIssueRepository":
+    def load(self) -> InMemoryIssueRepository:
         """No backing store to read from; present for interface symmetry."""
         return self
 
@@ -208,7 +208,7 @@ class FileIssueRepository(IssueRepository):
 
     # ------------------------------------------------------------- reading --
 
-    def load(self) -> "FileIssueRepository":
+    def load(self) -> FileIssueRepository:
         """Read the whole backing file into memory."""
         if not self.path.exists():
             raise FileNotFoundError(f"No such dataset file: {self.path}")
@@ -275,7 +275,7 @@ def make_repository(
     kind: str = "memory",
     issues: Sequence[IssueReport] | None = None,
     path: str | Path | None = None,
-    **kwargs,
+    fmt: str | None = None,
 ) -> IssueRepository:
     """Factory that hides the concrete persistence class from the caller.
 
@@ -287,6 +287,7 @@ def make_repository(
         kind: ``"memory"`` or ``"file"``.
         issues: Initial content, used by the in-memory implementation.
         path: Backing file, required when ``kind == "file"``.
+        fmt: Optional file format override (``"csv"`` or ``"json"``).
 
     Returns:
         A concrete :class:`IssueRepository`.
@@ -297,7 +298,7 @@ def make_repository(
     if kind == "file":
         if path is None:
             raise ValueError("A file-backed repository requires a `path`.")
-        repository = FileIssueRepository(path, autoload=False, **kwargs)
+        repository = FileIssueRepository(path, fmt=fmt, autoload=False)
         if issues is not None:
             repository.clear()
             repository.add_all(issues)
