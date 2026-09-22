@@ -1,0 +1,262 @@
+{
+  "model": "tfidf_logreg_tuned",
+  "n_errors": 385,
+  "confusion_pairs": [
+    {
+      "true": "question",
+      "predicted": "feature",
+      "count": 83,
+      "examples": [
+        "Bug: Inconsistent behavior between development and production builds\n\nI was trying to implement `useOn`, a hook lets you",
+        "Mixin rewrite with React and Higher-order-functions\n\n@gaearon How would you re-write the following mixins?\r\n\r\nhttps://gi",
+        "Can I help?\n\nHi guys,\r\nI would really like to join you in order to help with the maintenance of React.\r\n\r\nMy change prop"
+      ]
+    },
+    {
+      "true": "bug",
+      "predicted": "question",
+      "count": 82,
+      "examples": [
+        "Bug: Radio button onChange not called in current React Canary\n\n<!--\r\n  Please provide a clear and concise description of",
+        "Bug: out of order application of useState changes\n\nAfter updating my app to React 18 I had problem with inconsistent sta",
+        "Bug: setState is not flushed if an iframe is added in the same tick in Safari\n\nBatched state changes are not flushed if "
+      ]
+    },
+    {
+      "true": "feature",
+      "predicted": "question",
+      "count": 63,
+      "examples": [
+        "New React Developer Tools does not clearly indicate empty object or array\n\n**Do you want to request a *feature* or repor",
+        "New React DevTools can't access immutable.js objects?\n\n<!--\r\n  Note: if the issue is about documentation or the website,",
+        "eslint-react-hooks: should we enforce to use React.useMemo if there is no state hooks?\n\n1. Regarding the performance opt"
+      ]
+    },
+    {
+      "true": "question",
+      "predicted": "bug",
+      "count": 61,
+      "examples": [
+        "Bug: infinite function component rendering with lazy loading\n\nUnexpected behavior (infinite function component rendering",
+        "In React and react-dom 16 Upgrade, getting error: Uncaught TypeError: Cannot read property 'input' of undefined\n\nI am tr",
+        "Error starting Tensorflow in Python\n\n### Issue type\n\nOthers\n\n### Have you reproduced the bug with TensorFlow Nightly?\n\nY"
+      ]
+    },
+    {
+      "true": "bug",
+      "predicted": "feature",
+      "count": 53,
+      "examples": [
+        "tflite-rutime: RuntimeError: Encountered unresolved custom op: FarthestPointSample.\n\n**System information**\r\n- OS Platfo",
+        "tf.keras.models.model_from_json() missing a safe_mode parameter\n\n### Issue type\n\nBug\n\n### Have you reproduced the bug wi",
+        "Crashes in model.save, wrapt error\n\n<details><summary>Click to expand!</summary> \r\n \r\n ### Issue Type\r\n\r\nBug\r\n\r\n### Have"
+      ]
+    },
+    {
+      "true": "feature",
+      "predicted": "bug",
+      "count": 43,
+      "examples": [
+        "[DevTools] Manifest version 2 is deprecated\n\n### Website or app\n\nhttps://developer.chrome.com/blog/mv2-transition/\n\n### ",
+        "Bug: react-devtools not working inside react based chrome extensions\n\nreact-devtools not working inside react based chro",
+        "The parameter indices in tf.gather are supported int16\n\n<details><summary>Click to expand!</summary> \r\n \r\n ### Issue Typ"
+      ]
+    }
+  ],
+  "per_repo_class_errors": [
+    {
+      "repo": "bitcoin/bitcoin",
+      "label": "bug",
+      "total": 100,
+      "errors": 36,
+      "error_rate": 0.36
+    },
+    {
+      "repo": "bitcoin/bitcoin",
+      "label": "feature",
+      "total": 100,
+      "errors": 26,
+      "error_rate": 0.26
+    },
+    {
+      "repo": "bitcoin/bitcoin",
+      "label": "question",
+      "total": 100,
+      "errors": 43,
+      "error_rate": 0.43
+    },
+    {
+      "repo": "facebook/react",
+      "label": "bug",
+      "total": 100,
+      "errors": 10,
+      "error_rate": 0.1
+    },
+    {
+      "repo": "facebook/react",
+      "label": "feature",
+      "total": 100,
+      "errors": 15,
+      "error_rate": 0.15
+    },
+    {
+      "repo": "facebook/react",
+      "label": "question",
+      "total": 100,
+      "errors": 29,
+      "error_rate": 0.29
+    },
+    {
+      "repo": "microsoft/vscode",
+      "label": "bug",
+      "total": 100,
+      "errors": 37,
+      "error_rate": 0.37
+    },
+    {
+      "repo": "microsoft/vscode",
+      "label": "feature",
+      "total": 100,
+      "errors": 25,
+      "error_rate": 0.25
+    },
+    {
+      "repo": "microsoft/vscode",
+      "label": "question",
+      "total": 100,
+      "errors": 32,
+      "error_rate": 0.32
+    },
+    {
+      "repo": "opencv/opencv",
+      "label": "bug",
+      "total": 100,
+      "errors": 36,
+      "error_rate": 0.36
+    },
+    {
+      "repo": "opencv/opencv",
+      "label": "feature",
+      "total": 100,
+      "errors": 21,
+      "error_rate": 0.21
+    },
+    {
+      "repo": "opencv/opencv",
+      "label": "question",
+      "total": 100,
+      "errors": 19,
+      "error_rate": 0.19
+    },
+    {
+      "repo": "tensorflow/tensorflow",
+      "label": "bug",
+      "total": 100,
+      "errors": 16,
+      "error_rate": 0.16
+    },
+    {
+      "repo": "tensorflow/tensorflow",
+      "label": "feature",
+      "total": 100,
+      "errors": 19,
+      "error_rate": 0.19
+    },
+    {
+      "repo": "tensorflow/tensorflow",
+      "label": "question",
+      "total": 100,
+      "errors": 21,
+      "error_rate": 0.21
+    }
+  ],
+  "length_quintile_accuracy": [
+    {
+      "quintile": 1,
+      "min_words": 1,
+      "max_words": 69,
+      "n": 300,
+      "accuracy": 0.6933333333333334
+    },
+    {
+      "quintile": 2,
+      "min_words": 69,
+      "max_words": 127,
+      "n": 307,
+      "accuracy": 0.7328990228013029
+    },
+    {
+      "quintile": 3,
+      "min_words": 127,
+      "max_words": 178,
+      "n": 310,
+      "accuracy": 0.8129032258064516
+    },
+    {
+      "quintile": 4,
+      "min_words": 178,
+      "max_words": 280,
+      "n": 301,
+      "accuracy": 0.7375415282392026
+    },
+    {
+      "quintile": 5,
+      "min_words": 280,
+      "max_words": 5050,
+      "n": 300,
+      "accuracy": 0.74
+    }
+  ],
+  "template_lift": {
+    "with_template": {
+      "microsoft/vscode": {
+        "bug": 2,
+        "question": 1
+      },
+      "tensorflow/tensorflow": {
+        "feature": 1
+      },
+      "facebook/react": {
+        "bug": 10,
+        "feature": 1,
+        "question": 5
+      },
+      "bitcoin/bitcoin": {
+        "question": 8,
+        "bug": 2
+      },
+      "opencv/opencv": {
+        "bug": 57,
+        "question": 49,
+        "feature": 9
+      }
+    },
+    "without_template": {
+      "microsoft/vscode": {
+        "bug": 98,
+        "feature": 100,
+        "question": 99
+      },
+      "tensorflow/tensorflow": {
+        "question": 100,
+        "feature": 99,
+        "bug": 100
+      },
+      "facebook/react": {
+        "bug": 90,
+        "feature": 99,
+        "question": 95
+      },
+      "bitcoin/bitcoin": {
+        "feature": 100,
+        "question": 92,
+        "bug": 98
+      },
+      "opencv/opencv": {
+        "bug": 43,
+        "question": 51,
+        "feature": 91
+      }
+    }
+  }
+}

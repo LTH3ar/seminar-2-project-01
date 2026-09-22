@@ -1,0 +1,19 @@
+# Core scientific stack
+numpy>=1.24
+pandas>=1.5
+scikit-learn>=1.2
+matplotlib>=3.6
+
+# Deep learning
+torch>=2.0
+
+# NLP utilities (lemmatizer and stopwords)
+nltk>=3.8
+
+# Testing
+pytest>=7.0
+
+# Optional: Sentence Transformers (for frozen encoder & SetFit stages)
+# sentence-transformers>=2.2
+# setfit>=1.0
+# datasets>=2.0

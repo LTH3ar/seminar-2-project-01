@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "C:\\Python314\\python.exe",
+  "python.analysis.extraPaths": [
+    "src",
+    "d:/HUST/seminar-2-project-01/252276M"
+  ]
+}
