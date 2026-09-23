@@ -5,7 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from pathlib import Path
 
-from .audit import DatasetAudit, LeakageReport, audit_dataset, audit_train_test_leakage
+from .audit import DatasetAudit, LeakageReport, audit_dataset
+from .audit import audit_train_test_leakage
 from .folds import DataFold, make_folds_by_repository
 from .loader import DEFAULT_RAW_DIR, load_dataset
 from .model import IssueReport
@@ -26,7 +27,7 @@ class IssueDataService:
         *,
         kind: str = "memory",
         raw_dir: str | Path = DEFAULT_RAW_DIR,
-    ) -> IssueDataService:
+    ) -> "IssueDataService":
         """Load the official train and test repositories."""
         return cls(load_dataset(kind=kind, raw_dir=raw_dir))
 
@@ -103,7 +104,8 @@ class IssueDataService:
             max_words=max_words,
         )
         return pd.DataFrame(
-            {**issue.to_dict(), **structural_features(issue)} for issue in issues
+            {**issue.to_dict(), **structural_features(issue)}
+            for issue in issues
         )
 
     def make_folds(

@@ -14,14 +14,14 @@ from pathlib import Path
 from .repository import IssueRepository, make_repository
 
 BASE_URL = (
-    "https://raw.githubusercontent.com/nlbse2024/issue-report-classification/main/data"
+    "https://raw.githubusercontent.com/nlbse2024/"
+    "issue-report-classification/main/data"
 )
 
 SPLIT_FILES = {
     "train": "issues_train.csv",
     "test": "issues_test.csv",
 }
-
 
 def _project_root() -> Path:
     """Locate the project root so paths do not depend on the working directory.

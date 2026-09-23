@@ -78,10 +78,13 @@
     "source=ai4se-hf-cache,target=/home/vscode/.cache/huggingface,type=volume"
   ],
 
-  // Uncomment to expose an NVIDIA GPU to the container for track C.
-  // Requires the NVIDIA Container Toolkit on the host.
-  // "hostRequirements": { "gpu": "optional" },
-  // "runArgs": ["--gpus", "all", "--shm-size=2g"],
+  // Use an NVIDIA GPU for track C when the host has one. "optional" means the
+  // container still builds on a machine without the NVIDIA Container Toolkit
+  // -- which is most laptops, and the exam machine. Do NOT add
+  // "--gpus", "all" to runArgs: that flag is passed to docker run
+  // unconditionally and makes the container fail to start without a GPU.
+  "hostRequirements": { "gpu": "optional" },
+  "runArgs": ["--shm-size=2g"],
 
   "waitFor": "postCreateCommand"
 }
