@@ -1,0 +1,343 @@
+{
+  "model_name": "TF-IDF + Logistic Regression",
+  "evaluation": "official_holdout",
+  "total_predictions": 1500,
+  "total_errors": 365,
+  "confusions": [
+    {
+      "actual": "bug",
+      "predicted": "question",
+      "count": 87,
+      "share_of_errors": 0.23835616438356164
+    },
+    {
+      "actual": "question",
+      "predicted": "feature",
+      "count": 85,
+      "share_of_errors": 0.2328767123287671
+    },
+    {
+      "actual": "question",
+      "predicted": "bug",
+      "count": 64,
+      "share_of_errors": 0.17534246575342466
+    },
+    {
+      "actual": "feature",
+      "predicted": "question",
+      "count": 52,
+      "share_of_errors": 0.14246575342465753
+    },
+    {
+      "actual": "bug",
+      "predicted": "feature",
+      "count": 43,
+      "share_of_errors": 0.1178082191780822
+    },
+    {
+      "actual": "feature",
+      "predicted": "bug",
+      "count": 34,
+      "share_of_errors": 0.09315068493150686
+    }
+  ],
+  "errors_by_length": [
+    {
+      "bin": 1,
+      "issues": 300,
+      "minimum_words": 1,
+      "maximum_words": 69,
+      "median_words": 41.0,
+      "accuracy": 0.76,
+      "error_rate": 0.24
+    },
+    {
+      "bin": 2,
+      "issues": 300,
+      "minimum_words": 70,
+      "maximum_words": 127,
+      "median_words": 103.0,
+      "accuracy": 0.7866666666666666,
+      "error_rate": 0.21333333333333337
+    },
+    {
+      "bin": 3,
+      "issues": 300,
+      "minimum_words": 127,
+      "maximum_words": 178,
+      "median_words": 151.0,
+      "accuracy": 0.7866666666666666,
+      "error_rate": 0.21333333333333337
+    },
+    {
+      "bin": 4,
+      "issues": 300,
+      "minimum_words": 178,
+      "maximum_words": 280,
+      "median_words": 217.0,
+      "accuracy": 0.7533333333333333,
+      "error_rate": 0.2466666666666667
+    },
+    {
+      "bin": 5,
+      "issues": 300,
+      "minimum_words": 281,
+      "maximum_words": 5050,
+      "median_words": 394.0,
+      "accuracy": 0.6966666666666667,
+      "error_rate": 0.30333333333333334
+    }
+  ],
+  "high_confidence_mistakes": [
+    {
+      "issue_id": "018cfe2f17217ce0f983b60b19de0acad94950b3891991f89a1b2b41498fdfd4",
+      "repository": "facebook/react",
+      "actual": "feature",
+      "predicted": "bug",
+      "confidence": 0.9617812633514404,
+      "title": "[DevTools] Manifest version 2 is deprecated",
+      "excerpt": "### Website or app  https://developer.chrome.com/blog/mv2-transition/  ### Repro steps  Use latest React DevTools with Electron (Chromium) (18.2.0 / Chromium 100)\r \r ```\r   (node:80082) ExtensionLoadWarning: Warnings loading extension at ./",
+      "word_count": 99
+    },
+    {
+      "issue_id": "5fb77f44548be5aa602939fa4c61c5a0360f66f960cc846d401e1f32c7d32d86",
+      "repository": "microsoft/vscode",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.9542971849441528,
+      "title": "[Bug] Tela preta no terminal do VS Code",
+      "excerpt": "Type: <b>Bug</b>\r \r o meu terminal do vscode ficou todo preto derrepente, ele esta normal e quando fui abri-lo estava preto, nao consigo resolver e nao posso voltar a minha rotina por causa disso.\r \r My vscode terminal suddenly went all bla",
+      "word_count": 199
+    },
+    {
+      "issue_id": "706863a1b836baac33a57c2da721bf202a3323b81d614df85d310965da93fdd3",
+      "repository": "microsoft/vscode",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.9413244128227234,
+      "title": "Forders not opening",
+      "excerpt": "Type: <b>Bug</b>  When I open new window VS Code, showing me \"Recent\" part. In this part has a menu More.... When I press More... menu nothing is happend. This problem has been for 2-3 month  VS Code version: Code 1.81.1 (6c3e3dba23e8fadc36",
+      "word_count": 174
+    },
+    {
+      "issue_id": "1c6578b8b0d2d2c879a707b30246e7fc1a81f654c6825b3a47f64825da3f850a",
+      "repository": "microsoft/vscode",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.9367612600326538,
+      "title": "please allow for multiple tunnels on same machine",
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-- Please search existing issues to avoid creating duplicates. -->\r \r <!-- Descri",
+      "word_count": 176
+    },
+    {
+      "issue_id": "d66405408cfe8d7486ddaf3a100496632a3d7e119c898117b086e1e18515aa03",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.9285899996757507,
+      "title": "`sendtoaddress` tries to use unspendable UTXOs and fails",
+      "excerpt": "**Is your feature request related to a problem? Please describe.**\r <!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->\r problem: having to wait for a confirmation before able to spend them ",
+      "word_count": 158
+    },
+    {
+      "issue_id": "7a4766248f6ddde1e79b6abb2c5b8de07ecb189952044dfe3b6354f61fdd042a",
+      "repository": "opencv/opencv",
+      "actual": "feature",
+      "predicted": "question",
+      "confidence": 0.9229256510734558,
+      "title": "darknet_io.cpp:250: error: (-212:Parsing error) Unsupported activation: silu in function 'setActivation'",
+      "excerpt": "<!--\r If you have a question rather than reporting a bug please go to https://forum.opencv.org where you get much faster responses.\r If you need further assistance please read [How To Contribute](https://github.com/opencv/opencv/wiki/How_to",
+      "word_count": 507
+    },
+    {
+      "issue_id": "491ef37d402ed75cc9e55cf1f55f8a76ed0f9b985fdc4f875401b367679f844d",
+      "repository": "opencv/opencv",
+      "actual": "feature",
+      "predicted": "question",
+      "confidence": 0.9220234155654907,
+      "title": "[request] New parameter to imwrite JPEG to disable chroma subsampling",
+      "excerpt": "##### System information (version)\r <!-- Example\r - OpenCV => 4.2\r - Operating System / Platform => Windows 64 Bit\r - Compiler => Visual Studio 2017\r -->\r \r - OpenCV => all versions and OS's\r \r ##### Detailed description\r \r `cv::imwrite()` ",
+      "word_count": 554
+    },
+    {
+      "issue_id": "16ee24f798b146572cea17a7a2cfd88c3bfffcec3f40820bc83f4c15cf90def8",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "bug",
+      "confidence": 0.9172027707099915,
+      "title": "Intermittent issue in p2p_ibd_stalling.py                                        self.wait_until(lambda: self.total_bytes_recv_for_blocks() == 172761)",
+      "excerpt": "```\r wget https://drahtbot.space/temp_scratch/p2p_ibd_stalling_96.tar.xz\r tar -xvf p2p_ibd_stalling_96.tar.xz\r test/functional/combine_logs.py -c  ./p2p_ibd_stalling_96\r ```\r \r ```\r  test  2023-02-14T20:54:45.479000Z TestFramework (ERROR): ",
+      "word_count": 85
+    },
+    {
+      "issue_id": "c697e9edf5941a8876a573871b47af671622229898ce96b686124caa297418ec",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.9014549255371094,
+      "title": "Alternative read only paths for -blocksdir",
+      "excerpt": "### Please describe the feature you'd like to see added.  The Blockchain is growing in size over the years. It would be nice to be able to store it accross multiple hard drives and specify additional blocksdirs that are meant for validation",
+      "word_count": 212
+    },
+    {
+      "issue_id": "ac27648e7f502320784ed46f0401817f7f1a4646c686aa2108d2342a09047475",
+      "repository": "microsoft/vscode",
+      "actual": "feature",
+      "predicted": "question",
+      "confidence": 0.8986383080482483,
+      "title": "Small UI Improvement",
+      "excerpt": "Type: <b>Bug</b>\r \r Looks like the tooltip (when hovering on file tabs) utilizes a light theme approach, meanwhile all the app is used a dark theme. Appearing this tooltip when you work in the dark theme for a while is painful for the eyes ",
+      "word_count": 192
+    },
+    {
+      "issue_id": "a380aa45150f209f57d341de104f50386a19498a4ffaf030f65bc84ddb74ab7f",
+      "repository": "microsoft/vscode",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8985915184020996,
+      "title": "Allow webview context menus triggered by primary click",
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-- Please search existing issues to avoid creating duplicates. -->\r \r <!-- Descri",
+      "word_count": 224
+    },
+    {
+      "issue_id": "90cdf27a57694dbf40740712b1f8a9c34b168b700304178e8105de725265bf3c",
+      "repository": "microsoft/vscode",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8963486552238464,
+      "title": "Open files from different folders in one workspace without having to split editor",
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-- Please search existing issues to avoid creating duplicates. -->\r \r <!-- Descri",
+      "word_count": 127
+    },
+    {
+      "issue_id": "4b4fee24d15ca5dc2fab2a2cedb6959b8a798ce3c3909484c07fac867d837848",
+      "repository": "tensorflow/tensorflow",
+      "actual": "question",
+      "predicted": "bug",
+      "confidence": 0.8897612690925598,
+      "title": "Error when runnning tensorflow.python.ops.sparse_ops.sparse_to_dense",
+      "excerpt": "<details><summary>Click to expand!</summary>     ### Issue Type  Bug  ### Have you reproduced the bug with TF nightly?  No  ### Source  binary  ### Tensorflow Version  2.10.0  ### Custom Code  Yes  ### OS Platform and Distribution  Ubuntu 2",
+      "word_count": 517
+    },
+    {
+      "issue_id": "567ae69a1fe0d0a258c95446ef4c9c07a693fe56e1275a0eae17f22d1e07944b",
+      "repository": "microsoft/vscode",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8847852945327759,
+      "title": "[Feature Request] Add workbench action to split editor terminal below",
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-- Please search existing issues to avoid creating duplicates. -->\r \r <!-- Descri",
+      "word_count": 108
+    },
+    {
+      "issue_id": "84e2dc785c97a6a40ca69dda0cf955579229fc08cd3edb814605ed68783c8fd3",
+      "repository": "bitcoin/bitcoin",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.8769957423210144,
+      "title": "RPC request gives an exception on more than two wallet has been loaded.",
+      "excerpt": "<!-- This issue tracker is only for technical issues related to Bitcoin Core.\r \r General bitcoin questions and/or support requests are best directed to the Bitcoin StackExchange at https://bitcoin.stackexchange.com.\r \r For reporting securit",
+      "word_count": 298
+    },
+    {
+      "issue_id": "5535c4574ece4b322cfc91bf9e27f3357616b0cd7f5fd3595664eb2bf2dfaec8",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "bug",
+      "confidence": 0.8717803359031677,
+      "title": "index: ThreadSanitizer: data race on vptr",
+      "excerpt": "Seen with master @ 220008604f15d5078092dea28be3e3f7f11b6c8f on aarch64 (with `NO_BDB=1`). Follow up from #27298. See also #26188.\r \r ```bash\r 2023-03-28T13:52:47.882295Z (mocktime: 2020-08-31T15:34:12Z) [test] [dbwrapper.cpp:158] [CDBWrappe",
+      "word_count": 658
+    },
+    {
+      "issue_id": "f67c1a44c5f3244943fa4f3451eed855b8dfa1290ed7cfbd101c2f120c2d531c",
+      "repository": "bitcoin/bitcoin",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.8717219233512878,
+      "title": "signmessage and verifymessage : \"Address does not refer to key\"",
+      "excerpt": "<!-- This issue tracker is only for technical issues related to Bitcoin Core.\r \r \r General bitcoin questions and/or support requests are best directed to the Bitcoin StackExchange at https://bitcoin.stackexchange.com.\r \r For reporting secur",
+      "word_count": 298
+    },
+    {
+      "issue_id": "7e285f057abeef6b24603aa3ea602d3a43bf4f3fa79766cb6b08f7b887dfab76",
+      "repository": "bitcoin/bitcoin",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.8625844717025757,
+      "title": "v22.0 wallet freezes on Mac OS Ventura on arm64",
+      "excerpt": "I upgraded to the newest Mac OS Ventura. The Bitcoin Core application was deleted automatically from my computer. I downloaded Bitcoin core again fro my Mac. and when I tried to open Bitcoin core it has been stuck on Verifying Wallet(s) for",
+      "word_count": 282
+    },
+    {
+      "issue_id": "34325cdea8f14b5ab5ba65684d0847ae1b32b05b1128c9793ac54fa1c20388c3",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8484987020492554,
+      "title": "Increase trust through Wallet Aliases and Transfer Confirmations",
+      "excerpt": "**Is your feature request related to a problem? Please describe.**\r \r Users still fear doing bitcoin transactions, scared that something might go wrong. This fear is based on 2 closely-related issues:\r - First: \"Is the account I am transfer",
+      "word_count": 401
+    },
+    {
+      "issue_id": "febf6b8f30fd7c22ad9c6d707b440719122471d72e785f5b141979268522514b",
+      "repository": "opencv/opencv",
+      "actual": "feature",
+      "predicted": "question",
+      "confidence": 0.8438124656677246,
+      "title": "to extract frame type (I, P, B) info for better post-process without ffmpeg/ffprobe",
+      "excerpt": "##### System information (version)\r - OpenCV => opencv-python 4.5.5\r - Operating System / Platform => win10\r - Compiler => pre-compiled\r \r ##### Detailed description\r Currently, it always needs FFmpeg/FFprobe to extract frame type info befo",
+      "word_count": 382
+    },
+    {
+      "issue_id": "5945d937db72b29aa496304624baf7030e8d418f6f1f1ebbbb67ecb7032baffb",
+      "repository": "bitcoin/bitcoin",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.8429064750671387,
+      "title": "`getblocktemplate` returns a standard P2PKH with 0 sigops (testnet)",
+      "excerpt": "<!-- This issue tracker is only for technical issues related to Bitcoin Core.\r \r General bitcoin questions and/or support requests are best directed to the Bitcoin StackExchange at https://bitcoin.stackexchange.com.\r \r For reporting securit",
+      "word_count": 286
+    },
+    {
+      "issue_id": "79772522ffd01c3c015da89f3ecf20694990cf09fc6f1898692112f09d2a278b",
+      "repository": "microsoft/vscode",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8341061472892761,
+      "title": "Background color support for notebook cells",
+      "excerpt": "<!-- \u26a0\ufe0f\u26a0\ufe0f Do Not Delete This! feature_request_template \u26a0\ufe0f\u26a0\ufe0f -->\r <!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->\r <!-- Please search existing issues to avoid creating duplicates. -->\r \r <!-- Descri",
+      "word_count": 132
+    },
+    {
+      "issue_id": "3b24eee0fd38de6d7316401dec8b82d40b584e1d501e9faa236b68b4eecce2a7",
+      "repository": "microsoft/vscode",
+      "actual": "feature",
+      "predicted": "bug",
+      "confidence": 0.8340553045272827,
+      "title": "testing.openTesting is not working for testing explorer now",
+      "excerpt": "Version: 1.82.0-insider (user setup)\r Commit: a0377f0c51dbb2d3188565cdf35e89929f864e65\r Date: 2023-08-24T05:32:35.024Z\r Electron: 25.5.0\r ElectronBuildId: 23084831\r Chromium: 114.0.5735.289\r Node.js: 18.15.0\r V8: 11.4.183.29-electron.0\r OS:",
+      "word_count": 55
+    },
+    {
+      "issue_id": "b64c9023a64c40684350850b800ddce5f547ecb9b6685771726ec6d9cfd07096",
+      "repository": "bitcoin/bitcoin",
+      "actual": "bug",
+      "predicted": "question",
+      "confidence": 0.8331972360610962,
+      "title": "`-torcontrol` asks tor to connect to port 0, and tor refuses",
+      "excerpt": "<!-- This issue tracker is only for technical issues related to Bitcoin Core.\r \r General bitcoin questions and/or support requests are best directed to the Bitcoin StackExchange at https://bitcoin.stackexchange.com.\r \r For reporting securit",
+      "word_count": 2366
+    },
+    {
+      "issue_id": "8825e0e04f04f611c00c1f3a74aba13a2931438e839ff8bd449b043db08523b9",
+      "repository": "bitcoin/bitcoin",
+      "actual": "question",
+      "predicted": "feature",
+      "confidence": 0.8290712237358093,
+      "title": "-fallbackfee should apply to estimatesmartfee",
+      "excerpt": "### Please describe the feature you'd like to see added.\r \r `-fallback` fee is used by `sendtoaddress` to provide a fallback fee when sending transactions. However, this does not apply to `estimatesmartfee`, which still returns the error.\r ",
+      "word_count": 131
+    }
+  ]
+}

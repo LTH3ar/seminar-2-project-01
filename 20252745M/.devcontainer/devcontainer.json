@@ -1,0 +1,87 @@
+{
+  "name": "AI4SE Project 1 - Issue Report Classification",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+
+  // Run as the non-root "vscode" user created in the Dockerfile, so files
+  // written inside the container are not owned by root on the host.
+  "remoteUser": "vscode",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Installs the project in editable mode, fetches NLTK corpora and caches
+  // the competition dataset. See .devcontainer/post-create.sh.
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "forwardPorts": [8888],
+  "portsAttributes": {
+    "8888": {
+      "label": "Jupyter Lab",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-renderers",
+        "charliermarsh.ruff",
+        "njpwerner.autodocstring",
+        "James-Yu.latex-workshop",
+        "eamodio.gitlens",
+        "mechatroner.rainbow-csv"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["tests"],
+        "python.testing.unittestEnabled": false,
+        "editor.formatOnSave": true,
+        "editor.rulers": [88],
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+        "notebook.output.textLineLimit": 60,
+        "jupyter.notebookFileRoot": "${workspaceFolder}",
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/.ipynb_checkpoints": true
+        }
+      }
+    }
+  },
+
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "NLTK_DATA": "/home/vscode/nltk_data",
+    "HF_HOME": "/home/vscode/.cache/huggingface",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+
+  // Named volumes keep pip wheels and the (large) HuggingFace model cache
+  // across container rebuilds, which matters once track C starts fine-tuning.
+  "mounts": [
+    "source=ai4se-pip-cache,target=/home/vscode/.cache/pip,type=volume",
+    "source=ai4se-hf-cache,target=/home/vscode/.cache/huggingface,type=volume"
+  ],
+
+  // Uncomment to expose an NVIDIA GPU to the container for track C.
+  // Requires the NVIDIA Container Toolkit on the host.
+  // "hostRequirements": { "gpu": "optional" },
+  // "runArgs": ["--gpus", "all", "--shm-size=2g"],
+
+  "waitFor": "postCreateCommand"
+}
