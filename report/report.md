@@ -95,11 +95,11 @@ computed identically:
    contributes +0.0759 F1 on a fixed encoder and a larger pretrained encoder
    +0.0500 — the only two effects in this study large enough to be detectable
    under any assumption. An additive projection of the two predicted 0.8482 and
-   was wrong by 0.038; we report the failed prediction alongside the
+   was wrong by 0.037; we report the failed prediction alongside the
    measurement.
 
 2. **A reproduction and a result at the level of the baseline.** Our SetFit
-   reproduction reaches 0.8102 and our best ensemble 0.8168, against the
+   reproduction reaches 0.8108 and our best ensemble 0.8168, against the
    published 0.8270. The gap is not statistically detectable, and the
    organisers' own supplied re-run of their baseline gives 0.8240 — the
    reference point itself moves by 0.3 points.
@@ -588,7 +588,7 @@ model pairs:
 |---|---|---|---|
 | Linear SVM (tuned) | 5.5% | 1.8 points | 3.9 points |
 | Naive Bayes | 13.1% | 2.7 points | 6.0 points |
-| Random forest | 17.3% | 3.1 points | 6.9 points |
+| Random forest | 17.4% | 3.1 points | 6.9 points |
 
 Two similar models (logistic regression and SVM on the same features) rarely
 disagree, so even a small difference between them is detectable; two dissimilar
@@ -740,7 +740,7 @@ training data compensates for the lost specialisation.
 
 #### 5.4.1 The reproduction
 
-Our implementation of the published method reaches **0.8102** on MPNet against
+Our implementation of the published method reaches **0.8108** on MPNet against
 the published **0.8270** — and against the organisers' own re-run of 0.8240.
 
 #### 5.4.2 Where the performance comes from
@@ -751,8 +751,8 @@ Running both encoders in both configurations decomposes the baseline:
 | Configuration | MiniLM | MPNet | encoder effect |
 |---|---|---|---|
 | Frozen encoder + LogReg | 0.7057 | 0.7557 | **+0.0500** |
-| SetFit @ `batch=8, seq=128` | 0.7816 | 0.8102 | +0.0286 |
-| **fine-tuning effect** | **+0.0759** | **+0.0545** | |
+| SetFit @ `batch=8, seq=128` | 0.7816 | 0.8108 | +0.0292 |
+| **fine-tuning effect** | **+0.0759** | **+0.0551** | |
 
 **Contrastive fine-tuning is worth +0.0759 on a fixed encoder**, with everything
 else held constant. It is the largest single effect in this study, and it and
@@ -768,18 +768,18 @@ finding.
 measured an encoder effect of +0.0500 and a fine-tuning effect of +0.0925, and
 projected SetFit-on-MPNet at **0.8482** — above the published baseline.
 
-**Stage 2 — measurement.** The actual value was **0.8102**, wrong by 0.038.
-Taken at face value the encoder appeared worth only +0.0120 after fine-tuning,
+**Stage 2 — measurement.** The actual value was **0.8108**, wrong by 0.037.
+Taken at face value the encoder appeared worth only +0.0126 after fine-tuning,
 implying severe sub-additivity.
 
 **Stage 3 — the confound.** That comparison was not controlled. MiniLM had run at
 `batch_size=16` with a sequence length of 256; MPNet required 8 and 128 to fit in
 memory. Re-running MiniLM at MPNet's settings gives **0.7816** — the reduced
-settings alone cost 0.0166 — and the controlled encoder effect is **+0.0286**,
-not +0.0120.
+settings alone cost 0.0166 — and the controlled encoder effect is **+0.0292**,
+not +0.0126.
 
 Whether the two effects are sub-additive therefore remains open: the controlled
-encoder effect after fine-tuning (+0.0286) is below what this comparison can
+encoder effect after fine-tuning (+0.0292) is below what this comparison can
 reliably detect (Section 5.7). What is established is narrower and still useful:
 
 1. **Effects measured separately cannot be assumed to compose.** The additive
@@ -807,7 +807,7 @@ strength failing in different places, which is the precondition for ensembling.
 
 | Ensemble | test F1 | AUC | gain over best member |
 |---|---|---|---|
-| **SetFit + TF-IDF + MPNet** | **0.8168** | **0.9319** | +0.0066 |
+| **SetFit + TF-IDF + MPNet** | **0.8168** | **0.9319** | +0.0060 |
 | SetFit + TF-IDF | 0.8053 | 0.9244 | +0.0071 |
 | TF-IDF + MPNet + CNN | 0.7909 | 0.9245 | +0.0306 |
 | TF-IDF + MPNet | 0.7838 | 0.9198 | +0.0235 |
@@ -818,8 +818,8 @@ enough to be plausibly real (Section 5.7), and reaches within 0.007 of the SetFi
 reproduction at no fine-tuning cost.
 
 The best ensemble has the **highest AUC of any model measured, 0.9319**, above
-SetFit-on-MPNet's 0.9190: its ranking of the classes is better than its argmax
-decisions suggest. Its F1 gain over SetFit alone, however, is 0.0066 — far below
+SetFit-on-MPNet's 0.9195: its ranking of the classes is better than its argmax
+decisions suggest. Its F1 gain over SetFit alone, however, is 0.0060 — far below
 what can be detected.
 
 ### 5.6 Final results
@@ -832,7 +832,7 @@ decision tree per project that reads **only each issue's creation timestamp**
 |---|---|---|---|
 | **SetFit (published baseline)** | **0.8270** | — | — |
 | **Ensemble (SetFit + TF-IDF + MPNet)** | **0.8168** | **0.9319** | −0.0102 |
-| SetFit (MPNet) | 0.8102 | 0.9190 | −0.0168 |
+| SetFit (MPNet) | 0.8108 | 0.9195 | −0.0162 |
 | Ensemble (SetFit + TF-IDF) | 0.8053 | 0.9244 | −0.0217 |
 | SetFit (reproduction, MiniLM) | 0.7982 | 0.9181 | −0.0288 |
 | Ensemble (TF-IDF + MPNet + CNN) | 0.7909 | 0.9245 | −0.0361 |
@@ -888,10 +888,10 @@ for each claim the threshold most favourable to it:
 | Contrastive fine-tuning (MiniLM) | 7.59 | 1.8 | **detectable** |
 | Larger encoder, frozen | 5.00 | 1.8 | **detectable** |
 | TF-IDF + MPNet + CNN vs its TF-IDF member | 3.06 | 1.8 | likely detectable |
-| Larger encoder, fine-tuned (matched) | 2.86 | 1.8 | not established |
+| Larger encoder, fine-tuned (matched) | 2.92 | 1.8 | not established |
 | Neural models vs TF-IDF | 1.65 | 1.8 | not detectable |
 | Our best vs published baseline | 1.02 | 3.9 (unpaired) | not detectable |
-| Best ensemble vs SetFit on MPNet | 0.66 | 1.8 | not detectable |
+| Best ensemble vs SetFit on MPNet | 0.60 | 1.8 | not detectable |
 | Per-project differences from the baseline | ≤ 1.4 | 7.6–9.8 (unpaired) | not detectable |
 
 "Likely detectable" and "not established" mark the two claims whose disagreement
@@ -1103,26 +1103,35 @@ the finding that neural models do no better than TF-IDF would likely not hold.
 
 ### 7.4 Reproducibility
 
-Every result was regenerated from a clean checkout of the final code on one
-machine. **Twenty-one of twenty-two models returned bit-identical scores.** The
-exception is informative:
+Every result was regenerated three times, from clean checkouts of the final code
+on one machine (an NVIDIA RTX 3060, Python 3.11, PyTorch 2.14, scikit-learn 1.9,
+sentence-transformers 6.1, SetFit 1.2). **Twenty-one of twenty-two models
+returned bit-identical scores in all three runs**, including every scikit-learn
+pipeline, both neural models, three of four SetFit variants and all four
+ensembles.
 
-| Repository | run 1 | run 2 | difference |
-|---|---|---|---|
-| microsoft/vscode | 0.8203 | 0.8104 | −0.0099 |
-| opencv/opencv | 0.7676 | 0.7771 | +0.0095 |
-| facebook/react | 0.8401 | 0.8438 | +0.0037 |
-| bitcoin/bitcoin | 0.7520 | 0.7488 | −0.0032 |
-| tensorflow/tensorflow | 0.8710 | 0.8710 | +0.0001 |
-| **cross-repository mean** | **0.81017** | **0.81021** | **+0.00004** |
+The exception is SetFit on MPNet, and it is informative:
 
-*(SetFit on MPNet, two runs at fixed code and seed.)*
+| Repository | run 1 | run 2 | run 3 | range |
+|---|---|---|---|---|
+| bitcoin/bitcoin | 0.7520 | 0.7488 | 0.7553 | 0.0066 |
+| facebook/react | 0.8401 | 0.8438 | 0.8438 | 0.0037 |
+| microsoft/vscode | 0.8203 | 0.8104 | 0.8104 | 0.0099 |
+| opencv/opencv | 0.7676 | 0.7771 | 0.7801 | 0.0125 |
+| tensorflow/tensorflow | 0.8710 | 0.8710 | 0.8642 | 0.0068 |
+| **cross-repository mean** | **0.8102** | **0.8102** | **0.8108** | **0.0006** |
 
-**Per-project scores are roughly an order of magnitude less stable than the
-cross-repository mean**, because the protocol averages five independent
-classifiers whose deviations partly cancel. Per-project figures in this report
-show *where* models differ; they are not evidence that one model beats another
-on one project.
+**Per-project scores move about twenty times as much as the cross-repository
+mean**, because the protocol averages five independent classifiers whose
+deviations partly cancel. The reported metric is therefore far more robust than
+any single project's figure.
+
+The `tensorflow` row makes the point concretely. In the first two runs this
+model scored 0.8710 there, above the published baseline's 0.8644; in the third it
+scored 0.8642, below it. Had we reported "our reproduction beats the baseline on
+`tensorflow`" — as an earlier draft of this report did — the claim would have
+been true or false depending on which run was used. Per-project figures in this
+report show *where* models differ, not whether one beats another on one project.
 
 **Across devices the picture differs.** The CNN scores 0.7578 on a CPU and 0.7438
 on a GPU from identical code and seed. Each device reproduces its own number
@@ -1143,7 +1152,7 @@ already deterministic per device. The flags remain as insurance, not as a fix.
 **SetFit's run-to-run variation was overstated.** We first estimated it at about
 0.011, from an ensemble score that moved between two runs. Those runs spanned a
 change to SetFit's defaults, confounding a code change with run-to-run variation.
-At fixed code, the cross-repository score is stable to 0.00004.
+At fixed code, the cross-repository score varies by 0.0006 across three runs.
 
 **The detectable difference is not a single number.** We first adopted a threshold
 of "about 3 points overall, 7 per project" for every comparison. That figure
@@ -1179,7 +1188,7 @@ through a single harness, so that every entry on the leaderboard is computed
 identically. Our best result, a soft-voting ensemble of SetFit, TF-IDF and a
 frozen MPNet encoder, scores **0.8168** against the published baseline's 0.8270 —
 a gap the test set cannot resolve. Our reproduction of the published method
-reaches 0.8102, against the organisers' own re-run of 0.8240.
+reaches 0.8108, against the organisers' own re-run of 0.8240.
 
 ### 8.2 What we learned
 
@@ -1209,7 +1218,7 @@ ensembling worthwhile.
 
 Four expectations did not survive measurement. We assumed aggressive text
 cleaning would help; the ablation showed it hurt. We assumed the encoder and
-fine-tuning effects would compose additively; the projection missed by 0.038, and
+fine-tuning effects would compose additively; the projection missed by 0.037, and
 our first correction was itself confounded by training settings. We attributed a
 cross-device discrepancy to nondeterminism; the fix changed nothing. And we
 adopted a single detectability threshold for every comparison, which turned out

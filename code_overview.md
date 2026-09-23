@@ -444,7 +444,7 @@ Cross-repository F1 on the official test split, under the competition protocol
 |---|---|---|---|---|---|---|---|---|
 | **SetFit (NLBSE'24 baseline)** | 0.8718 | 0.8644 | 0.8262 | 0.7555 | 0.8173 | **0.8270** | — | — |
 | **Ensemble (SetFit + TF-IDF + MPNet)** | 0.8505 | 0.8520 | 0.7957 | 0.7691 | 0.8168 | **0.8168** | 0.9319 | −0.0102 |
-| SetFit (MPNet) | 0.8438 | 0.8710 | 0.8104 | 0.7488 | 0.7771 | 0.8102 | 0.9190 | −0.0168 |
+| SetFit (MPNet) | 0.8438 | 0.8642 | 0.8104 | 0.7553 | 0.7801 | 0.8108 | 0.9195 | −0.0162 |
 | Ensemble (SetFit + TF-IDF) | 0.8396 | 0.8521 | 0.7922 | 0.7459 | 0.7966 | 0.8053 | 0.9244 | −0.0217 |
 | SetFit (reproduction) | 0.8322 | 0.8414 | 0.7816 | 0.7464 | 0.7896 | 0.7982 | 0.9181 | −0.0288 |
 | Ensemble (TF-IDF + MPNet + CNN) | 0.8296 | 0.8395 | 0.7494 | 0.7694 | 0.7665 | 0.7909 | 0.9245 | −0.0361 |
@@ -477,7 +477,8 @@ Two framings used in earlier versions of this document are withdrawn. "98.5% of
 the distance from a majority-class classifier" was measured from the wrong
 floor: a timestamp-only model already scores 0.7071 (section 7.0). And the
 claims that our models *exceed* the baseline on `bitcoin` (0.7691 vs 0.7555) and
-`tensorflow` (0.8710 vs 0.8644) are 1.4 and 0.7 points on 300 items, far below
+`tensorflow` (0.8710 vs 0.8644 in two runs, 0.8642 in the third) are 1.4 and
+0.7 points on 300 items, far below
 the 7.8–9.8-point per-project threshold against the published baseline.
 
 ### Findings
@@ -534,7 +535,7 @@ size alone. Measured against tuned logistic regression:
 |---|---|---|---|
 | Linear SVM (tuned) | 5.5% | 1.8 points | 3.9 points |
 | Naive Bayes | 13.1% | 2.7 points | 6.0 points |
-| Random Forest | 17.3% | 3.1 points | 6.9 points |
+| Random Forest | 17.4% | 3.1 points | 6.9 points |
 
 Comparisons against the **published baseline** are harder still: the organisers
 publish scores, not per-issue predictions, so no paired test is possible. A
@@ -551,12 +552,12 @@ similar ones. Checking each claim against the threshold most favourable to it:
 | Contrastive fine-tuning (MiniLM) | 7.59 | 1.8 | detectable |
 | Larger encoder, frozen | 5.00 | 1.8 | detectable |
 | TF-IDF + MPNet + CNN vs its TF-IDF member | 3.06 | 1.8 | likely detectable |
-| Larger encoder, fine-tuned (matched) | 2.86 | 1.8 | not established |
+| Larger encoder, fine-tuned (matched) | 2.92 | 1.8 | not established |
 | Neural models vs TF-IDF | 1.65 | 1.8 | not detectable |
 | Our best vs published baseline | 1.02 | 3.9 (unpaired) | not detectable |
-| Best ensemble vs SetFit-MPNet | 0.66 | 1.8 | not detectable |
+| Best ensemble vs SetFit-MPNet | 0.60 | 1.8 | not detectable |
 | Ensemble vs baseline on `bitcoin` | 1.36 | 9.8 (unpaired) | not detectable |
-| SetFit-MPNet vs baseline on `tensorflow` | 0.66 | 7.8 (unpaired) | not detectable |
+| SetFit-MPNet vs baseline on `tensorflow` | ≤ 0.66 | 7.8 (unpaired) | not detectable |
 
 "Likely" and "not established" mark the two claims whose disagreement rate could
 not be measured here, because one side needs a GPU to regenerate. The ensemble
@@ -569,8 +570,9 @@ leaderboard's finer ordering does not, and should be read as ties.
 
 ### 7.1 The SetFit reproduction
 
-The published method reproduces to **0.8102** on MPNet against **0.8270** —
-short by 0.0168, and *above* the baseline on `tensorflow`.
+The published method reproduces to **0.8108** on MPNet against **0.8270** —
+short by 0.0162. Its `tensorflow` score sat above the baseline in two of three
+runs and below it in the third (section 7.3).
 
 ### 7.2 A prediction that failed, then a confound that corrected the correction
 
@@ -582,9 +584,9 @@ process is the point.
 effect of +0.0500 and a fine-tuning effect of +0.0925 were measured. Adding
 them projected SetFit-on-MPNet at **0.8482**, above the baseline.
 
-**Stage 2 — the measurement.** SetFit on MPNet came out at **0.8102**. The
-projection was wrong by 0.038, and wrong about beating the baseline. Taken at
-face value the encoder was worth only +0.0120 after fine-tuning against +0.0500
+**Stage 2 — the measurement.** SetFit on MPNet came out at **0.8108**. The
+projection was wrong by 0.037, and wrong about beating the baseline. Taken at
+face value the encoder was worth only +0.0126 after fine-tuning against +0.0500
 frozen, suggesting strong sub-additivity.
 
 **Stage 3 — the confound.** That comparison was not controlled. MiniLM had run
@@ -598,15 +600,15 @@ The controlled comparison is therefore:
 | | MiniLM | MPNet | encoder effect |
 |---|---|---|---|
 | Frozen + LogReg | 0.7057 | 0.7557 | **+0.0500** |
-| SetFit @ batch 8, seq 128 | 0.7816 | 0.8102 | **+0.0286** |
+| SetFit @ batch 8, seq 128 | 0.7816 | 0.8108 | **+0.0292** |
 
 **Sub-additivity is real but far milder than stage 2 suggested.** The encoder
-retains 57% of its frozen value after fine-tuning (+0.0286 of +0.0500), not the
-24% the uncontrolled numbers implied. Equivalently, fine-tuning is worth
-+0.0759 on MiniLM and +0.0545 on MPNet at matched settings.
+retains 58% of its frozen value after fine-tuning (+0.0292 of +0.0500), not the
+25% the uncontrolled numbers implied. Equivalently, fine-tuning is worth
++0.0759 on MiniLM and +0.0551 on MPNet at matched settings.
 
 **Training settings matter about as much as encoder size here.** Halving the
-batch and the sequence length cost 0.0166, against +0.0286 for doubling the
+batch and the sequence length cost 0.0166, against +0.0292 for doubling the
 encoder's depth and width. That is worth stating plainly, because it means a
 result reported without its batch size and sequence length is not comparable
 with another.
@@ -619,30 +621,37 @@ Two methodological points for the report, in order of importance:
 
 ### 7.3 Reproducibility, measured
 
-Every result was regenerated from a clean checkout of the final code on one
-machine. **Twenty-one of the twenty-two models returned bit-identical scores**,
-including all seven scikit-learn pipelines, both neural models, and four of the
-five SetFit variants.
+Every result was regenerated three times from clean checkouts of the final
+code on one machine (RTX 3060; Python 3.11, PyTorch 2.14, scikit-learn 1.9,
+sentence-transformers 6.1, SetFit 1.2). **Twenty-one of the twenty-two models
+returned bit-identical scores in all three runs**, including all seven
+scikit-learn pipelines, both neural models, three of the four SetFit variants and
+all four ensembles.
 
 The single exception is instructive. `SetFit (MPNet)` moved its
-cross-repository F1 by 3.7e-5 — but its *per-repository* scores moved much
-more:
+cross-repository F1 by 0.0006 across the three runs — but its *per-repository*
+scores moved about twenty times as much:
 
-| Repository | run 1 | run 2 | difference |
-|---|---|---|---|
-| microsoft/vscode | 0.8203 | 0.8104 | −0.0099 |
-| opencv/opencv | 0.7676 | 0.7771 | +0.0095 |
-| facebook/react | 0.8401 | 0.8438 | +0.0037 |
-| bitcoin/bitcoin | 0.7520 | 0.7488 | −0.0032 |
-| tensorflow/tensorflow | 0.8710 | 0.8710 | +0.0001 |
-| **cross-repository mean** | **0.81017** | **0.81021** | **+0.00004** |
+| Repository | run 1 | run 2 | run 3 | range |
+|---|---|---|---|---|
+| bitcoin/bitcoin | 0.7520 | 0.7488 | 0.7553 | 0.0066 |
+| facebook/react | 0.8401 | 0.8438 | 0.8438 | 0.0037 |
+| microsoft/vscode | 0.8203 | 0.8104 | 0.8104 | 0.0099 |
+| opencv/opencv | 0.7676 | 0.7771 | 0.7801 | 0.0125 |
+| tensorflow/tensorflow | 0.8710 | 0.8710 | 0.8642 | 0.0068 |
+| **cross-repository mean** | **0.8102** | **0.8102** | **0.8108** | **0.0006** |
 
-**Per-repository scores are roughly an order of magnitude less stable than the
+**Per-repository scores are roughly twenty times less stable than the
 cross-repository mean**, because the protocol averages five independent
 classifiers and their deviations partly cancel. The competition's reported
-metric is therefore more robust than any single project's figure. For the
-report: quote per-repository numbers to illustrate *where* models differ, not
-as evidence that one model beats another by a small margin on one project.
+metric is therefore far more robust than any single project's figure.
+
+The `tensorflow` row shows why this matters: the model scored above the
+published baseline (0.8644) in two runs and below it in the third. A claim that
+it "beats the baseline on `tensorflow`" — which an earlier version of this
+document made — would have been true or false depending on the run. Quote
+per-repository numbers to show *where* models differ, never as evidence that one
+beats another by a small margin on one project.
 
 *Two earlier claims in this document were wrong and are corrected here.*
 
@@ -685,7 +694,7 @@ reproduction, a tuned TF-IDF pipeline and a frozen MPNet encoder reaches
 comes within 0.011 of the published baseline. It also has the **highest AUC
 measured (0.9319)**.
 
-The gains are consistent: +0.0066 over its best member for the three-way
+The gains are consistent: +0.0060 over its best member for the three-way
 ensemble, +0.0071 for SetFit + TF-IDF, and +0.031 for the GPU-free
 TF-IDF + MPNet + CNN combination. An earlier run had SetFit + TF-IDF scoring
 *below* SetFit alone; that did not survive re-running, and is a reminder that
