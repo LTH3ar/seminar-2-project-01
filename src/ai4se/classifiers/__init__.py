@@ -11,6 +11,9 @@ protocol -- one model per project -- is driven once by
 ``neural``
     A feed-forward network over TF-IDF and a text CNN trained from scratch
     (track C). Needs ``.[dl]``.
+``transformer``
+    Fine-tuned DeBERTa-v3 encoder with a classification head (track C).
+    Needs ``.[dl]``.
 ``setfit_model``
     Reproduction of the organisers' published baseline (track D). Needs
     ``.[dl]``.

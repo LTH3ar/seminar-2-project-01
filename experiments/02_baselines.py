@@ -1,10 +1,16 @@
-"""Classical and neural baselines: selection, then a single test evaluation.
+"""Every model in the project: selection, then a single test evaluation.
+
+Seven configurations -- four classical, two neural trained from scratch, and
+the fine-tuned transformer the pre-registration names as H1 -- are put through
+the identical protocol so the report has one comparable table rather than
+several that were produced under different conditions.
 
 Two stages, in this order and never the other way round:
 
 1. **Selection** -- 5-fold cross-validation on the *training split only*,
-   choosing the regularisation strength of the linear models. The test set is
-   not read at this point.
+   choosing the regularisation strength of the linear models and the learning
+   rate and max-length of the transformer. The test set is not read at this
+   point.
 2. **Evaluation** -- each selected configuration trained five times with
    different seeds and scored once on the test set, with a bootstrap interval
    and a McNemar comparison against the published SetFit baseline.
@@ -16,13 +22,24 @@ would be indistinguishable from a lucky draw.
 Needs both extras::
 
     pip install -e ".[ml,dl]"
-    python experiments/02_baselines.py
+    python experiments/02_baselines.py                          # everything
+    python experiments/02_baselines.py --transformer off        # ~4 min CPU
+    python experiments/02_baselines.py --transformer fast       # CPU iteration
+    python experiments/02_baselines.py --skip-transformer-selection
 
-About four minutes on a laptop CPU. Writes ``results/baselines.json``.
+Cost is dominated by the transformer, because one model is fine-tuned per
+project and that multiplies fast: its selection is 4 configurations x 5 folds
+x 5 projects = **100 fine-tunes** and its evaluation another **25**, roughly
+**3 hours on a T4** at the ~90 s per fine-tune quoted in
+``ai4se.classifiers.transformer``. The other six models together take about
+four minutes on a laptop CPU, which is what ``--transformer off`` gives back.
+
+Writes ``results/baselines.json``.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -35,7 +52,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ai4se.classifiers.base import train_per_repo  # noqa: E402
 from ai4se.classifiers.classical import make_classical  # noqa: E402
 from ai4se.classifiers.neural import make_ffnn, make_text_cnn  # noqa: E402
-from ai4se.classifiers.selection import grid_search, summarise_search  # noqa: E402
+from ai4se.classifiers.selection import (  # noqa: E402
+    cross_validate,
+    grid_search,
+    summarise_search,
+)
+from ai4se.classifiers.transformer import make_transformer  # noqa: E402
 from ai4se.evaluation import (  # noqa: E402
     OFFICIAL_BASELINES,
     bootstrap_ci,
@@ -45,9 +67,27 @@ from ai4se.evaluation import (  # noqa: E402
     per_repo_f1,
 )
 from ai4se.loader import load_split  # noqa: E402
+from ai4se.preprocessing import make_cleaner  # noqa: E402
 
 RESULTS_PATH = Path(__file__).resolve().parents[1] / "results" / "baselines.json"
 SEEDS = (41, 42, 43, 44, 45)
+
+#: Transformer configurations tried during selection. Deliberately not a full
+#: cross-product: every entry costs 25 fine-tunes, and the pre-registration
+#: commits to giving the baseline a comparable tuning budget (the linear
+#: models get five configurations each).
+TRANSFORMER_SEARCH = {
+    "default": [
+        {"learning_rate": 1e-5, "max_length": 512},
+        {"learning_rate": 2e-5, "max_length": 512},
+        {"learning_rate": 3e-5, "max_length": 512},
+        {"learning_rate": 2e-5, "max_length": 256},
+    ],
+    "fast": [
+        {"learning_rate": 2e-5, "max_length": 256},
+        {"learning_rate": 3e-5, "max_length": 256},
+    ],
+}
 
 
 def _banner(title: str) -> None:
@@ -55,8 +95,76 @@ def _banner(title: str) -> None:
     print(f"\n{'=' * 74}\n{title}\n{'=' * 74}")
 
 
-def select_hyperparameters(train) -> dict:
-    """Choose the linear models' regularisation by 5-fold CV on train only."""
+def parse_args() -> argparse.Namespace:
+    """Read the command-line options."""
+    parser = argparse.ArgumentParser(description="All models, one protocol")
+    parser.add_argument(
+        "--transformer",
+        choices=["default", "fast", "off"],
+        default="default",
+        help="'default' fine-tunes DeBERTa-v3-base (GPU strongly advised), "
+        "'fast' uses DeBERTa-v3-small, 'off' runs the other six models only.",
+    )
+    parser.add_argument(
+        "--skip-transformer-selection",
+        action="store_true",
+        help="Use the transformer preset's own hyper-parameters instead of "
+        "cross-validating them, saving 100 fine-tunes.",
+    )
+    parser.add_argument(
+        "--clean",
+        choices=["none", "raw", "conservative", "light", "full"],
+        default="none",
+        help="Cleaning level applied to both splits before anything is "
+        "trained. One level for every model, so the table compares models "
+        "rather than model-and-preprocessing pairs. 'none' leaves the raw "
+        "Markdown, which is what the committed results were measured on.",
+    )
+    return parser.parse_args()
+
+
+def _select_transformer(train, preset: str) -> dict:
+    """Choose the transformer's learning rate and max-length by 5-fold CV.
+
+    ``grid_search`` is not used here because it expands a full cross-product
+    and each cell costs 25 fine-tunes; :data:`TRANSFORMER_SEARCH` is a
+    hand-picked slice of the same space.
+
+    Args:
+        train: Training issues. The test split is not read.
+        preset: Which entry of :data:`TRANSFORMER_SEARCH` to evaluate.
+
+    Returns:
+        The same record shape the other models produce in
+        :func:`select_hyperparameters`.
+    """
+    rows = []
+    for params in TRANSFORMER_SEARCH[preset]:
+        setting = ", ".join(f"{k}={v}" for k, v in params.items())
+        print(f"    evaluating {setting} ...")
+        result = cross_validate(make_transformer(preset=preset, **params), train, 5)
+        rows.append({"params": params, **result})
+    rows.sort(key=lambda row: row["mean"], reverse=True)
+    print("\n" + summarise_search(rows))
+    return {
+        "params": rows[0]["params"],
+        "cv_mean": rows[0]["mean"],
+        "cv_std": rows[0]["std"],
+        "n_configurations": len(rows),
+    }
+
+
+def select_hyperparameters(train, args: argparse.Namespace) -> dict:
+    """Choose every tunable hyper-parameter by 5-fold CV on train only.
+
+    Args:
+        train: Training issues. The test split is not read.
+        args: Parsed command line, for the transformer options.
+
+    Returns:
+        One record per model, carrying the chosen parameters and the number of
+        configurations that were tried to reach them.
+    """
     _banner("STAGE 1 - SELECTION BY 5-FOLD CROSS-VALIDATION (TRAINING SPLIT ONLY)")
     chosen: dict[str, dict] = {}
 
@@ -83,18 +191,48 @@ def select_hyperparameters(train) -> dict:
     # the tuning budget of every model, including the ones that got none.
     for estimator in ("naive_bayes", "random_forest"):
         chosen[estimator] = {"params": {}, "n_configurations": 1}
+
+    if args.transformer != "off":
+        print("\n  transformer")
+        if args.skip_transformer_selection:
+            # Empty params, so the preset's own values apply rather than a
+            # second copy of them that can drift out of step.
+            chosen["transformer"] = {
+                "params": {},
+                "n_configurations": 0,
+                "note": "selection skipped via --skip-transformer-selection",
+            }
+            print(f"    skipped; using the {args.transformer!r} preset defaults.")
+        else:
+            chosen["transformer"] = _select_transformer(train, args.transformer)
+
     return chosen
 
 
-def evaluate(name: str, factory_for_seed, train, test) -> dict:
-    """Train one configuration across five seeds and score it on the test set."""
-    y_true = [issue.label for issue in test.all()]
-    repos = [issue.repo for issue in test.all()]
+def evaluate(name: str, factory_for_seed, train, test, verbose: bool = False) -> dict:
+    """Train one configuration across five seeds and score it on the test set.
+
+    Args:
+        name: Label used in the printed table and the results file.
+        factory_for_seed: Called with a seed, returns a classifier factory.
+        train: Training issues.
+        test: Test issues. Read exactly once per configuration.
+        verbose: Print per-project progress, worth it for the transformer
+            where a single seed takes minutes.
+
+    Returns:
+        The record consumed by ``04_make_tables.py``.
+    """
+    test_issues = test.all()
+    y_true = [issue.label for issue in test_issues]
+    repos = [issue.repo for issue in test_issues]
 
     scores, predictions = [], []
     started = time.time()
     for seed in SEEDS:
-        predicted = train_per_repo(factory_for_seed(seed), train, test)
+        if verbose:
+            print(f"\n  {name} seed {seed}:")
+        predicted = train_per_repo(factory_for_seed(seed), train, test, verbose=verbose)
         predictions.append(predicted)
         scores.append(cross_repo_f1(y_true, predicted, repos))
     elapsed = time.time() - started
@@ -135,11 +273,22 @@ def evaluate(name: str, factory_for_seed, train, test) -> dict:
 
 def main() -> None:
     """Run selection, then evaluation, then write the results file."""
+    args = parse_args()
+
     train = load_split("train", kind="memory")
     test = load_split("test", kind="memory")
-    print(f"Loaded {len(train)} training and {len(test)} test issues.")
+    if args.clean != "none":
+        # No word cap: for the transformer max_length is meant to be the only
+        # truncation knob, and stage 1 searches it.
+        cleaner = make_cleaner(level=args.clean)
+        train.apply(cleaner)
+        test.apply(cleaner)
+    print(
+        f"Loaded {len(train)} training and {len(test)} test issues, "
+        f"cleaning level {args.clean!r}."
+    )
 
-    chosen = select_hyperparameters(train)
+    chosen = select_hyperparameters(train, args)
 
     _banner("STAGE 2 - TEST EVALUATION, FIVE SEEDS EACH")
     print("  Published baselines for reference:")
@@ -159,10 +308,18 @@ def main() -> None:
         "ffnn": lambda seed: make_ffnn(seed=seed),
         "text_cnn": lambda seed: make_text_cnn(seed=seed),
     }
+    # Last, because it is the only one measured in hours rather than seconds:
+    # the cheap models have already printed their numbers by the time it runs.
+    if args.transformer != "off":
+        configurations["transformer"] = lambda seed: make_transformer(
+            preset=args.transformer, seed=seed, **chosen["transformer"]["params"]
+        )
 
     results = {}
     for name, factory_for_seed in configurations.items():
-        results[name] = evaluate(name, factory_for_seed, train, test)
+        results[name] = evaluate(
+            name, factory_for_seed, train, test, verbose=name == "transformer"
+        )
 
     _banner("SEED VARIANCE - WHY A SINGLE NUMBER IS NOT A RESULT")
     for name, result in results.items():
@@ -174,6 +331,8 @@ def main() -> None:
         )
 
     payload = {
+        "clean": args.clean,
+        "transformer_preset": args.transformer,
         "selection": chosen,
         "seeds": list(SEEDS),
         "official_baselines": OFFICIAL_BASELINES,

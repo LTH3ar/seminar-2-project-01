@@ -1,0 +1,1107 @@
+{
+  "selection": {
+    "logreg": {
+      "params": {
+        "c_value": 4.0
+      },
+      "cv_mean": 0.7486602998236858,
+      "cv_std": 0.017498406949167333,
+      "n_configurations": 5
+    },
+    "linear_svm": {
+      "params": {
+        "c_value": 1.0
+      },
+      "cv_mean": 0.7463364045134538,
+      "cv_std": 0.026409731118419853,
+      "n_configurations": 5
+    },
+    "naive_bayes": {
+      "params": {},
+      "n_configurations": 1
+    },
+    "random_forest": {
+      "params": {},
+      "n_configurations": 1
+    }
+  },
+  "seeds": [
+    41,
+    42,
+    43,
+    44,
+    45
+  ],
+  "official_baselines": {
+    "setfit": {
+      "facebook/react": 0.8751,
+      "tensorflow/tensorflow": 0.8679,
+      "microsoft/vscode": 0.8031,
+      "bitcoin/bitcoin": 0.7507,
+      "opencv/opencv": 0.8231,
+      "cross-repo": 0.824
+    },
+    "roberta": {
+      "facebook/react": 0.8441,
+      "tensorflow/tensorflow": 0.8585,
+      "microsoft/vscode": 0.7643,
+      "bitcoin/bitcoin": 0.7526,
+      "opencv/opencv": 0.7422,
+      "cross-repo": 0.7923
+    },
+    "fasttext": {
+      "facebook/react": 0.7876,
+      "tensorflow/tensorflow": 0.7063,
+      "microsoft/vscode": 0.7275,
+      "bitcoin/bitcoin": 0.6618,
+      "opencv/opencv": 0.7088,
+      "cross-repo": 0.7184
+    }
+  },
+  "results": {
+    "naive_bayes": {
+      "name": "naive_bayes",
+      "seed_scores": [
+        0.7198796554639599,
+        0.7198796554639599,
+        0.7198796554639599,
+        0.7198796554639599,
+        0.7198796554639599
+      ],
+      "mean": 0.7198796554639599,
+      "std": 0.0,
+      "best_seed_score": 0.7198796554639599,
+      "cherry_pick_inflation": 0.0,
+      "ci": [
+        0.6961388076151329,
+        0.7434912968823327
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.6832593422399248,
+        "facebook/react": 0.7417153076177938,
+        "microsoft/vscode": 0.7037260247763907,
+        "opencv/opencv": 0.7295156695156696,
+        "tensorflow/tensorflow": 0.741181933170021
+      },
+      "delta_vs_setfit": -0.10412034453604002,
+      "detectable_vs_setfit": true,
+      "seconds": 11.634172201156616,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.8333333333333334,
+          "recall": 0.5,
+          "f1": 0.625,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.7014925373134329,
+          "recall": 0.94,
+          "f1": 0.8034188034188035,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.6037735849056604,
+          "recall": 0.64,
+          "f1": 0.6213592233009708,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9666666666666667,
+          "recall": 0.87,
+          "f1": 0.9157894736842105,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.6258503401360545,
+          "recall": 0.92,
+          "f1": 0.7449392712550608,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.7301587301587301,
+          "recall": 0.46,
+          "f1": 0.5644171779141104,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.8235294117647058,
+          "recall": 0.56,
+          "f1": 0.6666666666666666,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.6384615384615384,
+          "recall": 0.83,
+          "f1": 0.7217391304347827,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.7156862745098039,
+          "recall": 0.73,
+          "f1": 0.7227722772277227,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.6875,
+          "recall": 0.55,
+          "f1": 0.6111111111111112,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.672,
+          "recall": 0.84,
+          "f1": 0.7466666666666667,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.8526315789473684,
+          "recall": 0.81,
+          "f1": 0.8307692307692308,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.7288135593220338,
+          "recall": 0.86,
+          "f1": 0.7889908256880734,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.8351648351648352,
+          "recall": 0.76,
+          "f1": 0.7958115183246073,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.6703296703296703,
+          "recall": 0.61,
+          "f1": 0.6387434554973822,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.807968594217348,
+          "recall": 0.668,
+          "f1": 0.7215116154300124,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.6945938502151722,
+          "recall": 0.858,
+          "f1": 0.7625150780199842,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.7145159677702466,
+          "recall": 0.65,
+          "f1": 0.6756122729418834,
+          "support": 500
+        }
+      ]
+    },
+    "logreg": {
+      "name": "logreg",
+      "seed_scores": [
+        0.750198190294018,
+        0.750198190294018,
+        0.750198190294018,
+        0.750198190294018,
+        0.750198190294018
+      ],
+      "mean": 0.750198190294018,
+      "std": 0.0,
+      "best_seed_score": 0.750198190294018,
+      "cherry_pick_inflation": 0.0,
+      "ci": [
+        0.7293994871596785,
+        0.7716414527375605
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.716270931106067,
+        "facebook/react": 0.7917836562997853,
+        "microsoft/vscode": 0.7272952479508822,
+        "opencv/opencv": 0.7442715023524374,
+        "tensorflow/tensorflow": 0.7713696137609181
+      },
+      "delta_vs_setfit": -0.07380180970598194,
+      "detectable_vs_setfit": true,
+      "seconds": 16.553585529327393,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.7564102564102564,
+          "recall": 0.59,
+          "f1": 0.6629213483146067,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.7719298245614035,
+          "recall": 0.88,
+          "f1": 0.822429906542056,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.6388888888888888,
+          "recall": 0.69,
+          "f1": 0.6634615384615384,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9387755102040817,
+          "recall": 0.92,
+          "f1": 0.9292929292929293,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.7094017094017094,
+          "recall": 0.83,
+          "f1": 0.7649769585253456,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.7411764705882353,
+          "recall": 0.63,
+          "f1": 0.6810810810810811,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.7802197802197802,
+          "recall": 0.71,
+          "f1": 0.743455497382199,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.6727272727272727,
+          "recall": 0.74,
+          "f1": 0.7047619047619048,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.7373737373737373,
+          "recall": 0.73,
+          "f1": 0.7336683417085427,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.7159090909090909,
+          "recall": 0.63,
+          "f1": 0.6702127659574468,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.7777777777777778,
+          "recall": 0.77,
+          "f1": 0.7738693467336684,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.7433628318584071,
+          "recall": 0.84,
+          "f1": 0.7887323943661971,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.7870370370370371,
+          "recall": 0.85,
+          "f1": 0.8173076923076923,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.8823529411764706,
+          "recall": 0.75,
+          "f1": 0.8108108108108109,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.6635514018691588,
+          "recall": 0.71,
+          "f1": 0.6859903381642513,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.7956703349560492,
+          "recall": 0.74,
+          "f1": 0.7646380466509749,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.7628379051289268,
+          "recall": 0.794,
+          "f1": 0.7753697854747572,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.7048706661156856,
+          "recall": 0.72,
+          "f1": 0.7105867387563221,
+          "support": 500
+        }
+      ]
+    },
+    "linear_svm": {
+      "name": "linear_svm",
+      "seed_scores": [
+        0.7504493973780382,
+        0.7504493973780382,
+        0.7504493973780382,
+        0.7504493973780382,
+        0.7504493973780382
+      ],
+      "mean": 0.7504493973780382,
+      "std": 0.0,
+      "best_seed_score": 0.7504493973780382,
+      "cherry_pick_inflation": 0.0,
+      "ci": [
+        0.7294099827158057,
+        0.7728642761771204
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.7128287707997852,
+        "facebook/react": 0.7878377058604987,
+        "microsoft/vscode": 0.7238035117779457,
+        "opencv/opencv": 0.7508828263548888,
+        "tensorflow/tensorflow": 0.7768941720970727
+      },
+      "delta_vs_setfit": -0.07355060262196178,
+      "detectable_vs_setfit": true,
+      "seconds": 17.086776971817017,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.7662337662337663,
+          "recall": 0.59,
+          "f1": 0.6666666666666666,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.7586206896551724,
+          "recall": 0.88,
+          "f1": 0.8148148148148148,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.6355140186915887,
+          "recall": 0.68,
+          "f1": 0.6570048309178744,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9292929292929293,
+          "recall": 0.92,
+          "f1": 0.9246231155778895,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.7094017094017094,
+          "recall": 0.83,
+          "f1": 0.7649769585253456,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.7380952380952381,
+          "recall": 0.62,
+          "f1": 0.6739130434782609,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.7777777777777778,
+          "recall": 0.7,
+          "f1": 0.7368421052631579,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.6728971962616822,
+          "recall": 0.72,
+          "f1": 0.6956521739130435,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.7281553398058253,
+          "recall": 0.75,
+          "f1": 0.7389162561576355,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.7159090909090909,
+          "recall": 0.63,
+          "f1": 0.6702127659574468,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.7766990291262136,
+          "recall": 0.8,
+          "f1": 0.7881773399014779,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.7614678899082569,
+          "recall": 0.83,
+          "f1": 0.7942583732057417,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.7699115044247787,
+          "recall": 0.87,
+          "f1": 0.8169014084507042,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.8823529411764706,
+          "recall": 0.75,
+          "f1": 0.8108108108108109,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.696078431372549,
+          "recall": 0.71,
+          "f1": 0.7029702970297029,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.7918250137276686,
+          "recall": 0.742,
+          "f1": 0.7630492123831729,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.7599943131242497,
+          "recall": 0.7959999999999999,
+          "f1": 0.7748864195930986,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.7118621835746917,
+          "recall": 0.718,
+          "f1": 0.713412560157843,
+          "support": 500
+        }
+      ]
+    },
+    "random_forest": {
+      "name": "random_forest",
+      "seed_scores": [
+        0.7234000233751804,
+        0.723859528473539,
+        0.7241665870850776,
+        0.7257228689797393,
+        0.7231750035867812
+      ],
+      "mean": 0.7240648023000634,
+      "std": 0.001004409698491474,
+      "best_seed_score": 0.7257228689797393,
+      "cherry_pick_inflation": 0.0016580666796758292,
+      "ci": [
+        0.7016089032601264,
+        0.7455915744679694
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.6850241280163416,
+        "facebook/react": 0.7526805886028792,
+        "microsoft/vscode": 0.6763474620617478,
+        "opencv/opencv": 0.6860579913586479,
+        "tensorflow/tensorflow": 0.8191874723280784
+      },
+      "delta_vs_setfit": -0.09993519769993653,
+      "detectable_vs_setfit": true,
+      "seconds": 37.54724359512329,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.7441860465116279,
+          "recall": 0.64,
+          "f1": 0.6881720430107527,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.6893939393939394,
+          "recall": 0.91,
+          "f1": 0.7844827586206896,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.6463414634146342,
+          "recall": 0.53,
+          "f1": 0.5824175824175825,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9456521739130435,
+          "recall": 0.87,
+          "f1": 0.90625,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.6915887850467289,
+          "recall": 0.74,
+          "f1": 0.714975845410628,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.6336633663366337,
+          "recall": 0.64,
+          "f1": 0.6368159203980099,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.6666666666666666,
+          "recall": 0.72,
+          "f1": 0.6923076923076923,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.6354166666666666,
+          "recall": 0.61,
+          "f1": 0.6224489795918368,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.7291666666666666,
+          "recall": 0.7,
+          "f1": 0.7142857142857143,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.6082474226804123,
+          "recall": 0.59,
+          "f1": 0.5989847715736041,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.7524752475247525,
+          "recall": 0.76,
+          "f1": 0.7562189054726368,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.696078431372549,
+          "recall": 0.71,
+          "f1": 0.7029702970297029,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.8958333333333334,
+          "recall": 0.86,
+          "f1": 0.8775510204081632,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.9135802469135802,
+          "recall": 0.74,
+          "f1": 0.8176795580110497,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.6910569105691057,
+          "recall": 0.85,
+          "f1": 0.7623318385650224,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.7721171286210168,
+          "recall": 0.736,
+          "f1": 0.7526531054600425,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.7364909771091335,
+          "recall": 0.752,
+          "f1": 0.7391612094213682,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.6792613676719179,
+          "recall": 0.686,
+          "f1": 0.6797642705392064,
+          "support": 500
+        }
+      ]
+    },
+    "ffnn": {
+      "name": "ffnn",
+      "seed_scores": [
+        0.7359327013774136,
+        0.7409177885347085,
+        0.7314402921554258,
+        0.7325952758350166,
+        0.7400699299697958
+      ],
+      "mean": 0.736191197574472,
+      "std": 0.004270649916606,
+      "best_seed_score": 0.7409177885347085,
+      "cherry_pick_inflation": 0.004726590960236421,
+      "ci": [
+        0.7137702506516215,
+        0.7577816681584104
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.6645509866477608,
+        "facebook/react": 0.7989012755985168,
+        "microsoft/vscode": 0.7434821643696587,
+        "opencv/opencv": 0.7484030712326406,
+        "tensorflow/tensorflow": 0.7243260090384914
+      },
+      "delta_vs_setfit": -0.08780880242552791,
+      "detectable_vs_setfit": true,
+      "seconds": 63.905147552490234,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.7066666666666667,
+          "recall": 0.53,
+          "f1": 0.6057142857142858,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.7685185185185185,
+          "recall": 0.83,
+          "f1": 0.7980769230769231,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.5470085470085471,
+          "recall": 0.64,
+          "f1": 0.5898617511520737,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9292929292929293,
+          "recall": 0.92,
+          "f1": 0.9246231155778895,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.7256637168141593,
+          "recall": 0.82,
+          "f1": 0.7699530516431925,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.75,
+          "recall": 0.66,
+          "f1": 0.7021276595744681,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.8095238095238095,
+          "recall": 0.68,
+          "f1": 0.7391304347826086,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.6721311475409836,
+          "recall": 0.82,
+          "f1": 0.7387387387387387,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.776595744680851,
+          "recall": 0.73,
+          "f1": 0.7525773195876289,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.7142857142857143,
+          "recall": 0.65,
+          "f1": 0.680628272251309,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.7722772277227723,
+          "recall": 0.78,
+          "f1": 0.7761194029850746,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.7592592592592593,
+          "recall": 0.82,
+          "f1": 0.7884615384615384,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.7476635514018691,
+          "recall": 0.8,
+          "f1": 0.7729468599033816,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.813953488372093,
+          "recall": 0.7,
+          "f1": 0.7526881720430108,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.6261682242990654,
+          "recall": 0.67,
+          "f1": 0.6473429951690821,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.7814865342341978,
+          "recall": 0.716,
+          "f1": 0.7446085936458949,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.7505088197937053,
+          "recall": 0.79,
+          "f1": 0.767115257697388,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.6918063550495445,
+          "recall": 0.704,
+          "f1": 0.6960742527889583,
+          "support": 500
+        }
+      ]
+    },
+    "text_cnn": {
+      "name": "text_cnn",
+      "seed_scores": [
+        0.7190663609920099,
+        0.7258272382945554,
+        0.7323093312840246,
+        0.7318675105374777,
+        0.718390948314593
+      ],
+      "mean": 0.7254922778845321,
+      "std": 0.006688596573226176,
+      "best_seed_score": 0.7323093312840246,
+      "cherry_pick_inflation": 0.0068170533994925675,
+      "ci": [
+        0.7026298066479727,
+        0.7478436526427582
+      ],
+      "per_repo": {
+        "bitcoin/bitcoin": 0.6649701643198825,
+        "facebook/react": 0.7426582206243223,
+        "microsoft/vscode": 0.7110082899556583,
+        "opencv/opencv": 0.6905577589262384,
+        "tensorflow/tensorflow": 0.8199417576466758
+      },
+      "delta_vs_setfit": -0.09850772211546788,
+      "detectable_vs_setfit": true,
+      "seconds": 319.6663587093353,
+      "classification_rows": [
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "bug",
+          "precision": 0.8421052631578947,
+          "recall": 0.48,
+          "f1": 0.6114649681528662,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "feature",
+          "precision": 0.8021978021978022,
+          "recall": 0.73,
+          "f1": 0.7643979057591623,
+          "support": 100
+        },
+        {
+          "repo": "bitcoin/bitcoin",
+          "label": "question",
+          "precision": 0.5131578947368421,
+          "recall": 0.78,
+          "f1": 0.6190476190476191,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "bug",
+          "precision": 0.9387755102040817,
+          "recall": 0.92,
+          "f1": 0.9292929292929293,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "feature",
+          "precision": 0.64,
+          "recall": 0.8,
+          "f1": 0.7111111111111111,
+          "support": 100
+        },
+        {
+          "repo": "facebook/react",
+          "label": "question",
+          "precision": 0.6753246753246753,
+          "recall": 0.52,
+          "f1": 0.5875706214689266,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "bug",
+          "precision": 0.7064220183486238,
+          "recall": 0.77,
+          "f1": 0.7368421052631579,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "feature",
+          "precision": 0.7317073170731707,
+          "recall": 0.6,
+          "f1": 0.6593406593406593,
+          "support": 100
+        },
+        {
+          "repo": "microsoft/vscode",
+          "label": "question",
+          "precision": 0.7064220183486238,
+          "recall": 0.77,
+          "f1": 0.7368421052631579,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "bug",
+          "precision": 0.7627118644067796,
+          "recall": 0.45,
+          "f1": 0.5660377358490566,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "feature",
+          "precision": 0.6833333333333333,
+          "recall": 0.82,
+          "f1": 0.7454545454545455,
+          "support": 100
+        },
+        {
+          "repo": "opencv/opencv",
+          "label": "question",
+          "precision": 0.6942148760330579,
+          "recall": 0.84,
+          "f1": 0.7601809954751131,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "bug",
+          "precision": 0.8842105263157894,
+          "recall": 0.84,
+          "f1": 0.8615384615384616,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "feature",
+          "precision": 0.927710843373494,
+          "recall": 0.77,
+          "f1": 0.8415300546448088,
+          "support": 100
+        },
+        {
+          "repo": "tensorflow/tensorflow",
+          "label": "question",
+          "precision": 0.6885245901639344,
+          "recall": 0.84,
+          "f1": 0.7567567567567568,
+          "support": 100
+        },
+        {
+          "repo": "cross-repo",
+          "label": "bug",
+          "precision": 0.826845036486634,
+          "recall": 0.692,
+          "f1": 0.7410352400192943,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "feature",
+          "precision": 0.7569898591955602,
+          "recall": 0.744,
+          "f1": 0.7443668552620574,
+          "support": 500
+        },
+        {
+          "repo": "cross-repo",
+          "label": "question",
+          "precision": 0.6555288109214267,
+          "recall": 0.75,
+          "f1": 0.6920796196023147,
+          "support": 500
+        }
+      ]
+    }
+  }
+}
