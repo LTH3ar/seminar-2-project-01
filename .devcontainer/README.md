@@ -1,5 +1,9 @@
 # Dev container
 
+> **Not the supported setup path.** A plain virtualenv is — see `RUNBOOK.md`.
+> This container is provided as-is for anyone who prefers it; if it gives you
+> trouble, use the virtualenv instead rather than debugging the container.
+
 Built from the official Docker Hub image `python:3.11-slim-trixie`
 (Debian 13 "trixie", slim variant, multi-arch amd64 + arm64/v8).
 

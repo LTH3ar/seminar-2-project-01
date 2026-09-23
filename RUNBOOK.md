@@ -65,9 +65,16 @@ make install-gpu       # adds setfit, datasets, accelerate
 make test
 ```
 
-Expected: `74 passed` with everything installed, or `55 passed, 8 skipped` with
-`install-core`. Any *failure* means the environment is wrong — stop and fix it
-before going further.
+Expected, depending on which install you ran:
+
+| Install | Result |
+|---|---|
+| `make install-core` | `72 passed, 9 skipped` |
+| `make install` | `81 passed` |
+| `make install-gpu` | `80 passed, 1 skipped` (the missing-SetFit test cannot run once SetFit is installed) |
+
+Skips are expected. Any *failure* means the environment is wrong — stop and fix
+it before going further.
 
 ---
 
@@ -108,6 +115,7 @@ without one.
 | Track D2, frozen encoders | `--embeddings` | ~1 min (first run downloads ~500 MB) |
 | Ensembles | `--ensemble` | ~1 min |
 | Error analysis | `--errors` | ~15 s |
+| Validity: confound, power, pooling | `--validity` | ~30 s |
 
 `python scripts/run_experiments.py --list` prints them.
 
@@ -186,6 +194,9 @@ make clean
 ---
 
 ## 6. Build the report
+
+The full report is in Markdown at `report/report.md`; every figure in it
+regenerates from steps 3–5.
 
 `results/tables/*.tex` are generated, so the report's numbers cannot drift from
 what the code produced:
@@ -275,8 +286,11 @@ depends on the model:
   identical code and seed — CPU and GPU use different kernels that accumulate
   in a different order, and no seeding setting removes that. Compare GPU
   numbers with GPU numbers.
-- **SetFit varies by roughly 0.01 run to run**, even on one device.
+- **SetFit's cross-repository score is stable** at fixed code on one device
+  (0.8102 on MPNet, to within 0.00004 across runs), but its **per-project**
+  scores can move by up to ~0.01 — the five-classifier average cancels most of
+  that out.
 
 So: a third-decimal difference is always fine. A second-decimal difference is
-expected between a CPU and a GPU run of the neural models, and between repeated
-SetFit runs — but is a real problem anywhere else.
+expected between a CPU and a GPU run of the neural models, and in SetFit's
+per-project figures — but is a real problem anywhere else.

@@ -23,6 +23,7 @@ Stages
                 full contrastive reproduction)
 ``ensemble``    soft-voting ensembles of the complementary models
 ``errors``      error analysis of the best model
+``validity``    temporal confound, statistical power, per-project vs pooled
 """
 
 from __future__ import annotations
@@ -301,6 +302,90 @@ def run_ensemble(force: bool = False, with_setfit: bool = False) -> None:
     done(started)
 
 
+def run_validity(force: bool = False) -> None:
+    """Temporal confound, statistical power, and per-project versus pooled training."""
+    started = announce("Validity -- confound, power, pooling")
+    from ai4se.baselines import MultinomialNaiveBayes
+    from ai4se.classical import naive_bayes, tuned_linear_svm
+    from ai4se.error_analysis import collect_predictions
+    from ai4se.evaluation import SETFIT_BASELINE, SETFIT_OVERALL
+    from ai4se.validity import (
+        discordant_rate,
+        label_share_by_year,
+        minimum_detectable_difference,
+        pooling_comparison,
+        timestamp_only_scores,
+        unpaired_mdd,
+    )
+
+    raw_train = load_split("train", kind="memory")
+    raw_test = load_split("test", kind="memory")
+    timestamp = timestamp_only_scores(raw_train, raw_test)
+    by_year = label_share_by_year(raw_train)
+    print(f"  timestamp-only cross-repository F1: {timestamp['mean']:.4f}")
+
+    train, test = load(TUNED_PREPROCESSING)
+    flat = lambda preds, key: [y for r in preds for y in preds[r][key]]  # noqa: E731
+    reference = collect_predictions(tuned_logistic_regression, train, test)
+    truth, ref_pred = flat(reference, "y_true"), flat(reference, "y_pred")
+
+    pairs = {}
+    for name, factory in [
+        ("TF-IDF + Linear SVM (tuned)", tuned_linear_svm),
+        ("TF-IDF + Naive Bayes", naive_bayes),
+        ("TF-IDF + Random Forest", CLASSICAL_MODELS["TF-IDF + Random Forest"]),
+    ]:
+        other = collect_predictions(factory, train, test)
+        rate = discordant_rate(ref_pred, flat(other, "y_pred"), truth)
+        pairs[name] = {
+            "discordant_rate": round(rate, 4),
+            "mdd_overall": minimum_detectable_difference(1500, rate),
+            "mdd_per_project": minimum_detectable_difference(300, rate),
+        }
+        print(f"  LR vs {name:<30} disagree {rate:.3f} -> MDD "
+              f"{pairs[name]['mdd_overall'] * 100:.1f} / "
+              f"{pairs[name]['mdd_per_project'] * 100:.1f} points")
+
+    sensitivity = {
+        f"{rate:.2f}": {
+            "overall": minimum_detectable_difference(1500, rate),
+            "per_project": minimum_detectable_difference(300, rate),
+        }
+        for rate in (0.05, 0.10, 0.15, 0.20)
+    }
+    published = {"overall": unpaired_mdd(1500, SETFIT_OVERALL)}
+    published.update({r: unpaired_mdd(300, a) for r, a in SETFIT_BASELINE.items()})
+
+    full = {"level": "full", "max_words": 400}
+    pooling = {}
+    for name, factory, prep in [
+        ("naive Bayes (from scratch), full", MultinomialNaiveBayes, full),
+        ("naive Bayes (from scratch), light", MultinomialNaiveBayes,
+         TUNED_PREPROCESSING),
+        ("TF-IDF + Naive Bayes", naive_bayes, TUNED_PREPROCESSING),
+        ("TF-IDF + Logistic Regression (tuned)", tuned_logistic_regression,
+         TUNED_PREPROCESSING),
+        ("TF-IDF + Linear SVM (tuned)", tuned_linear_svm, TUNED_PREPROCESSING),
+    ]:
+        tr, te = load(prep)
+        result = pooling_comparison(factory, tr, te)
+        pooling[name] = result
+        wins = result["per_project_wins"]
+        print(f"  pooling {name:<38} per-project {result['per_project_mean']:.4f}  "
+              f"pooled {result['pooled_mean']:.4f}  wins {wins}/5")
+
+    payload = {
+        "timestamp_only": timestamp,
+        "label_share_by_year": json.loads(by_year.to_json(orient="index")),
+        "discordance_vs_tuned_logreg": pairs,
+        "mdd_sensitivity": sensitivity,
+        "mdd_vs_published_unpaired": published,
+        "pooling": pooling,
+    }
+    (TABLES / "validity.json").write_text(json.dumps(payload, indent=2))
+    done(started)
+
+
 def run_errors(force: bool = False) -> None:
     """Error analysis of the best classical model."""
     started = announce("Error analysis")
@@ -339,6 +424,7 @@ STAGES = {
     "embeddings": run_embeddings,
     "ensemble": run_ensemble,
     "errors": run_errors,
+    "validity": run_validity,
 }
 
 
