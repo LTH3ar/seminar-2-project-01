@@ -1,0 +1,95 @@
+{
+  "baseline": {
+    "global": {
+      "f1": 0.7631121097971124,
+      "ci": [
+        0.7413070764733664,
+        0.7848094798176071
+      ]
+    },
+    "per_repo": {
+      "f1": 0.7504493973780382
+    },
+    "setfit_official": 0.827
+  },
+  "temporal_confound": {
+    "per_repo": {
+      "facebook/react": 0.8016666666666666,
+      "tensorflow/tensorflow": 0.7916666666666666,
+      "microsoft/vscode": 0.585,
+      "opencv/opencv": 0.62,
+      "bitcoin/bitcoin": 0.625
+    },
+    "mean": 0.6846666666666666,
+    "chance": 0.3333333333333333
+  },
+  "split_protocol": {
+    "random": 0.769965651243932,
+    "time_aware": 0.6816862451868324,
+    "delta": -0.08827940605709961
+  },
+  "significance": {
+    "rows": [
+      {
+        "repo": "bitcoin/bitcoin",
+        "n01": 17,
+        "n10": 9,
+        "discordant": 26,
+        "p_value": 0.16863754391670227,
+        "p_holm": 0.8431877195835114,
+        "significant": false
+      },
+      {
+        "repo": "facebook/react",
+        "n01": 14,
+        "n10": 17,
+        "discordant": 31,
+        "p_value": 0.720100131817162,
+        "p_holm": 1.0,
+        "significant": false
+      },
+      {
+        "repo": "microsoft/vscode",
+        "n01": 17,
+        "n10": 10,
+        "discordant": 27,
+        "p_value": 0.24778856337070465,
+        "p_holm": 0.9911542534828186,
+        "significant": false
+      },
+      {
+        "repo": "opencv/opencv",
+        "n01": 16,
+        "n10": 14,
+        "discordant": 30,
+        "p_value": 0.855535551905632,
+        "p_holm": 1.0,
+        "significant": false
+      },
+      {
+        "repo": "tensorflow/tensorflow",
+        "n01": 21,
+        "n10": 15,
+        "discordant": 36,
+        "p_value": 0.40503224614076316,
+        "p_holm": 1.0,
+        "significant": false
+      },
+      {
+        "repo": "POOLED",
+        "n01": 85,
+        "n10": 65,
+        "discordant": 150,
+        "p_value": 0.12052916970948838,
+        "p_holm": 0.12052916970948838,
+        "significant": false
+      }
+    ],
+    "survivors": 0
+  },
+  "power": {
+    "discordant_rate": 0.16133333333333333,
+    "mdd_cross_repo": 0.03,
+    "mdd_per_repo": 0.07
+  }
+}

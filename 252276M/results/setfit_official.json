@@ -1,0 +1,26 @@
+{
+  "preset": "official",
+  "cross_repo_f1": 0.8240,
+  "ci": [
+    0.8042,
+    0.8431
+  ],
+  "per_repo": {
+    "facebook/react": 0.8751,
+    "tensorflow/tensorflow": 0.8679,
+    "microsoft/vscode": 0.8031,
+    "bitcoin/bitcoin": 0.7507,
+    "opencv/opencv": 0.8231
+  },
+  "published": {
+    "facebook/react": 0.8751,
+    "tensorflow/tensorflow": 0.8679,
+    "microsoft/vscode": 0.8031,
+    "bitcoin/bitcoin": 0.7507,
+    "opencv/opencv": 0.8231,
+    "cross-repo": 0.8240
+  },
+  "gap": 0.0,
+  "verdict": "reproduced (within 1.0 point)",
+  "minutes": 15.2
+}

@@ -1,0 +1,62 @@
+{
+  "majority_class": {
+    "name": "majority_class",
+    "cross_repo_f1": 0.16666666666666666,
+    "per_repo_f1": {
+      "bitcoin/bitcoin": 0.16666666666666666,
+      "facebook/react": 0.16666666666666666,
+      "microsoft/vscode": 0.16666666666666666,
+      "opencv/opencv": 0.16666666666666666,
+      "tensorflow/tensorflow": 0.16666666666666666
+    },
+    "macro_f1": 0.30952380952380953,
+    "accuracy": 0.3333333333333333,
+    "auc": null,
+    "elapsed_s": 0.01
+  },
+  "random_stratified": {
+    "name": "random_stratified",
+    "cross_repo_f1": 0.3348329215250404,
+    "per_repo_f1": {
+      "bitcoin/bitcoin": 0.3067131638170635,
+      "facebook/react": 0.34888655668584767,
+      "microsoft/vscode": 0.34888655668584767,
+      "opencv/opencv": 0.3627907104863745,
+      "tensorflow/tensorflow": 0.3068876199500688
+    },
+    "macro_f1": 0.33483292152504046,
+    "accuracy": 0.3353333333333333,
+    "auc": null,
+    "elapsed_s": 0.01
+  },
+  "keyword_rules": {
+    "name": "keyword_rules",
+    "cross_repo_f1": 0.5975515357124037,
+    "per_repo_f1": {
+      "bitcoin/bitcoin": 0.6298576105361208,
+      "facebook/react": 0.6476640294757071,
+      "microsoft/vscode": 0.5300349125157309,
+      "opencv/opencv": 0.5623473748473748,
+      "tensorflow/tensorflow": 0.6178537511870846
+    },
+    "macro_f1": 0.6046072896761913,
+    "accuracy": 0.612,
+    "auc": null,
+    "elapsed_s": 0.09
+  },
+  "naive_bayes_scratch": {
+    "name": "naive_bayes_scratch",
+    "cross_repo_f1": 0.6852332636216427,
+    "per_repo_f1": {
+      "bitcoin/bitcoin": 0.6387446478413267,
+      "facebook/react": 0.817135570513131,
+      "microsoft/vscode": 0.667813014601245,
+      "opencv/opencv": 0.679378325694115,
+      "tensorflow/tensorflow": 0.6230947594583958
+    },
+    "macro_f1": 0.6859863649806256,
+    "accuracy": 0.6906666666666667,
+    "auc": null,
+    "elapsed_s": 0.52
+  }
+}
