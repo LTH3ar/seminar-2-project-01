@@ -432,3 +432,71 @@ def test_evaluation_is_indifferent_to_persistence_layer(tmp_path):
         k=3,
     )
     assert from_memory.mean_macro_f1 == pytest.approx(from_file.mean_macro_f1)
+
+
+# --------------------------------------------------------------------------- #
+# Validity analyses
+# --------------------------------------------------------------------------- #
+
+
+def test_timestamp_only_reproduces_the_confound():
+    """A model that reads only the creation date must score near 0.70.
+
+    If this ever drops towards 0.33, the dataset changed or the temporal
+    confound was removed -- either way, the report's framing is stale.
+    """
+    from ai4se.validity import timestamp_only_scores
+
+    scores = timestamp_only_scores(load_split("train"), load_split("test"))
+    assert scores["mean"] == pytest.approx(0.7071, abs=5e-4)
+    assert set(scores) == {*SETFIT_BASELINE, "mean"}
+
+
+def test_no_bug_report_predates_2021():
+    """The fact the whole confound rests on."""
+    from ai4se.validity import label_share_by_year
+
+    table = label_share_by_year(load_split("train"))
+    assert (table.loc[table.index < 2021, "bug"] == 0).all()
+    assert table.loc[2023, "bug"] > 0.4
+
+
+def test_discordant_rate_counts_only_disagreeing_outcomes():
+    from ai4se.validity import discordant_rate
+
+    truth = ["bug", "bug", "feature", "question"]
+    # Item 0: both right. Item 1: only A right. Item 2: only B right.
+    # Item 3: both wrong -- in different ways, which is still concordant.
+    a = ["bug", "bug", "bug", "bug"]
+    b = ["bug", "feature", "feature", "feature"]
+    assert discordant_rate(a, b, truth) == pytest.approx(0.5)
+
+
+def test_power_grows_with_the_true_difference():
+    from ai4se.validity import mcnemar_power
+
+    weak = mcnemar_power(0.005, 1500, 0.15)
+    strong = mcnemar_power(0.05, 1500, 0.15)
+    assert weak < 0.2 < 0.95 < strong
+
+
+def test_detectable_difference_depends_on_the_pair():
+    """Two models that rarely disagree give a far more sensitive test.
+
+    This is why a single "minimum detectable difference" for the benchmark is
+    misleading: it is a property of the pair being compared, not of the test set.
+    """
+    from ai4se.validity import minimum_detectable_difference as mdd
+
+    similar, dissimilar = mdd(1500, 0.05), mdd(1500, 0.20)
+    assert similar < dissimilar
+    assert 0.01 < similar < 0.025
+    assert 0.025 < dissimilar < 0.045
+    assert mdd(300, 0.15) > mdd(1500, 0.15), "smaller test sets detect less"
+
+
+def test_unpaired_threshold_is_conservative():
+    from ai4se.validity import minimum_detectable_difference, unpaired_mdd
+
+    assert unpaired_mdd(1500, 0.827) == pytest.approx(0.0387, abs=1e-3)
+    assert unpaired_mdd(1500, 0.827) > minimum_detectable_difference(1500, 0.16)

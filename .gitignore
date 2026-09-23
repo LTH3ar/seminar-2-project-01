@@ -23,9 +23,10 @@ data/processed/*
 # --------------------------------------------------------------------------
 # Results
 #
-# Figures and tables ARE committed: the LaTeX report references them, and the
-# lecturer should see them without re-running anything. Model checkpoints and
-# raw prediction dumps are not -- they are large and fully reproducible.
+# Figures and tables ARE committed once generated: the LaTeX report references
+# them, and the lecturer should be able to see them without re-running anything.
+# Model checkpoints and raw prediction dumps are not -- they are large and fully
+# reproducible.
 # --------------------------------------------------------------------------
 results/models/*
 results/predictions/*

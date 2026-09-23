@@ -7,7 +7,7 @@ Course project based on the [NLBSE'24 tool competition on issue report classific
 
 Classify GitHub issue reports into one of three types: `bug`, `feature`, `question`.
 
-The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — collected between January 2022 and September 2023. It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
+The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — created between March 2016 and September 2023 (about 77% from 2022–2023). It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
 
 **The task is multi-class, not multi-label.** Issues carrying more than one label were excluded by the organisers, so every issue has exactly one class. The course brief describes the task as multi-label; this discrepancy has been raised with the lecturer.
 
@@ -45,41 +45,74 @@ B and C plug into them rather than writing their own metrics.
 ## Layout
 
 ```
-.devcontainer/           Reproducible environment (see .devcontainer/README.md)
-.dockerignore            Keeps the Docker build context small
-pyproject.toml           Packaging; `pip install -e ".[dev]"`
-Makefile                 Task shortcuts, run `make help`
+README.md                This file
+RUNBOOK.md               Step-by-step: fresh clone to every result in the report
+code_overview.md         Architecture, design decisions, findings, corrections
+pyproject.toml           Packaging and optional extras (dev, ml, dl, embeddings, setfit)
+requirements.txt         Flat dependency list, for tools that do not read pyproject
+Makefile                 Task shortcuts -- run `make help`
+.devcontainer/           Optional container setup; the virtualenv is the supported path
+
 src/ai4se/
+    __init__.py          Public API -- the dependency-light layers only
     model.py             IssueReport entity, label and repository constants
     repository.py        IssueRepository (abstract) + InMemory / File implementations
     loader.py            Downloads and caches the official NLBSE'24 splits
     preprocessing.py     Markdown-aware cleaning pipeline (raw / light / full)
     eda.py               Dataset characterisation and figures
-    metrics.py           Precision, recall, F1, confusion matrix (from scratch)
-    evaluation.py        Stratified k-fold + the competition protocol
-    baselines.py         Reference floors, no third-party dependencies
+    metrics.py           Precision, recall, F1, confusion matrix, ROC/AUC (from scratch)
+    evaluation.py        Stratified k-fold, competition protocol, leaderboard, grid search
+    baselines.py         Reference floors -- no third-party dependencies
+    classical.py         Track B: TF-IDF + NB, LogReg, SVM, Random Forest   [scikit-learn]
+    neural.py            Track C: FFNN and CNN, learning curves             [torch]
+    embeddings.py        Track D2: frozen encoders and SetFit       [sentence-transformers]
+    ensemble.py          Soft-voting ensembles over any of the above
+    error_analysis.py    Confusions, length effects, misleading terms, confident errors
+    validity.py          Temporal confound, statistical power, per-project vs pooled
+
+scripts/
+    run_experiments.py   Regenerates every result -- `--list` shows the stages
+
 notebooks/
-    01_data_and_eda.ipynb        Track A
-    02_evaluation_protocol.ipynb Track D
+    01_data_and_eda.ipynb          Track A -- dataset, persistence, EDA       (standalone)
+    02_evaluation_protocol.ipynb   Track D -- metrics, k-fold, floors         (standalone)
+    03_classical_models.ipynb      Track B -- ablation, grid search, results  (needs results)
+    04_neural_models.ipynb         Track C -- learning curves, early stopping (needs results)
+    05_final_comparison.ipynb      Leaderboard, analysis, error analysis      (needs results)
+
 tests/
-    test_persistence_equivalence.py
-    test_evaluation.py
+    test_persistence_equivalence.py   Memory/file equivalence, public API, dependency layering
+    test_evaluation.py                Metrics and splitter, cross-checked against scikit-learn
+    test_models.py                    Tracks B, C, D2, ensembles, error analysis
+
 data/
-    raw/                 Cached competition CSVs (ignored, downloaded on demand)
-    processed/           Cleaned datasets handed to tracks B, C, D (ignored)
+    raw/                 Competition CSVs -- downloaded on demand, never committed
+    processed/           Cleaned datasets written by notebook 01 -- never committed
+
 results/
-    figures/             Committed -- referenced by the LaTeX report
-    tables/              Committed -- results tables for the report
-    models/              Ignored -- checkpoints are large and reproducible
-    predictions/         Ignored -- raw prediction dumps
+    tables/              JSON results and generated .tex -- safe to commit once generated
+    figures/             PNG figures -- safe to commit once generated
+    models/              Checkpoints -- git-ignored
+    predictions/         Prediction dumps -- git-ignored
+
 report/
+    report.md            The full report, in Markdown -- source for the LaTeX version
     figures/             Figures copied in for the LaTeX build
 ```
 
+Notebooks 03–05 read results written by `scripts/run_experiments.py`, so run
+that first; 01 and 02 are standalone. See `RUNBOOK.md` for the order.
+
+**What gets committed.** Source code always. Generated tables and figures may be
+committed once produced — the report references them — but every one of them
+regenerates from `RUNBOOK.md`, so a source-only checkout loses nothing. Data,
+model checkpoints and prediction dumps are git-ignored. `make strip` returns the
+tree to source-only (clears notebook outputs and generated results) if you want
+a clean commit.
+
 Every directory that can legitimately be empty carries a `.gitkeep`, and the
 final rule in `.gitignore` re-includes those placeholders even inside ignored
-directories. A fresh `git clone` therefore reproduces the whole tree, so no
-member has to guess where their outputs belong.
+directories. A fresh clone therefore reproduces the whole tree.
 
 ## Persistence design
 
@@ -179,8 +212,9 @@ are imported on demand, and their tests skip cleanly when the dependency is
 absent:
 
 ```
-55 passed, 8 skipped        # with only .[dev] installed
-63 passed                   # with everything
+72 passed, 9 skipped        # make install-core   (no torch, no sentence-transformers)
+81 passed                   # make install
+80 passed, 1 skipped        # make install-gpu    (the SetFit missing-extra test cannot run)
 ```
 
 So a member who cannot install torch is not blocked from any other part of the
@@ -295,7 +329,7 @@ Cross-repository F1 on the official test split, under the competition protocol.
 |---|---|---|---|
 | **SetFit (NLBSE'24 baseline)** | **0.8270** | — | — |
 | **Ensemble (SetFit + TF-IDF + MPNet)** | **0.8168** | **0.9319** | −0.0102 |
-| SetFit (MPNet) | 0.8102 | 0.9186 | −0.0168 |
+| SetFit (MPNet) | 0.8102 | 0.9190 | −0.0168 |
 | Ensemble (SetFit + TF-IDF) | 0.8053 | 0.9244 | −0.0217 |
 | SetFit (reproduction, MiniLM) | 0.7982 | 0.9181 | −0.0288 |
 | Ensemble (TF-IDF + MPNet + CNN) | 0.7909 | 0.9245 | −0.0361 |
@@ -312,31 +346,43 @@ Full per-repository table: `results/tables/final_leaderboard.tex`, or
 
 ### Findings
 
+- **The benchmark has a temporal confound.** No bug report predates 2021;
+  every 2016–2020 issue is a feature or question. A shallow decision tree reading
+  *only the creation timestamp* scores **0.7071**, and on `tensorflow` it matches
+  our tuned TF-IDF model. The meaningful floor for this benchmark is ~0.70, not
+  the majority class's 0.17.
+- **How small a difference the test set can detect depends on the pair of
+  models.** McNemar's test at 80% power detects 1.8–3.1 points overall
+  (3.9–6.9 within one project) for real model pairs — less for models that
+  rarely disagree. Against the published baseline, whose per-issue predictions
+  are not available, the conservative threshold is 3.9 points overall and
+  7.6–9.8 per project.
+- **Best result 0.8168**, a soft-voting ensemble — **statistically
+  indistinguishable from the published baseline** (1.02 points below it).
+- **The published method reproduces to 0.8102** on MPNet. The organisers' own
+  supplied re-run gives 0.8240 against their published 0.8270, so the
+  reference point itself moves by 0.3 points.
+- **Contrastive fine-tuning is worth +0.0759** on a fixed encoder, and a larger
+  encoder **+0.0500** frozen — both detectable under any assumption. At matched
+  training settings the encoder is worth +0.0286 after fine-tuning, which is
+  not established, so the apparent sub-additivity is suggestive only.
 - **Aggressive cleaning hurts.** `full` (stop words + lemmatisation) scores
-  0.015 below `light` — stop-word removal deletes *would* and *could*, the
-  modal words that mark a feature request.
-- **Best result 0.8168**, a soft-voting ensemble — 98.5% of the distance from a
-  majority classifier to the baseline, and **above the baseline on
-  `bitcoin`** (0.7691 vs 0.7555).
-- **The published method reproduces to 0.8102** on MPNet, and beats the
-  baseline on `tensorflow` (0.8710 vs 0.8644).
-- **Contrastive fine-tuning is worth +0.0759**, and a larger encoder **+0.0286**,
-  both measured at matched training settings. Sub-additive: the encoder keeps
-  57% of its frozen value (+0.0500) after fine-tuning.
-- **Training settings matter as much as encoder size.** Halving batch and
-  sequence length cost 0.0166, against +0.0286 for doubling encoder depth and
-  width — so a result quoted without them is not comparable.
-- **Ensembling beats every individual model**, +0.0066 over its best member,
-  and gives the best AUC measured (0.9319).
-- **Reproducibility differs by model class.** scikit-learn pipelines and the
-  neural models reproduce exactly on the same device; the CNN differs by 0.0140
-  between CPU and GPU, because the devices use different kernels. SetFit varies
-  ~0.01 run to run. Don't compare across devices, and don't interpret sub-0.015
-  gaps between SetFit-based models.
-- **Neither neural model beats TF-IDF.** With 300 training issues per project
-  there is not enough data to learn a better representation.
-- **Per-project training beats a global classifier** by 0.068 on all five
-  repositories, despite using a fifth of the data.
+  0.011 below `light` on average, and lower in all six paired settings —
+  stop-word removal deletes *would* and *could*, the modal words that mark a
+  feature request.
+- **Ensembling helps when members are complementary.** TF-IDF + frozen MPNet +
+  CNN gains +0.031 over its best member at no GPU cost. Adding SetFit gives the
+  best AUC measured (0.9319), but its F1 gain over SetFit alone (+0.0066) is
+  not detectable.
+- **No neural model is detectably better or worse than TF-IDF** with 300
+  training issues per project.
+- **Whether per-project training helps depends on the model.** It gains +0.068
+  for unregularised naive Bayes, winning on all five projects; for the tuned
+  linear models there is no detectable difference from one pooled classifier.
+- **21 of 22 models reproduce bit-identically** from a clean checkout. The
+  exception, SetFit on MPNet, is stable to 0.00004 on the cross-repository mean
+  while its per-project scores move by up to 0.0099. Neural models differ by up
+  to 0.014 between CPU and GPU.
 - **`bug` → `question` is the dominant error**, over a quarter of all mistakes.
 - **About a third of confident errors look like label noise** — the title
   declares a different type than the label, and the model usually agrees with

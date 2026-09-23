@@ -23,8 +23,8 @@ repository before the oral.
 | — | Error analysis | complete |
 | — | LaTeX report | not started |
 
-Current size: 4,294 lines across 14 modules in `src/ai4se/`, 1,230 lines across
-3 test files (75 tests, all passing), a 336-line experiment runner, and 5
+Current size: 4,536 lines across 15 modules in `src/ai4se/`, 1,298 lines across
+3 test files (81 tests, all passing), a 479-line experiment runner, and 5
 notebooks that all execute end to end with zero errors. `ruff check` is clean
 under a configuration that includes docstring linting.
 
@@ -61,8 +61,8 @@ on `facebook/react`. The per-repository figures are encoded in
 published overall, so a transcription error cannot go unnoticed.
 
 Dataset: 3,000 issues from `facebook/react`, `tensorflow/tensorflow`,
-`microsoft/vscode`, `bitcoin/bitcoin` and `opencv/opencv`, collected January
-2022 to September 2023, split 50/50 into train and test, balanced at exactly
+`microsoft/vscode`, `bitcoin/bitcoin` and `opencv/opencv`, created between
+March 2016 and September 2023 (about 77% from 2022–2023), split 50/50 into train and test, balanced at exactly
 100 issues per (project, class) cell in each split.
 
 ---
@@ -116,6 +116,7 @@ evaluation layers stay usable without any of them, which is why
 | Track C | `neural` | torch |
 | Track D2 | `embeddings` | sentence-transformers (+ `setfit` for the full run) |
 | Ensembles | `ensemble` | whatever its members need |
+| Validity analyses | `validity` | scikit-learn, SciPy |
 
 `metrics.py` and `evaluation.py` deliberately do **not** import scikit-learn:
 precision, recall, F1, ROC and AUC, and the stratified fold splitter are all
@@ -126,8 +127,8 @@ and in the test suite as the oracle those implementations are checked against.
 imported from their submodules on demand. `import ai4se` therefore works in an
 environment with none of scikit-learn, torch or sentence-transformers
 installed, and `test_core_package_has_no_heavy_dependencies` parses the source
-to enforce it. With only `.[dev]` installed the suite reports 55 passed,
-8 skipped.
+to enforce it. With `make install-core` (no torch, no sentence-transformers)
+the suite reports 72 passed, 9 skipped.
 
 ---
 
@@ -323,6 +324,16 @@ majority voting because three classes and two members tie too often, and a tie
 discards the confidence information that decides the case. A member without
 `predict_proba` — `LinearSVC` — raises rather than being silently dropped.
 
+### `validity.py` (242 lines)
+
+Three analyses that change how the leaderboard should be read.
+`timestamp_only_scores` measures the temporal confound with a classifier that
+never reads text. `minimum_detectable_difference` simulates McNemar's exact test
+at a measured disagreement rate; `unpaired_mdd` gives the conservative threshold
+for comparisons against published scores, where per-issue predictions are
+unavailable. `pooling_comparison` trains a model per project and pooled, and
+scores both per project. All feed `results/tables/validity.json`.
+
 ### `error_analysis.py` (299 lines)
 
 `collect_predictions` mirrors the competition protocol but keeps individual
@@ -383,7 +394,7 @@ truncate and corrupt every score. `strict=True` turns that into an exception.
 
 ## 6. Tests
 
-75 tests, all passing, in three files (55 pass and 8 skip in an environment
+81 tests, all passing, in three files (72 pass and 9 skip in an environment
 without torch or sentence-transformers).
 
 `test_persistence_equivalence.py` (7) is the evidence for the graded
@@ -398,14 +409,14 @@ and advertised eighteen names the package did not expose — counting the entrie
 is not the same as checking they resolve. `test_core_package_has_no_heavy_
 dependencies` parses the source to keep the optional extras optional.
 
-`test_evaluation.py` (31) covers hand-computed metric values, fold
+`test_evaluation.py` (36) covers hand-computed metric values, fold
 partitioning, stratification and determinism, the competition protocol's
 arithmetic, and the self-consistency of the published baseline constants. Three
 tests **cross-check against scikit-learn** — every classification metric, the
 fold splitter's proportions, and one-vs-rest AUC — and the AUC comparison
 agrees to 1.1e-16.
 
-`test_models.py` (37) covers the model tracks and error analysis. Torch and
+`test_models.py` (38) covers the model tracks and error analysis. Torch and
 sentence-transformers tests skip cleanly when those packages are absent. The
 notable ones:
 
@@ -456,11 +467,18 @@ Cross-repository F1 on the official test split, under the competition protocol
 | majority | 0.1667 | 0.1667 | 0.1667 | 0.1667 | 0.1667 | 0.1667 | — | −0.6603 |
 
 **Best result: 0.8168**, from a soft-voting ensemble of the SetFit
-reproduction, a tuned TF-IDF pipeline and a frozen MPNet encoder. That closes
-**98.5%** of the distance from a majority-class classifier to the published
-baseline, leaving 0.0102. On `bitcoin/bitcoin` it *exceeds* the baseline
-(0.7691 against 0.7555), and the best single model, SetFit on MPNet, exceeds
-it on `tensorflow` (0.8710 against 0.8644).
+reproduction, a tuned TF-IDF pipeline and a frozen MPNet encoder. It is 1.02
+points below the published baseline — under the 3.9-point difference a
+conservative test can detect against it (section 7.0) — so the honest statement
+is that it is **statistically indistinguishable from the published baseline**,
+not that it falls short of it.
+
+Two framings used in earlier versions of this document are withdrawn. "98.5% of
+the distance from a majority-class classifier" was measured from the wrong
+floor: a timestamp-only model already scores 0.7071 (section 7.0). And the
+claims that our models *exceed* the baseline on `bitcoin` (0.7691 vs 0.7555) and
+`tensorflow` (0.8710 vs 0.8644) are 1.4 and 0.7 points on 300 items, far below
+the 7.8–9.8-point per-project threshold against the published baseline.
 
 ### Findings
 
@@ -470,6 +488,84 @@ title weight and truncation setting. Stop-word removal deletes *would*,
 *could*, *should* and *please*, which are precisely the modal words Track A's
 own term analysis identified as the signature of a feature request. Track A was
 built on the opposite assumption; only the ablation exposed it.
+
+### 7.0 Two findings that reframe the results
+
+Both came from comparing this project against teammates' independent versions.
+Both were verified here, and both are now regenerated by
+`scripts/run_experiments.py --validity` via `ai4se.validity`, so every number
+below reproduces from this repository.
+
+**The benchmark has a temporal confound.** No bug report in the dataset predates
+2021; every issue from 2016 to 2020 is a feature request or a question. The
+organisers evidently filled the feature and question quotas by reaching further
+back in time than the bug quota. In `facebook/react` the median bug dates from
+2022 and the median feature request from 2018.
+
+A depth-3 decision tree per project, reading **only the creation timestamp** —
+never a word of text — scores:
+
+| Repository | timestamp only | tuned TF-IDF | published SetFit |
+|---|---|---|---|
+| tensorflow/tensorflow | **0.8375** | 0.8155 | 0.8644 |
+| facebook/react | 0.7794 | 0.8334 | 0.8718 |
+| bitcoin/bitcoin | 0.6656 | 0.6793 | 0.7555 |
+| opencv/opencv | 0.6274 | 0.7496 | 0.8173 |
+| microsoft/vscode | 0.6255 | 0.7234 | 0.8262 |
+| **mean** | **0.7071** | **0.7603** | **0.8270** |
+
+On `tensorflow` the date alone matches our text model. Text carries temporal
+proxies — library versions, API names, deprecated features — so any model can
+learn *when* an issue was filed as a stand-in for *what kind* it is. The
+meaningful floor for this benchmark is therefore ~0.70, not the majority class's
+0.17.
+
+The exact figure depends slightly on how time is encoded, because a shallow tree
+places its thresholds at midpoints between training dates: continuous epoch time
+gives 0.7018, and a teammate's independent implementation 0.684. The conclusion
+does not change.
+
+**How small a difference the test set can detect depends on the pair of models
+compared.** McNemar's test only uses the issues on which the two models
+disagree, so its power depends on that disagreement rate, not on the test-set
+size alone. Measured against tuned logistic regression:
+
+| Compared model | disagreement | detectable overall | detectable per project |
+|---|---|---|---|
+| Linear SVM (tuned) | 5.5% | 1.8 points | 3.9 points |
+| Naive Bayes | 13.1% | 2.7 points | 6.0 points |
+| Random Forest | 17.3% | 3.1 points | 6.9 points |
+
+Comparisons against the **published baseline** are harder still: the organisers
+publish scores, not per-issue predictions, so no paired test is possible. A
+conservative unpaired test detects 3.9 points overall and 7.6–9.8 points within
+one project.
+
+An earlier version of this section quoted a single threshold of "about 3 points
+overall, 7 per project", taken from a teammate's analysis that assumed a 16%
+disagreement rate. That is correct for dissimilar models and too pessimistic for
+similar ones. Checking each claim against the threshold most favourable to it:
+
+| Claim | difference | most favourable threshold | verdict |
+|---|---|---|---|
+| Contrastive fine-tuning (MiniLM) | 7.59 | 1.8 | detectable |
+| Larger encoder, frozen | 5.00 | 1.8 | detectable |
+| TF-IDF + MPNet + CNN vs its TF-IDF member | 3.06 | 1.8 | likely detectable |
+| Larger encoder, fine-tuned (matched) | 2.86 | 1.8 | not established |
+| Neural models vs TF-IDF | 1.65 | 1.8 | not detectable |
+| Our best vs published baseline | 1.02 | 3.9 (unpaired) | not detectable |
+| Best ensemble vs SetFit-MPNet | 0.66 | 1.8 | not detectable |
+| Ensemble vs baseline on `bitcoin` | 1.36 | 9.8 (unpaired) | not detectable |
+| SetFit-MPNet vs baseline on `tensorflow` | 0.66 | 7.8 (unpaired) | not detectable |
+
+"Likely" and "not established" mark the two claims whose disagreement rate could
+not be measured here, because one side needs a GPU to regenerate. The ensemble
+contains the TF-IDF model it is compared with, so they disagree rarely and the
+favourable threshold probably applies; the two SetFit variants share a method and
+could plausibly fall on either side.
+
+The two largest effects in the project survive under any assumption. Most of the
+leaderboard's finer ordering does not, and should be read as ties.
 
 ### 7.1 The SetFit reproduction
 
@@ -610,13 +706,15 @@ averages by opposite routes:
 | Ensemble of both + CNN | 0.8296 | 0.8395 | 0.7494 | **0.7694** | 0.7665 | 0.090 |
 
 TF-IDF wins the two easiest projects, MPNet all three hardest. The ensemble
-takes `bitcoin` to 0.7694, **above the published baseline's 0.7555** on that
-project — the only place anything here beats it. Lexical overlap between train
+takes `bitcoin` to 0.7694 — numerically above the published baseline's 0.7555,
+though at 1.4 points on 300 items that is far inside the per-project noise
+(section 7.0). Lexical overlap between train
 and test is high within an easy project and low within a hard one, which is
 where a pretrained semantic representation earns its keep.
 
-**Neither neural model beats TF-IDF.** The CNN reaches 0.7578 and the FFNN
-0.7467, against 0.7603 for tuned logistic regression. With 300 training issues
+**No neural model is detectably better or worse than TF-IDF.** The CNN reaches
+0.7438 and the FFNN 0.7424 (GPU), against 0.7603 for tuned logistic regression —
+a 1.65-point gap, under even the most sensitive threshold measured (1.8). With 300 training issues
 per project there is not enough data to learn a better representation than
 TF-IDF already supplies, and the CNN must learn its embeddings from scratch.
 
@@ -624,9 +722,12 @@ TF-IDF already supplies, and the CNN must learn its embeddings from scratch.
 between 0.70 and 0.76. The spread within Track B is comparable to the spread
 between Tracks B, C and D2.
 
-**Per-project training beats a global classifier** by 0.068 on all five
-repositories despite using a fifth of the data, confirming the low
-cross-project vocabulary overlap measured in the EDA.
+**Whether per-project training helps depends on the model.** It gains +0.068
+for unregularised naive Bayes, winning on all five projects — but for the tuned
+linear models there is no detectable difference from one pooled classifier
+(−0.002 for logistic regression, −0.011 for the SVM, both under the threshold). Regularisation lets a global model
+down-weight the project-specific vocabulary that misleads naive Bayes. An
+earlier version of this document generalised from the naive Bayes result alone.
 
 **`bug` misclassified as `question` is the dominant error**, over a quarter of
 all mistakes. Fourteen of the twenty-five most confident errors have `question`
@@ -665,7 +766,7 @@ build.
 One entry point regenerates every number:
 
 ```bash
-python scripts/run_experiments.py --list     # the seven stages
+python scripts/run_experiments.py --list     # the nine stages
 python scripts/run_experiments.py --all      # roughly 6 minutes on one CPU core
 make notebooks                               # re-execute all five notebooks
 ```
