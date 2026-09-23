@@ -99,7 +99,7 @@ class IssueReport:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, record: dict[str, Any]) -> IssueReport:
+    def from_dict(cls, record: dict[str, Any]) -> "IssueReport":
         """Build an entity from a dictionary, ignoring unknown keys."""
         return cls(
             repo=record.get("repo", ""),

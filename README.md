@@ -6,7 +6,7 @@ Course project based on the [NLBSE'24 tool competition on issue report classific
 
 Classify GitHub issue reports into one of three types: `bug`, `feature`, `question`.
 
-The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — collected between March 2016 and September 2023. It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
+The dataset contains 3,000 labelled issues extracted from five open-source projects — `facebook/react`, `tensorflow/tensorflow`, `microsoft/vscode`, `bitcoin/bitcoin`, `opencv/opencv` — collected between January 2022 and September 2023. It is split 50/50 into training and test sets, balanced at 100 issues per (project, class) cell in each split.
 
 **The task is multi-class, not multi-label.** Issues carrying more than one label were excluded by the organisers, so every issue has exactly one class. The course brief describes the task as multi-label; this discrepancy has been raised with the lecturer.
 
@@ -23,10 +23,6 @@ The competition requires **one classifier per project** (five per submission). P
 | opencv/opencv | 0.8173 |
 | **cross-repository** | **0.8270** |
 
-These are the published competition values. The supplied local SetFit result
-reproduces a cross-repository F1 of 0.8240; Track D keeps both values explicit
-instead of presenting them as the same run.
-
 ## Team and tracks
 
 | Track | Owner | Scope |
@@ -36,8 +32,7 @@ instead of presenting them as the same run.
 | C — Deep learning | *(name)* | FFNN, CNN, fine-tuned transformer |
 | D — Baseline & evaluation | *(name)* | SetFit reproduction, k-fold harness, metrics, results tables |
 
-Tracks A, B, C, and D are implemented. Both modelling tracks consume the same
-cleaned `IssueReport` objects produced by A and use D's shared evaluator.
+Track A is complete and its outputs under `data/processed/` are the agreed input for B, C and D.
 
 ## Layout
 
@@ -52,14 +47,6 @@ src/ai4se/
     validation.py      Strict record and split validation
     audit.py           Duplicate and train/test leakage analysis
     folds.py           Per-project stratified group folds
-    classical.py       TF-IDF + NB, logistic regression, SVM, random forest
-    deep_learning.py   FFNN, TextCNN, and DistilBERT fine-tuning
-    evaluation.py      Shared metrics, grouped CV, holdout evaluation, plots
-    statistical_analysis.py  Confidence intervals, paired tests, power analysis
-    error_analysis.py  Confusion, length, and high-confidence error summaries
-    splits.py          Duplicate-safe random and chronological robustness splits
-    reporting.py       CSV/Markdown result tables and model comparison plots
-    setfit_baseline.py SetFit adapter matching the supplied notebook
     service.py         Unified application workflow
 notebooks/
     00_dataset_extraction_reference.ipynb
@@ -67,19 +54,13 @@ notebooks/
     02_setfit_baseline.ipynb
     03_roberta_baseline.ipynb
     04_fasttext_baseline.ipynb
-    05_classical_ml.ipynb
-    06_deep_learning.ipynb
 tests/
     test_persistence_equivalence.py
     test_data_quality.py
-    test_evaluation.py
 data/raw/              Cached competition CSVs (git-ignored, downloaded on demand)
 data/processed/        Cleaned datasets handed to tracks B, C, and D
 results/baselines/     Reproduced SetFit, RoBERTa, and fastText metrics
-results/classical/     Track B CV, selection, and official-holdout metrics
-results/deep_learning/ Track C CV and official-holdout metrics
 results/figures/       Figures referenced by the LaTeX report
-results/tables/        Shared model comparison tables
 docs/                  Competition reference and dataset notes
 report/                LaTeX sources
 ```
@@ -118,7 +99,7 @@ are provided so the ablation study can be run by changing one string:
 | <code>conservative</code> | replaces URLs and code blocks while preserving versions, numbers, and punctuation | software-aware default |
 | `raw` | whitespace normalisation only | control condition |
 | `light` | removes code, stack traces, Markdown markup, URLs, paths, SHAs, mentions | transformer models |
-| `full` | `light` + lowercasing, punctuation removal, stop words, lemmatisation | aggressive ablation |
+| `full` | `light` + lowercasing, punctuation removal, stop words, lemmatisation | TF-IDF models |
 
 Run the EDA or integrated pipeline to compare retained text across all four
 levels on the current dataset.
@@ -145,9 +126,9 @@ On first build the container:
 - runs the test suite as a smoke check.
 
 Pip and HuggingFace caches live in named volumes and survive rebuilds, which
-matters once track C starts downloading transformer checkpoints. To give the
-container a GPU for that track, uncomment the `runArgs` block in
-`devcontainer.json`.
+matters once track C starts downloading transformer checkpoints. The
+container asks for a GPU as `optional`, so it uses one where the host has
+the NVIDIA Container Toolkit and builds normally where it does not.
 
 ### Without the dev container
 
@@ -163,30 +144,15 @@ make help     # list every target
 make data     # download and cache the NLBSE'24 dataset
 make eda      # execute the Track A notebook end to end
 make pipeline # validate, audit, prepare and generate grouped folds
-make classical-ablation # select preprocessing using training folds only
-make classical # select Track B model by CV, then evaluate the winner once
-make classical-cv # compare all classical models without touching test labels
-make classical-holdout # explicit official evaluation of Track B models
-make install-dl # install PyTorch and Transformers for Track C
-make deep-neural # run FFNN and TextCNN (CPU-friendly)
-make deep-transformer # fine-tune DistilBERT (GPU recommended)
-make deep       # run all Track C official evaluations
-make deep-cv    # duplicate-safe grouped CV for Track C (expensive)
-make results  # build shared baseline tables and comparison plot
-make setfit   # reproduce SetFit on the official test split
-make setfit-cv # run duplicate-safe grouped cross-validation for SetFit
 make lab      # start Jupyter Lab on port 8888
 make test     # run the test suite
 make check    # print the persistence-equivalence table for the report
 make lint     # ruff check + format
-make report-tables # regenerate LaTeX tables from saved JSON results
 make report   # compile report/report.tex
 ```
 
 Optional dependency groups, installed per track:
-`pip install -e ".[ml]"` for track B, `pip install -e ".[dl]"` for track C,
-`pip install -e ".[evaluation]"` for D's reporting tools, and
-`pip install -e ".[setfit]"` for the SetFit reproduction.
+`pip install -e ".[ml]"` for track B, `pip install -e ".[dl]"` for tracks C and D.
 
 Minimal example:
 
@@ -220,59 +186,20 @@ Kallis, Di Sorbo, Canfora, Panichella. *Predicting issue types on GitHub.* Scien
 
 Colavito, Lanubile, Novielli. *Few-Shot Learning for Issue Report Classification.* NLBSE'23.
 
+## Consolidated datdq workflow
 
-## Shared evaluation
+This branch uses the root ai4se structure from main and incorporates the
+data-quality and experiment work developed on datdq. There is one package,
+one test directory, one notebook directory, and one results directory.
 
-Track D provides one evaluation contract for Tracks B, C, and D. Models expose
-`fit(texts, labels)` and `predict(texts)` while the shared evaluator handles
-duplicate-safe folds, fixed label ordering, per-class metrics, macro and
-weighted averages, confusion matrices, out-of-fold predictions, timing, and
-the competition's mean across repositories.
+Additional safeguards include strict record validation, duplicate analysis,
+train/test leakage reporting, software-aware conservative cleaning, structural
+features, and per-repository stratified group folds.
 
-The SetFit command reproduces the supplied notebook on the official split by
-default. Its output uses the same versioned JSON schema as future classical and
-deep-learning runs. Generate the current cross-model tables with:
+Run the integrated process with:
 
-    make results
+    make pipeline
 
-See `docs/evaluation.md` for the schema, SetFit settings, evaluation protocol,
-and integration instructions for other model tracks.
+Install the supplied baseline notebook dependencies with:
 
-## Classical machine learning
-
-Track B is implemented in `ai4se.classical`. Every model is a complete
-scikit-learn pipeline containing word/character TF-IDF and one classifier, so
-the vectorizer is fitted independently inside every fold. The default workflow
-compares Complement Naive Bayes, logistic regression, linear SVM, and random
-forest across five seeds of five-fold grouped cross-validation, selects by
-cross-repository weighted F1, and evaluates only the winner on the official
-test split. Raw text, title weight 3, and 400-word truncation were selected by
-a 36-configuration training-only ablation.
-
-The current run selects logistic regression at `0.7506 +/- 0.0061` repeated-CV
-weighted F1 and obtains `0.7548` on the official holdout (95% bootstrap CI
-`[0.7329, 0.7763]`). The matched chronological check scores `0.6733`, compared
-with `0.7757` for its random-split control.
-
-Run it with:
-
-    python -m pip install -e ".[ml]"
-    make classical
-
-See `docs/classical_ml.md` for hyperparameters, ablations, outputs, and the
-model-selection protocol.
-
-## Deep learning
-
-Track C adds a feed-forward network over training-only TF-IDF features, a
-TextCNN over learned word embeddings, and full fine-tuning of
-`distilbert-base-uncased`. Every model uses a duplicate-safe internal validation
-split for early stopping; the FFNN vectorizer and CNN vocabulary are fitted
-only after that split. Training histories, probabilities, timings, confusion
-matrices, and shared metrics are retained in the same result schema as Track B.
-
-DistilBERT is used rather than RoBERTa because the assignment requires one of
-the two and DistilBERT is more practical on Colab while still transferring a
-pretrained contextual representation. Start with `make deep-neural`, then run
-`make deep-transformer` with a GPU. See `docs/deep_learning.md` for the full
-protocol and hyperparameters.
+    python -m pip install -e ".[baseline]"

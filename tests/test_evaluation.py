@@ -1,167 +1,365 @@
-"""Tests for the shared Track D evaluation workflow."""
+"""Tests for the evaluation, significance and power utilities.
+
+These are correctness tests with hand-checkable expectations, not smoke tests:
+a metric that is silently wrong would corrupt every table in the report, and
+unlike a crash it would never announce itself.
+
+Run with::
+
+    python -m pytest tests/test_evaluation.py -v
+"""
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
-from ai4se.evaluation import (
-    calculate_metrics,
-    evaluate_cross_validation,
-    evaluate_holdout_by_repository,
-    load_evaluation,
-    save_evaluation,
+import numpy as np
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from ai4se.evaluation import (  # noqa: E402
+    bootstrap_ci,
+    classification_rows,
+    cliffs_delta,
+    compare_per_repo,
+    cross_repo_f1,
+    holm,
+    is_conclusive,
+    macro_f1,
+    mcnemar_exact,
+    micro_f1,
+    minimum_detectable_difference,
+    per_repo_f1,
+    power_at,
+    random_split_control,
+    stratified_folds,
+    time_aware_split,
 )
-from ai4se.model import LABELS, IssueReport
-from ai4se.reporting import result_rows, write_result_tables
-from ai4se.setfit_baseline import SetFitConfig
+from ai4se.model import IssueReport  # noqa: E402
+from ai4se.repository import make_repository  # noqa: E402
+
+LABELS3 = ["bug", "feature", "question"]
 
 
-class KeywordClassifier:
-    """Tiny deterministic classifier for exercising the evaluation harness."""
-
-    def fit(self, texts, labels):
-        """Record labels observed during training."""
-
-        self.labels = set(labels)
-        return self
-
-    def predict(self, texts):
-        """Recover the label keyword embedded in each test issue."""
-
-        return [next(label for label in LABELS if label in text) for text in texts]
+def _issue(repo: str, label: str, day: int, title: str = "t") -> IssueReport:
+    """Build a minimal issue whose creation date is controlled by ``day``."""
+    return IssueReport(
+        repo=repo,
+        created_at=f"2023-01-{day:02d} 00:00:00",
+        label=label,
+        title=title,
+        body="body",
+    )
 
 
-class DiagnosticKeywordClassifier(KeywordClassifier):
-    """Keyword classifier exposing optional training diagnostics."""
+@pytest.fixture
+def toy_predictions():
+    """Two projects, six issues, three of them misclassified."""
+    y_true = ["bug", "bug", "feature", "bug", "feature", "question"]
+    y_pred = ["bug", "feature", "feature", "bug", "feature", "bug"]
+    repos = ["a/a", "a/a", "a/a", "b/b", "b/b", "b/b"]
+    return y_true, y_pred, repos
 
-    def training_summary(self):
-        return {"best_epoch": 2, "history": {"validation_loss": [0.5, 0.4]}}
+
+# --------------------------------------------------------------- metrics --
 
 
-def make_issues(
-    *,
-    suffix: str = "train",
-    per_label: int = 4,
-) -> list[IssueReport]:
-    """Create balanced, unique issues for two repositories."""
+def test_perfect_prediction_scores_one():
+    """A perfect classifier must score exactly 1.0 on every metric."""
+    y = ["bug", "feature", "question", "bug"]
+    assert micro_f1(y, y) == pytest.approx(1.0)
+    assert macro_f1(y, y) == pytest.approx(1.0)
 
-    return [
-        IssueReport(
-            repo=repository,
-            created_at=f"2024-01-{index + 1:02d}",
-            label=label,
-            title=f"{label} example {suffix} {index}",
-            body=f"unique {repository} {label} {suffix} {index}",
-        )
-        for repository in ("owner/one", "owner/two")
-        for label in LABELS
-        for index in range(per_label)
+
+def test_micro_f1_equals_accuracy_for_single_label():
+    """With one label per item, micro-F1 and accuracy coincide by definition."""
+    y_true = ["bug", "bug", "feature", "question"]
+    y_pred = ["bug", "feature", "feature", "question"]
+    assert micro_f1(y_true, y_pred) == pytest.approx(3 / 4)
+
+
+def test_macro_f1_is_hand_checkable():
+    """Verify macro-F1 against counts worked out by hand."""
+    y_true = ["bug", "bug", "feature", "feature"]
+    y_pred = ["bug", "feature", "feature", "feature"]
+    # bug:      tp=1 fp=0 fn=1 -> F1 = 2/3
+    # feature:  tp=2 fp=1 fn=0 -> F1 = 4/5
+    # question: never occurs, so it is not part of the average at all --
+    #           scikit-learn's behaviour, and the reason a fold missing a class
+    #           does not silently score zero for it.
+    assert macro_f1(y_true, y_pred) == pytest.approx((2 / 3 + 4 / 5) / 2)
+
+
+def test_cross_repo_f1_averages_projects_not_items(toy_predictions):
+    """The official score weights each project equally, not each issue."""
+    y_true, y_pred, repos = toy_predictions
+    per_repo = per_repo_f1(y_true, y_pred, repos, average="micro")
+    assert per_repo == {"a/a": pytest.approx(2 / 3), "b/b": pytest.approx(2 / 3)}
+    assert cross_repo_f1(y_true, y_pred, repos, average="micro") == pytest.approx(2 / 3)
+
+
+def test_the_default_average_is_the_competition_metric(toy_predictions):
+    """The default must be the weighted average, not accuracy.
+
+    Getting this wrong is silent: micro-F1 looks like a plausible score and
+    differs from the official figure only by a point or two, so it would sit in
+    a results table unnoticed.
+    """
+    y_true, y_pred, repos = toy_predictions
+    default = cross_repo_f1(y_true, y_pred, repos)
+    explicit = cross_repo_f1(y_true, y_pred, repos, average="weighted")
+    assert default == explicit
+    assert default != pytest.approx(cross_repo_f1(y_true, y_pred, repos, "micro"))
+
+
+def test_weighted_ignores_absent_classes_while_macro_penalises_them():
+    """A class with no instances must not drag the official metric down."""
+    from ai4se.evaluation import weighted_f1
+
+    # Only two of the three labels occur; a perfect prediction of them.
+    y_true = ["bug", "bug", "feature"]
+    y_pred = ["bug", "bug", "feature"]
+    assert weighted_f1(y_true, y_pred) == pytest.approx(1.0)
+    assert macro_f1(y_true, y_pred) == pytest.approx(1.0)
+
+
+def test_unknown_average_is_rejected(toy_predictions):
+    """A typo in the average name must fail rather than pick a default."""
+    y_true, y_pred, repos = toy_predictions
+    with pytest.raises(ValueError):
+        per_repo_f1(y_true, y_pred, repos, average="wieghted")
+
+
+def test_our_averages_agree_with_scikit_learn():
+    """Pin the hand-rolled metrics to the reference implementation.
+
+    These functions are written with numpy alone so the package imports
+    without scikit-learn. That independence is only worth having if the
+    results are identical, and "identical" is a claim that has to be checked
+    rather than assumed -- the whole audit rests on these three numbers.
+    """
+    metrics = pytest.importorskip(
+        "sklearn.metrics", reason="scikit-learn not installed"
+    )
+    from ai4se.evaluation import weighted_f1
+
+    rng = np.random.default_rng(0)
+    labels = np.array(LABELS3, dtype=object)
+    for size in (12, 60, 300):
+        y_true = rng.choice(labels, size=size)
+        y_pred = rng.choice(labels, size=size)
+        for name, ours in (
+            ("micro", micro_f1),
+            ("macro", macro_f1),
+            ("weighted", weighted_f1),
+        ):
+            assert ours(y_true, y_pred) == pytest.approx(
+                metrics.f1_score(y_true, y_pred, average=name)
+            ), f"{name} diverges from scikit-learn at n={size}"
+
+
+def test_cross_repo_differs_from_pooled_when_projects_are_unequal():
+    """Unequal project sizes make the mean-of-five differ from the pooled F1."""
+    y_true = ["bug"] * 5 + ["bug"]
+    y_pred = ["bug"] * 5 + ["feature"]
+    repos = ["a/a"] * 5 + ["b/b"]
+    assert cross_repo_f1(y_true, y_pred, repos) == pytest.approx(0.5)
+    assert micro_f1(y_true, y_pred) == pytest.approx(5 / 6)
+
+
+def test_classification_rows_shape_and_averages(toy_predictions):
+    """One row per project-class cell, plus one averaged row per class."""
+    y_true, y_pred, repos = toy_predictions
+    rows = classification_rows(y_true, y_pred, repos)
+    assert len(rows) == 2 * 3 + 3
+    summary = [r for r in rows if r["repo"] == "cross-repo"]
+    assert {r["label"] for r in summary} == set(LABELS3)
+    for label in LABELS3:
+        cells = [r for r in rows if r["label"] == label and r["repo"] != "cross-repo"]
+        expected = sum(c["f1"] for c in cells) / len(cells)
+        got = next(r["f1"] for r in summary if r["label"] == label)
+        assert got == pytest.approx(expected)
+
+
+def test_bootstrap_ci_brackets_the_point_estimate(toy_predictions):
+    """The interval must contain the observed score and be reproducible."""
+    y_true, y_pred, repos = toy_predictions
+    point, low, high = bootstrap_ci(y_true, y_pred, repos, n_resamples=200, seed=7)
+    assert low <= point <= high
+    again = bootstrap_ci(y_true, y_pred, repos, n_resamples=200, seed=7)
+    assert (point, low, high) == again
+
+
+# ---------------------------------------------------------- significance --
+
+
+def test_mcnemar_counts_discordant_pairs_only():
+    """Items both models get right or both get wrong carry no information."""
+    y_true = ["bug", "bug", "bug", "bug"]
+    pred_a = ["bug", "bug", "feature", "feature"]
+    pred_b = ["bug", "feature", "bug", "feature"]
+    result = mcnemar_exact(pred_a, pred_b, y_true)
+    assert (result.n01, result.n10) == (1, 1)
+    assert result.n_discordant == 2
+    assert result.p_value == pytest.approx(1.0)
+
+
+def test_mcnemar_identical_models_are_never_significant():
+    """Two identical models have zero discordant pairs and p = 1."""
+    y_true = ["bug", "feature", "question"] * 4
+    pred = ["bug"] * 12
+    result = mcnemar_exact(pred, pred, y_true)
+    assert result.n_discordant == 0
+    assert result.p_value == 1.0
+
+
+def test_mcnemar_detects_a_one_sided_difference():
+    """A model that wins every discordant pair must reach significance."""
+    y_true = ["bug"] * 12
+    pred_a = ["feature"] * 12
+    pred_b = ["bug"] * 12
+    result = mcnemar_exact(pred_a, pred_b, y_true)
+    assert result.favours_second
+    # Two-sided exact binomial with 12 trials, all on one side: 2 / 2**12.
+    assert result.p_value == pytest.approx(2 / 4096)
+
+
+def test_holm_is_monotone_and_never_lowers_a_p_value():
+    """Adjustment may only make p-values larger, and must preserve order."""
+    raw = [0.001, 0.04, 0.03, 0.2, 0.5]
+    adjusted = holm(raw)
+    assert all(a >= r for a, r in zip(adjusted, raw, strict=True))
+    by_rank = [adjusted[i] for i in sorted(range(len(raw)), key=lambda i: raw[i])]
+    assert by_rank == sorted(by_rank)
+    assert all(a <= 1.0 for a in adjusted)
+
+
+def test_holm_matches_bonferroni_on_the_smallest_p_value():
+    """The most significant test receives the full family-size penalty."""
+    raw = [0.005, 0.5, 0.5, 0.5, 0.5]
+    assert holm(raw)[0] == pytest.approx(0.025)
+
+
+def test_compare_per_repo_returns_a_row_per_project_plus_pooled():
+    """Five projects give five rows and one pooled summary row."""
+    y_true = ["bug", "feature"] * 5
+    pred_a = ["bug"] * 10
+    pred_b = ["feature"] * 10
+    repos = [f"p{i}/p{i}" for i in range(5) for _ in range(2)]
+    rows = compare_per_repo(pred_a, pred_b, y_true, repos)
+    assert len(rows) == 6
+    assert rows[-1]["repo"] == "POOLED"
+    assert all(r["p_holm"] >= r["p_value"] for r in rows[:-1])
+
+
+def test_cliffs_delta_signs_and_magnitude():
+    """Fully separated groups give delta = 1; identical groups give 0."""
+    assert cliffs_delta([4, 5, 6], [1, 2, 3]) == (1.0, "large")
+    assert cliffs_delta([1, 2, 3], [4, 5, 6]) == (-1.0, "large")
+    delta, label = cliffs_delta([1, 2, 3], [1, 2, 3])
+    assert delta == pytest.approx(0.0)
+    assert label == "negligible"
+
+
+# ----------------------------------------------------------------- power --
+
+
+def test_power_increases_with_effect_size():
+    """Bigger true differences must be easier to detect."""
+    powers = [power_at(d, n_simulations=400, seed=1) for d in (0.005, 0.02, 0.05)]
+    assert powers == sorted(powers)
+    assert powers[0] < 0.5 < powers[-1]
+
+
+def test_minimum_detectable_difference_is_around_three_points():
+    """Reproduce the headline number of the benchmark audit."""
+    mdd = minimum_detectable_difference(n_simulations=600, seed=3)
+    assert 0.02 <= mdd <= 0.045
+
+
+def test_smaller_test_sets_detect_less():
+    """Per-project claims need a bigger gap than cross-repository ones."""
+    full = minimum_detectable_difference(n_items=1500, n_simulations=400, seed=5)
+    single = minimum_detectable_difference(n_items=300, n_simulations=400, seed=5)
+    assert single > full
+
+
+def test_is_conclusive_rejects_small_differences():
+    """The guard used by experiment scripts must reject sub-threshold gaps."""
+    assert not is_conclusive(0.01, n_simulations=400, seed=2)
+    assert is_conclusive(0.08, n_simulations=400, seed=2)
+
+
+# ---------------------------------------------------------------- splits --
+
+
+@pytest.fixture
+def dated_repository():
+    """Two projects, three classes, eight issues per cell with known dates."""
+    issues = [
+        _issue(repo, label, day)
+        for repo in ("a/a", "b/b")
+        for label in LABELS3
+        for day in range(1, 9)
     ]
+    return make_repository("memory", issues=issues)
 
 
-def classifier_factory(repository: str, fold: int) -> KeywordClassifier:
-    """Return a fresh deterministic classifier."""
-
-    return KeywordClassifier()
-
-
-def test_calculate_metrics_uses_fixed_label_order():
-    metrics = calculate_metrics(
-        ["bug", "feature", "question", "bug"],
-        ["bug", "question", "question", "feature"],
-    )
-
-    assert metrics["accuracy"] == 0.5
-    assert list(metrics["per_label"]) == list(LABELS)
-    assert metrics["confusion_matrix"] == [[1, 1, 0], [0, 0, 1], [0, 0, 1]]
+def test_time_aware_split_preserves_class_balance(dated_repository):
+    """Splitting inside each cell is what keeps both sides balanced."""
+    train, test = time_aware_split(dated_repository)
+    assert len(train) == len(test) == 24
+    assert train.label_distribution() == {"bug": 8, "feature": 8, "question": 8}
+    assert test.label_distribution() == {"bug": 8, "feature": 8, "question": 8}
 
 
-def test_cross_validation_produces_complete_oof_predictions():
-    issues = make_issues()
-    result = evaluate_cross_validation(
-        issues,
-        classifier_factory,
-        model_name="keyword",
-        n_splits=2,
-    )
-
-    assert result["evaluation"] == "stratified_group_k_fold"
-    assert result["overall"]["sample_count"] == len(issues)
-    assert result["overall"]["repository_average"]["macro_average"]["f1"] == 1
-    for repository in result["repositories"].values():
-        assert len(repository["folds"]) == 2
-        assert repository["fold_summary"]["macro_f1_mean"] == 1
-        assert repository["fold_summary"]["macro_f1_std"] == 0
-        ids = [row["issue_id"] for row in repository["predictions"]]
-        assert len(ids) == len(set(ids)) == 12
+def test_time_aware_split_puts_older_issues_in_train(dated_repository):
+    """Every training issue must predate every test issue of the same cell."""
+    train, test = time_aware_split(dated_repository)
+    for repo in ("a/a", "b/b"):
+        for label in LABELS3:
+            newest_train = max(
+                i.created_at for i in train.by_repo(repo) if i.label == label
+            )
+            oldest_test = min(
+                i.created_at for i in test.by_repo(repo) if i.label == label
+            )
+            assert newest_train < oldest_test
 
 
-def test_official_holdout_uses_one_model_per_repository():
-    train = make_issues(per_label=2)
-    test = make_issues(suffix="test", per_label=1)
-    result = evaluate_holdout_by_repository(
-        train,
-        test,
-        classifier_factory,
-        model_name="keyword",
-    )
-
-    assert result["evaluation"] == "official_holdout"
-    assert result["overall"]["sample_count"] == 6
-    assert result["overall"]["pooled"]["accuracy"] == 1
+def test_random_control_matches_the_time_split_in_shape(dated_repository):
+    """The control must differ from the time split only in which issues move."""
+    time_train, time_test = time_aware_split(dated_repository)
+    rand_train, rand_test = random_split_control(dated_repository, seed=0)
+    assert len(rand_train) == len(time_train)
+    assert len(rand_test) == len(time_test)
+    assert rand_train.label_distribution() == time_train.label_distribution()
 
 
-def test_evaluator_records_optional_training_diagnostics():
-    result = evaluate_holdout_by_repository(
-        make_issues(per_label=2),
-        make_issues(suffix="test", per_label=1),
-        lambda repository, fold: DiagnosticKeywordClassifier(),
-        model_name="diagnostic-keyword",
-    )
-
-    for repository in result["repositories"].values():
-        assert repository["training"]["best_epoch"] == 2
+def test_time_aware_split_rejects_a_degenerate_fraction(dated_repository):
+    """A fraction of 0 or 1 would produce an empty side; refuse it."""
+    with pytest.raises(ValueError):
+        time_aware_split(dated_repository, train_fraction=1.0)
 
 
-def test_result_persistence_and_tables(tmp_path: Path):
-    result = evaluate_holdout_by_repository(
-        make_issues(per_label=2),
-        make_issues(suffix="test", per_label=1),
-        classifier_factory,
-        model_name="keyword",
-    )
-    json_path = save_evaluation(result, tmp_path / "result.json")
-    loaded = load_evaluation(json_path)
-    rows = result_rows(loaded)
-    csv_path, markdown_path = write_result_tables(rows, tmp_path / "tables")
-
-    assert loaded["model_name"] == "keyword"
-    assert len(rows) == 3
-    assert csv_path.exists()
-    assert "macro_f1" in markdown_path.read_text(encoding="utf-8")
+def test_folds_partition_the_data_exactly_once(dated_repository):
+    """Every issue must appear in exactly one validation fold."""
+    folds = list(stratified_folds(dated_repository, n_folds=4, seed=0))
+    assert len(folds) == 4
+    seen: list[int] = []
+    for train_index, validation_index in folds:
+        assert set(train_index).isdisjoint(validation_index)
+        assert len(train_index) + len(validation_index) == len(dated_repository)
+        seen.extend(validation_index.tolist())
+    assert sorted(seen) == list(range(len(dated_repository)))
 
 
-def test_supplied_baseline_format_is_supported():
-    baseline = {
-        "overall": {
-            "average": {
-                "precision": 0.8,
-                "recall": 0.75,
-                "f1-score": 0.77,
-            }
-        }
-    }
-
-    assert result_rows(baseline, model_name="setfit")[0]["macro_f1"] == 0.77
-
-
-def test_setfit_defaults_match_the_supplied_notebook():
-    config = SetFitConfig()
-
-    assert config.model_id == "sentence-transformers/all-mpnet-base-v2"
-    assert config.num_epochs == 1
-    assert config.num_iterations == 20
-    assert config.body_batch_size == 16
-    assert config.classifier_batch_size == 2
-    assert config.prediction_batch_size == 8
-    assert config.max_sequence_length == 384
+def test_folds_are_stratified_by_project_and_class(dated_repository):
+    """Each fold must hold the same number of issues from every cell."""
+    issues = dated_repository.all()
+    for _, validation_index in stratified_folds(dated_repository, n_folds=4, seed=0):
+        cells = [(issues[i].repo, issues[i].label) for i in validation_index]
+        assert len(set(cells)) == 6
+        assert all(cells.count(cell) == 2 for cell in set(cells))
