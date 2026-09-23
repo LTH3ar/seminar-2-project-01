@@ -1,4 +1,4 @@
-﻿"""Scoring functions for the cross-repository evaluation protocol.
+"""Scoring functions for the cross-repository evaluation protocol.
 
 The competition score is the arithmetic mean of five per-project F1 scores,
 not a single F1 over the pooled test set. The two differ whenever the projects
@@ -158,9 +158,7 @@ def per_repo_f1(
         "weighted": weighted_f1,
     }
     if average not in averages:
-        raise ValueError(
-            f"Unknown average {average!r}; use one of {sorted(averages)}."
-        )
+        raise ValueError(f"Unknown average {average!r}; use one of {sorted(averages)}.")
     score = averages[average]
     true = np.asarray(y_true, dtype=object)
     pred = np.asarray(y_pred, dtype=object)
