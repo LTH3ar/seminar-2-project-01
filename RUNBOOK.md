@@ -287,8 +287,8 @@ depends on the model:
   in a different order, and no seeding setting removes that. Compare GPU
   numbers with GPU numbers.
 - **SetFit's cross-repository score is stable** at fixed code on one device
-  (0.8102 on MPNet, to within 0.00004 across runs), but its **per-project**
-  scores can move by up to ~0.01 — the five-classifier average cancels most of
+  (0.8108 on MPNet, within 0.0006 across three runs), but its **per-project**
+  scores can move by up to ~0.013 — the five-classifier average cancels most of
   that out.
 
 So: a third-decimal difference is always fine. A second-decimal difference is

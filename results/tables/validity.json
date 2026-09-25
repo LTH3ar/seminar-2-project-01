@@ -1,0 +1,200 @@
+{
+  "timestamp_only": {
+    "bitcoin/bitcoin": 0.6656330990764675,
+    "facebook/react": 0.7794208453103374,
+    "microsoft/vscode": 0.6254591706252259,
+    "opencv/opencv": 0.6273616784611549,
+    "tensorflow/tensorflow": 0.8375139863696471,
+    "mean": 0.7070777559685666
+  },
+  "label_share_by_year": {
+    "2016": {
+      "bug": 0.0,
+      "feature": 1.0,
+      "question": 0.0,
+      "n": 16
+    },
+    "2017": {
+      "bug": 0.0,
+      "feature": 0.8929,
+      "question": 0.1071,
+      "n": 28
+    },
+    "2018": {
+      "bug": 0.0,
+      "feature": 0.5517,
+      "question": 0.4483,
+      "n": 58
+    },
+    "2019": {
+      "bug": 0.0,
+      "feature": 0.2326,
+      "question": 0.7674,
+      "n": 86
+    },
+    "2020": {
+      "bug": 0.0,
+      "feature": 0.5079,
+      "question": 0.4921,
+      "n": 63
+    },
+    "2021": {
+      "bug": 0.2551,
+      "feature": 0.4694,
+      "question": 0.2755,
+      "n": 98
+    },
+    "2022": {
+      "bug": 0.3227,
+      "feature": 0.3818,
+      "question": 0.2956,
+      "n": 406
+    },
+    "2023": {
+      "bug": 0.4617,
+      "feature": 0.2336,
+      "question": 0.3047,
+      "n": 745
+    }
+  },
+  "discordance_vs_tuned_logreg": {
+    "TF-IDF + Linear SVM (tuned)": {
+      "discordant_rate": 0.0553,
+      "mdd_overall": 0.018,
+      "mdd_per_project": 0.039
+    },
+    "TF-IDF + Naive Bayes": {
+      "discordant_rate": 0.1307,
+      "mdd_overall": 0.027,
+      "mdd_per_project": 0.06
+    },
+    "TF-IDF + Random Forest": {
+      "discordant_rate": 0.174,
+      "mdd_overall": 0.031,
+      "mdd_per_project": 0.069
+    }
+  },
+  "mdd_sensitivity": {
+    "0.05": {
+      "overall": 0.017,
+      "per_project": 0.037
+    },
+    "0.10": {
+      "overall": 0.024,
+      "per_project": 0.053
+    },
+    "0.15": {
+      "overall": 0.029,
+      "per_project": 0.064
+    },
+    "0.20": {
+      "overall": 0.033,
+      "per_project": 0.074
+    }
+  },
+  "mdd_vs_published_unpaired": {
+    "overall": 0.0387,
+    "facebook/react": 0.0765,
+    "tensorflow/tensorflow": 0.0783,
+    "microsoft/vscode": 0.0867,
+    "bitcoin/bitcoin": 0.0983,
+    "opencv/opencv": 0.0884
+  },
+  "pooling": {
+    "naive Bayes (from scratch), full": {
+      "per_project": {
+        "bitcoin/bitcoin": 0.6030389363722697,
+        "facebook/react": 0.7913752913752914,
+        "microsoft/vscode": 0.6609150326797385,
+        "opencv/opencv": 0.637503352105122,
+        "tensorflow/tensorflow": 0.6466498685676271
+      },
+      "pooled": {
+        "bitcoin/bitcoin": 0.567716765253416,
+        "facebook/react": 0.5955077121009777,
+        "microsoft/vscode": 0.6021829023778342,
+        "opencv/opencv": 0.6222972333189168,
+        "tensorflow/tensorflow": 0.6137095254250066
+      },
+      "per_project_mean": 0.6678964962200097,
+      "pooled_mean": 0.6002828276952302,
+      "per_project_wins": 5
+    },
+    "naive Bayes (from scratch), light": {
+      "per_project": {
+        "bitcoin/bitcoin": 0.6335046637576367,
+        "facebook/react": 0.8270904206979194,
+        "microsoft/vscode": 0.6900258073516077,
+        "opencv/opencv": 0.6956158498141723,
+        "tensorflow/tensorflow": 0.6768359150889273
+      },
+      "pooled": {
+        "bitcoin/bitcoin": 0.6475804896857529,
+        "facebook/react": 0.6531823345151629,
+        "microsoft/vscode": 0.6362167075805724,
+        "opencv/opencv": 0.6397115194625568,
+        "tensorflow/tensorflow": 0.6237665618945365
+      },
+      "per_project_mean": 0.7046145313420527,
+      "pooled_mean": 0.6400915226277163,
+      "per_project_wins": 4
+    },
+    "TF-IDF + Naive Bayes": {
+      "per_project": {
+        "bitcoin/bitcoin": 0.6690817162971076,
+        "facebook/react": 0.7944455192486416,
+        "microsoft/vscode": 0.6833137347697805,
+        "opencv/opencv": 0.6587437404970534,
+        "tensorflow/tensorflow": 0.7645975869487368
+      },
+      "pooled": {
+        "bitcoin/bitcoin": 0.6767662223878504,
+        "facebook/react": 0.691954015476315,
+        "microsoft/vscode": 0.6434740627784761,
+        "opencv/opencv": 0.6510109498344792,
+        "tensorflow/tensorflow": 0.7477702657483795
+      },
+      "per_project_mean": 0.714036459552264,
+      "pooled_mean": 0.6821951032451,
+      "per_project_wins": 4
+    },
+    "TF-IDF + Logistic Regression (tuned)": {
+      "per_project": {
+        "bitcoin/bitcoin": 0.6792812640446964,
+        "facebook/react": 0.8334305906762628,
+        "microsoft/vscode": 0.7234168278542997,
+        "opencv/opencv": 0.7496169202410772,
+        "tensorflow/tensorflow": 0.8155413605047217
+      },
+      "pooled": {
+        "bitcoin/bitcoin": 0.7032017046379272,
+        "facebook/react": 0.7889555247659596,
+        "microsoft/vscode": 0.7388475311778234,
+        "opencv/opencv": 0.7724919203180075,
+        "tensorflow/tensorflow": 0.8071441910097371
+      },
+      "per_project_mean": 0.7602573926642116,
+      "pooled_mean": 0.762128174381891,
+      "per_project_wins": 2
+    },
+    "TF-IDF + Linear SVM (tuned)": {
+      "per_project": {
+        "bitcoin/bitcoin": 0.685436240012384,
+        "facebook/react": 0.8001948085040532,
+        "microsoft/vscode": 0.7331695331695331,
+        "opencv/opencv": 0.7447533740118427,
+        "tensorflow/tensorflow": 0.8020674427940585
+      },
+      "pooled": {
+        "bitcoin/bitcoin": 0.7249698363934721,
+        "facebook/react": 0.78369774530587,
+        "microsoft/vscode": 0.7202096655787583,
+        "opencv/opencv": 0.7835018007955203,
+        "tensorflow/tensorflow": 0.8073181214347113
+      },
+      "per_project_mean": 0.7531242796983744,
+      "pooled_mean": 0.7639394339016664,
+      "per_project_wins": 2
+    }
+  }
+}

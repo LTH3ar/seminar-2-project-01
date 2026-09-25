@@ -329,7 +329,7 @@ Cross-repository F1 on the official test split, under the competition protocol.
 |---|---|---|---|
 | **SetFit (NLBSE'24 baseline)** | **0.8270** | — | — |
 | **Ensemble (SetFit + TF-IDF + MPNet)** | **0.8168** | **0.9319** | −0.0102 |
-| SetFit (MPNet) | 0.8102 | 0.9190 | −0.0168 |
+| SetFit (MPNet) | 0.8108 | 0.9195 | −0.0162 |
 | Ensemble (SetFit + TF-IDF) | 0.8053 | 0.9244 | −0.0217 |
 | SetFit (reproduction, MiniLM) | 0.7982 | 0.9181 | −0.0288 |
 | Ensemble (TF-IDF + MPNet + CNN) | 0.7909 | 0.9245 | −0.0361 |
@@ -359,12 +359,12 @@ Full per-repository table: `results/tables/final_leaderboard.tex`, or
   7.6–9.8 per project.
 - **Best result 0.8168**, a soft-voting ensemble — **statistically
   indistinguishable from the published baseline** (1.02 points below it).
-- **The published method reproduces to 0.8102** on MPNet. The organisers' own
+- **The published method reproduces to 0.8108** on MPNet. The organisers' own
   supplied re-run gives 0.8240 against their published 0.8270, so the
   reference point itself moves by 0.3 points.
 - **Contrastive fine-tuning is worth +0.0759** on a fixed encoder, and a larger
   encoder **+0.0500** frozen — both detectable under any assumption. At matched
-  training settings the encoder is worth +0.0286 after fine-tuning, which is
+  training settings the encoder is worth +0.0292 after fine-tuning, which is
   not established, so the apparent sub-additivity is suggestive only.
 - **Aggressive cleaning hurts.** `full` (stop words + lemmatisation) scores
   0.011 below `light` on average, and lower in all six paired settings —
@@ -372,16 +372,17 @@ Full per-repository table: `results/tables/final_leaderboard.tex`, or
   feature request.
 - **Ensembling helps when members are complementary.** TF-IDF + frozen MPNet +
   CNN gains +0.031 over its best member at no GPU cost. Adding SetFit gives the
-  best AUC measured (0.9319), but its F1 gain over SetFit alone (+0.0066) is
+  best AUC measured (0.9319), but its F1 gain over SetFit alone (+0.0060) is
   not detectable.
 - **No neural model is detectably better or worse than TF-IDF** with 300
   training issues per project.
 - **Whether per-project training helps depends on the model.** It gains +0.068
   for unregularised naive Bayes, winning on all five projects; for the tuned
   linear models there is no detectable difference from one pooled classifier.
-- **21 of 22 models reproduce bit-identically** from a clean checkout. The
-  exception, SetFit on MPNet, is stable to 0.00004 on the cross-repository mean
-  while its per-project scores move by up to 0.0099. Neural models differ by up
+- **21 of 22 models reproduce bit-identically** across three clean runs. The
+  exception, SetFit on MPNet, varies by 0.0006 on the cross-repository mean
+  while its per-project scores move by up to 0.0125 — on `tensorflow` it landed
+  above the published baseline in two runs and below it in the third. Neural models differ by up
   to 0.014 between CPU and GPU.
 - **`bug` → `question` is the dominant error**, over a quarter of all mistakes.
 - **About a third of confident errors look like label noise** — the title
