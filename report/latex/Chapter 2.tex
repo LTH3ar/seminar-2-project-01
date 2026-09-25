@@ -7,7 +7,7 @@
 
 \subsection{Composition}
 
-We use the dataset published by the NLBSE'24 tool competition: 3,000 GitHub issue reports collected from five open-source projects. Each record has five fields -- repository, creation timestamp, label, title and body -- and carries exactly one class from \texttt{\{bug, feature, question\}}.
+We use the dataset published by the NLBSE'24 tool competition~\cite{nlbse2024}: 3,000 GitHub issue reports collected from five open-source projects. Each record has five fields -- repository, creation timestamp, label, title and body -- and carries exactly one class from \texttt{\{bug, feature, question\}}.
 
 % The organisers balanced the dataset deliberately. It is split 50/50 into training and test sets, with \textbf{exactly 100 issues per (project, class) cell in each split}:
 The dataset is partitioned identically into equal training and test splits ($N = 1{,}500$ each). The organizers set strict division across both project and label dimensions, allocating exactly 100 issues per (repository, class) pair in both partitions (Table~\ref{tab:dataset_composition}).

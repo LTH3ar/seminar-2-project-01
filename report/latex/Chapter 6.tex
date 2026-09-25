@@ -11,9 +11,9 @@
 
 All analysis in this section uses the best classical model, TF-IDF with tuned logistic regression (0.7603). We analyse this rather than the best overall model because it is fully interpretable -- every decision traces to term weights -- and because its errors are representative: the confusion structure is the same for the stronger models, only less frequent. The predictions are re-derived through the same per-project protocol as Section 5, and a test asserts the two agree to four decimal places.
 
-\subsection{Where the model fails}
+\subsection{Error Distribution and Class Confusion}
 
-Of 1,500 test issues, 359 are misclassified. The errors are not uniformly distributed:
+Across the held-out evaluation split of 1,500 issue reports, 359 instances are misclassified. Table~\ref{tab:error_breakdown} details the distribution across error categories
 
 \begin{table}[H]
 \centering
@@ -60,7 +60,7 @@ bitcoin/bitcoin & 0.6374 & 0.7586 & 0.6419 & 0.6793 & 96 \\
 
 An asymmetry worth noting: \texttt{bug} is the \textit{best} class on the two easy projects (0.9175 on React) and the \textit{worst} on the two hardest (0.6374 on Bitcoin, 0.6630 on OpenCV). Bug reports in a JavaScript UI library are lexically distinctive -- crash, render, hook, component. Bug reports in a cryptocurrency node or a computer-vision library read much like questions about the same subsystems.
 
-\subsection{The class boundary is soft}
+\subsection{Semantic Ambiguity in Class Boundaries}
 
 A user who is unsure whether observed behaviour is a defect writes a report that looks as both a bug and a question; the label reflects a maintainer's later decision, not anything determinable from the text. \texttt{[Bug] Forders not opening} -- a four-word title with a typo -- carries no information that distinguishes the two.
 
@@ -95,8 +95,8 @@ These are not content words. They are pieces of the boilerplate OpenCV inserts i
 
 This is a concrete, actionable finding: \textbf{template boilerplate correlates with class within a project, and the per-project protocol lets each classifier overfit to its own project's conventions.} More aggressive template stripping is the obvious remedy and is the cheapest available improvement we did not implement.
 
-\subsection{Document length}
-
+\subsection{Performance Sensitivity to Document Length}
+Document length exerts a direct influence on classification accuracy, as shown across corpus quintiles in Table~\ref{tab:length_quintiles_accuracy}
 \begin{table}[H]
 \centering
 \caption{Classification accuracy across issue report document length quintiles.}
@@ -125,7 +125,7 @@ Errors the model was confident about are the informative ones. A near-tie means 
 
 Among the 25 most confident errors, the true label is \texttt{question} 14 times, \texttt{feature} 6 and \texttt{bug} 5 -- confirming \texttt{question} as the problem class.
 
-More striking: \textbf{nine of the twenty-five have a title that explicitly declares a different type than its label}, and in eight of those nine the model agreed with the title rather than the label.
+More striking: \textbf{nine of the twenty-five have a title that explicitly declares a different type than its label}, and in eight of those nine the model agreed with the title rather than the label (Table~\ref{tab:confident_error_examples}).
 
 \begin{table}[H]
 \centering
@@ -149,8 +149,8 @@ These labels come from maintainers applying project conventions, not from an ann
 
 One further observation from inspecting the list: at least one confident error is an issue written in Portuguese (\texttt{[Bug] Tela preta no terminal do VS Code}). The dataset is not language-filtered. This is a marginal effect -- one case in twenty-five -- not a major error source, and we note it only to record that we checked.
 
-\subsection{Error Summary}
-
+\subsection{Summary of Error Analysis}
+Table~\ref{tab:error_analysis_summary} synthesizes the core findings from the error analysis along with their methodological remediations
 \begin{table}[h]
 \centering
 \caption{Summary of error analysis findings, supporting evidence, and actionability.}

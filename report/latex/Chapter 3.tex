@@ -53,7 +53,7 @@ is not blocked from any other part of the project.
  
 The project specification requires that data be manageable both in memory and
 through files, and that switching between the two involve few changes to the
-application. We implement this with the Repository pattern.
+application. We implement this with the Repository pattern~\cite{fowler2002peaa}.
  
 \texttt{IssueRepository} is an abstract base class exposing \textbf{five primitives}
 --- \texttt{load}, \texttt{save}, \texttt{all}, \texttt{add}, \texttt{clear} --- and
@@ -152,7 +152,7 @@ selectable by one string shown in Table~\ref{tab:preprocessing-levels}
   \label{tab:preprocessing-levels}
 \end{table}
  
-Stop words are NLTK's English list plus a domain list of terms appearing in
+Stop words are NLTK's English list~\cite{bird2009nltk} plus a domain list of terms appearing in
 nearly every issue regardless of class (\texttt{issue}, \texttt{reproduce},
 \texttt{expected}, \texttt{screenshot}, and similar).
  
@@ -182,7 +182,7 @@ from scratch in log space with Laplace smoothing.
 \subsubsection{Classical machine learning}
 \label{sec:classical-ml}
  
-Five scikit-learn pipelines over a shared TF-IDF representation, so that score
+Five scikit-learn~\cite{scikit-learn} pipelines over a shared TF-IDF representation, so that score
 differences come from the classifier rather than the features: multinomial naive
 Bayes, complement naive Bayes, logistic regression, linear SVM, and random
 forest.
@@ -205,7 +205,7 @@ rather than approximated.
 layers of 256 and 64, ReLU, dropout 0.5) directly comparable with the
 classical pipelines.
  
-\textbf{1-D convolutional network} over learned 100-dimensional embeddings, with
+\textbf{1-D convolutional network}~\cite{kim2014cnn} over learned 100-dimensional embeddings, with
 parallel filters of widths 2, 3 and 4 acting as learned n-gram detectors, 64
 filters each, and global max-pooling.
  
@@ -216,7 +216,7 @@ validation loss and validation accuracy at every epoch, with early stopping afte
 \subsubsection{Sentence transformers}
 \label{sec:sentence-transformers}
  
-\textbf{Frozen encoder baselines.} A pretrained Sentence Transformer encodes each
+\textbf{Frozen encoder baselines.} A pretrained Sentence Transformer~\cite{reimers2019sbert} encodes each
 issue and a logistic-regression head is fitted on the embeddings; the encoder is
 not updated. We evaluate \texttt{all-MiniLM-L6-v2} (6 layers, 384 dimensions) and
 \texttt{all-mpnet-base-v2} (12 layers, 768 dimensions). This configuration is
