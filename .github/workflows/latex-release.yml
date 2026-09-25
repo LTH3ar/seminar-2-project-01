@@ -7,10 +7,10 @@ on:
     branches:
       - main
     paths:
-      - "reports/latex/**"
+      - "report/latex/**"
   pull_request:
     paths:
-      - "reports/latex/**"
+      - "report/latex/**"
   workflow_dispatch:     # manual run from the Actions tab
 
 permissions:
@@ -24,14 +24,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Find every .tex file under reports/latex that is a root document
+      # Find every .tex file under report/latex that is a root document
       # (i.e. contains \documentclass), so included chapters/sections are skipped.
       - name: Find root LaTeX files
         id: find
         run: |
-          files=$(grep -rlE --include='*.tex' '^[[:space:]]*\\documentclass' reports/latex || true)
+          files=$(grep -rlE --include='*.tex' '^[[:space:]]*\\documentclass' report/latex || true)
           if [ -z "$files" ]; then
-            echo "::error::No root .tex files (with \\documentclass) found in reports/latex"
+            echo "::error::No root .tex files (with \\documentclass) found in report/latex"
             exit 1
           fi
           echo "Found root documents:"
@@ -50,14 +50,14 @@ jobs:
           latexmk_use_lualatex: false   # set true (or use latexmk_use_xelatex) if your docs need it
 
       # Gather PDFs into dist/, flattening paths so e.g.
-      # reports/latex/thesis/main.pdf -> dist/thesis-main.pdf (avoids name clashes)
+      # report/latex/thesis/main.pdf -> dist/thesis-main.pdf (avoids name clashes)
       - name: Collect PDFs
         run: |
           mkdir -p dist
           while IFS= read -r tex; do
             [ -z "$tex" ] && continue
             pdf="${tex%.tex}.pdf"
-            rel="${pdf#reports/latex/}"
+            rel="${pdf#report/latex/}"
             name="${rel//\//-}"
             cp "$pdf" "dist/$name"
           done <<< "${{ steps.find.outputs.files }}"
