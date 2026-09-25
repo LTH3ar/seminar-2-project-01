@@ -1,0 +1,118 @@
+% =====================================================================
+%  CHAPTER 4: RESULTS  (converted from Markdown)
+%  Required preamble packages: graphicx, booktabs
+%  ( \resizebox needs graphicx; \toprule/\midrule/\cmidrule/\bottomrule
+%    need booktabs; \textsubscript is built into modern LaTeX. )
+% =====================================================================
+
+\section*{CHAPTER 4: EVALUATION METHODOLOGY}
+\addcontentsline{toc}{section}{\numberline{}CHAPTER 4: EVALUATION METHODOLOGY}
+\setcounter{section}{4}
+\setcounter{subsection}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\subsection{Two measurements}
+
+\textbf{Model selection} uses stratified \textit{k}-fold cross-validation over the \textbf{training split only}. Every decision in this report (preprocessing level, title weighting, truncation, hyperparameters, architecture) was made against cross-validation scores.
+
+\textbf{The final result} uses the competition process on the \textbf{test split}, run exactly once per model when that model was final. This is the only number comparable with the published baseline.
+
+\subsection{Metrics}
+
+The course specifies accuracy, precision, recall, F1-score, and area under the ROC curve. All are derived from the confusion matrix. For a class $c$:
+
+\[ \text{precision} = \frac{TP}{TP + FP}, \qquad \text{recall} = \frac{TP}{TP + FN}, \qquad F_1 = \frac{2PR}{P + R} \]
+
+We implement these from first principles rather than importing them because the evaluation layer then carries no dependency on any modelling library and the definitions match exactly what the course covered.
+
+\texttt{tests/test\_evaluation.py} cross-checks every metric against scikit-learn on 500 synthetic predictions -- per-class precision, recall, F1 and support; macro, micro and weighted averaging; the stratified fold splitter's proportions; and one-vs-rest AUC. \textbf{Agreement is exact to machine precision}, with a maximum deviation of $1.1 \times 10^{-16}$ on the AUC comparison.
+
+\subsubsection{Averaging}
+
+We report macro, micro and weighted F1 because they answer different questions. Macro averages the per-class scores unweighted, so a class the model ignores cannot be hidden. Micro pools the counts before dividing, which for a single-label multi-class problem makes it identical to accuracy -- a property we assert in a test.
+
+The difference is easiest to see in the degenerate case. A model that always predicts \texttt{bug} on our balanced data scores (Table~\ref{tab:degenerate_case_metrics}). Accuracy rewards the third of the data it happens to get right; macro F1 reports that two of three classes score zero.
+
+\begin{table}[H]
+\centering
+\caption{Evaluation metric values under a trivial majority-class prediction policy.}
+\label{tab:degenerate_case_metrics}
+\vspace{0.5em}
+\begin{tabular}{l c}
+\hline
+ & value \\
+\hline
+accuracy & 0.3333 \\
+micro F1 & 0.3333 \\
+\textbf{macro F1} & \textbf{0.1667} \\
+weighted F1 & 0.1667 \\
+\hline
+\end{tabular}
+\end{table}
+
+Because the dataset is exactly balanced (Section 2.1), macro and micro converge for any model that predicts all three classes at similar rates. We report both regardless: if resampling or filtering were introduced at any point, they would diverge immediately, and that divergence is the signal that something changed.
+
+\textbf{Macro F1 is the figure used throughout}, matching the competition's definition.
+
+\subsubsection{ROC and AUC}
+
+The task is multi-class, so ROC is computed one-vs-rest: each class is taken as positive in turn with the other two pooled as negative, and the macro AUC is the unweighted mean of the three curves.
+
+AUC is reported only for models that expose calibrated class probabilities. Models returning hard labels -- the keyword rules, \texttt{LinearSVC} -- report AUC as absent. This costs us an AUC column for two models and is the correct trade: a number computed differently from the rest of the column is worse than no number.
+
+\subsection{Cross-validation}
+
+Stratified \textit{k}-fold with $k = 10$ over the 1,500 training issues, seeded at 42. Each class is shuffled independently and dealt round-robin into the folds, so every fold holds the class proportions of the whole to within one item. In practice each fold contains exactly 150 issues -- 50 per class -- with 1,350 for training.
+
+The splitter is seeded (42), so every run and every team member obtains identical folds and identical numbers.
+
+Grid searches use $k = 5$ rather than 10, because a grid multiplies the number of fits and five folds is sufficient to \textit{rank} configurations; the selected configuration is then re-evaluated at $k = 10$.
+
+For the neural models, cross-validation is supplemented by a \textbf{held-out validation split of 20\%} of the training data, as the course prescribes, from which training and validation loss are recorded at every epoch.
+
+\subsection{The competition protocol}
+
+The NLBSE'24 rules define the reported figure:
+
+\begin{enumerate}
+    \item Train a \textbf{separate classifier for each of the five repositories}.
+    \item Evaluate each on that repository's 300 test issues.
+    \item Score each repository as the \textbf{mean F1 over the three classes}.
+    \item Report the \textbf{arithmetic mean of the five per-repository scores}.
+\end{enumerate}
+
+\subsection{Baselines}
+
+\textbf{Floors} establish what costs no effort, so that a result can be read in context. A model reaching 0.75 means little until the reader knows that always predicting one class reaches 0.17 and hand-written keyword rules reach 0.54.
+
+\textbf{The published baseline} is the competition's SetFit result, which is what ``how good is this?'' ultimately means in Table~\ref{tab:published_baseline_scores}
+
+\begin{table}[h]
+\centering
+\caption{Published NLBSE'24 SetFit baseline F1 scores by repository.}
+\label{tab:published_baseline_scores}
+\vspace{0.5em}
+\begin{tabular}{l c}
+\hline
+Repository & SetFit F1 \\
+\hline
+facebook/react & 0.8718 \\
+tensorflow/tensorflow & 0.8644 \\
+microsoft/vscode & 0.8262 \\
+opencv/opencv & 0.8173 \\
+bitcoin/bitcoin & 0.7555 \\
+\textbf{cross-repository} & \textbf{0.8270} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Guarding against leakage}
+
+Three mechanisms, each with a corresponding test:
+
+\textbf{Vectorisers are fitted inside the pipeline}, and therefore inside each fold. A test fits a pipeline on one half of a project's issues and asserts that no term occurring only in the held-out half entered the learned vocabulary -- comparing using the vectoriser's own analyser, since a naive whitespace split tokenises differently and comparing across the two would compare noise.
+
+\textbf{Models are supplied as factories}, so no fitted state can leak between folds or between repositories.
+
+\textbf{The error analysis re-derives its predictions} through the same protocol as the leaderboard, and a test asserts the two agree to four decimal places -- so Section 6 describes the same run Section 5 reports, not a separate one.

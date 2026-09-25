@@ -1,0 +1,171 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% CHAPTER 6: CHALLENGES & LESSONS LEARNED (draft)
+% ══════════════════════════════════════════════════════════════════════════════
+
+\section*{CHAPTER 6: DISCUSSION \& ERROR ANALYSIS}
+\addcontentsline{toc}{section}{\numberline{}CHAPTER 6: DISCUSSION \& ERROR ANALYSIS}
+\setcounter{section}{6}
+\setcounter{subsection}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+All analysis in this section uses the best classical model, TF-IDF with tuned logistic regression (0.7603). We analyse this rather than the best overall model because it is fully interpretable -- every decision traces to term weights -- and because its errors are representative: the confusion structure is the same for the stronger models, only less frequent. The predictions are re-derived through the same per-project protocol as Section 5, and a test asserts the two agree to four decimal places.
+
+\subsection{Where the model fails}
+
+Of 1,500 test issues, 359 are misclassified. The errors are not uniformly distributed:
+
+\begin{table}[H]
+\centering
+\caption{Distribution and prevalence of misclassification errors by true and predicted class pair.}
+\label{tab:error_breakdown}
+\vspace{0.5em}
+\begin{tabular}{l l c c c}
+\hline
+True & Predicted & count & share of errors & share of all \\
+\hline
+\textbf{bug} & \textbf{question} & \textbf{96} & \textbf{26.7\%} & 6.4\% \\
+question & feature & 70 & 19.5\% & 4.7\% \\
+feature & question & 57 & 15.9\% & 3.8\% \\
+bug & feature & 53 & 14.8\% & 3.5\% \\
+question & bug & 49 & 13.6\% & 3.3\% \\
+feature & bug & 34 & 9.5\% & 2.3\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{\texttt{bug} misclassified as \texttt{question} is the single largest error type}, accounting for more than a quarter of all mistakes. More broadly, \textbf{\texttt{question} is involved in 176 of 359 errors (49\%)} either as the true or predicted class -- it is the class the model cannot reliably separate from the other two.
+
+This is visible in the per-class scores as well from Table~\ref{tab:per_repo_f1_errors}
+
+\begin{table}[H]
+\centering
+\caption{Per-class F1 performance and total misclassification counts across repositories.}
+\label{tab:per_repo_f1_errors}
+\vspace{0.5em}
+\begin{tabular}{l c c c c c}
+\hline
+Repository & F1 bug & F1 feature & F1 question & F1 avg & errors \\
+\hline
+facebook/react & 0.9175 & 0.8302 & 0.7526 & 0.8334 & 50 \\
+tensorflow/tensorflow & 0.8290 & 0.8526 & 0.7650 & 0.8155 & 56 \\
+opencv/opencv & 0.6630 & 0.8195 & 0.7664 & 0.7496 & 74 \\
+microsoft/vscode & 0.6957 & 0.7117 & 0.7629 & 0.7234 & 83 \\
+bitcoin/bitcoin & 0.6374 & 0.7586 & 0.6419 & 0.6793 & 96 \\
+\hline
+\end{tabular}
+\end{table}
+
+\texttt{bitcoin/bitcoin} produces almost twice the errors of \texttt{facebook/react}, consistent with it being the hardest project for the published baseline too.
+
+An asymmetry worth noting: \texttt{bug} is the \textit{best} class on the two easy projects (0.9175 on React) and the \textit{worst} on the two hardest (0.6374 on Bitcoin, 0.6630 on OpenCV). Bug reports in a JavaScript UI library are lexically distinctive -- crash, render, hook, component. Bug reports in a cryptocurrency node or a computer-vision library read much like questions about the same subsystems.
+
+\subsection{The class boundary is soft}
+
+A user who is unsure whether observed behaviour is a defect writes a report that looks as both a bug and a question; the label reflects a maintainer's later decision, not anything determinable from the text. \texttt{[Bug] Forders not opening} -- a four-word title with a typo -- carries no information that distinguishes the two.
+
+The \texttt{question $\rightarrow$ feature} confusion (70 errors) has the same character in reverse. Titles such as \texttt{please allow for multiple tunnels on same machine} and \texttt{Allow webview context menus triggered by primary click} are labelled \texttt{question} but are, on any reading, feature requests.
+
+\subsection{What misleads the model}
+
+Ranking terms by their lift in a specific confusion shows \textit{why} the model goes wrong, not just \textit{that} it does.
+
+\textbf{\texttt{question $\rightarrow$ bug}} is dominated by fragments of OpenCV's issue template being shown in Table~\ref{tab:boilerplate_lift_terms}
+
+\begin{table}[H]
+\centering
+\caption{Highest-lift terms characterizing OpenCV template boilerplate in \texttt{question $\rightarrow$ bug} confusions.}
+\label{tab:boilerplate_lift_terms}
+\vspace{0.5em}
+\begin{tabular}{l c c c}
+\hline
+Term & in errors & in correct & lift \\
+\hline
+\texttt{forum.opencv.org,} & 32.7\% & 1.8\% & 15.6$\times$ \\
+\texttt{overflow,} & 32.7\% & 1.8\% & 15.6$\times$ \\
+\texttt{(videos,} & 28.6\% & 1.6\% & 15.6$\times$ \\
+\texttt{solution} & 32.7\% & 3.1\% & 9.6$\times$ \\
+\hline
+\end{tabular}
+\end{table}
+
+These are not content words. They are pieces of the boilerplate OpenCV inserts into new issues -- a line directing users to the forum, Stack Overflow and the documentation. The model has learned the template rather than the issue.
+
+\textbf{\texttt{bug $\rightarrow$ question}} shows the same pathology with different boilerplate -- \texttt{reproduce**}, \texttt{**actual}, \texttt{behavior**} -- the residue of GitHub issue-template headings that our Markdown stripping left behind as bold-marked fragments.
+
+This is a concrete, actionable finding: \textbf{template boilerplate correlates with class within a project, and the per-project protocol lets each classifier overfit to its own project's conventions.} More aggressive template stripping is the obvious remedy and is the cheapest available improvement we did not implement.
+
+\subsection{Document length}
+
+\begin{table}[H]
+\centering
+\caption{Classification accuracy across issue report document length quintiles.}
+\label{tab:length_quintiles_accuracy}
+\vspace{0.5em}
+\begin{tabular}{l c c c}
+\hline
+Length quintile & issues & median words & accuracy \\
+\hline
+1--70 words & 300 & 41 & 0.7467 \\
+70--127 & 307 & 103 & 0.7655 \\
+\textbf{127--178} & \textbf{297} & \textbf{152} & \textbf{0.8148} \\
+178--280 & 296 & 219 & 0.7601 \\
+280--5,050 & 300 & 394 & \textbf{0.7167} \\
+\hline
+\end{tabular}
+\end{table}
+
+Accuracy peaks in the middle quintile and falls at both ends, by 0.068 on the shortest and 0.098 on the longest. Very short issues carry too little text to classify; very long ones are diluted by log output and partly discarded by the 200-word truncation.
+
+The middle quintile's median of 152 words is almost exactly the dataset median of 150, which is a useful coincidence for the report: \textbf{the model performs best on the typical issue and degrades on both tails.} It also justifies treating the truncation threshold as a reported hyperparameter rather than an implementation detail.
+
+\subsection{Confident errors and label quality}
+
+Errors the model was confident about are the informative ones. A near-tie means a genuinely ambiguous issue; a confident mistake means the model learned something wrong -- or the ground-truth label is questionable.
+
+Among the 25 most confident errors, the true label is \texttt{question} 14 times, \texttt{feature} 6 and \texttt{bug} 5 -- confirming \texttt{question} as the problem class.
+
+More striking: \textbf{nine of the twenty-five have a title that explicitly declares a different type than its label}, and in eight of those nine the model agreed with the title rather than the label.
+
+\begin{table}[H]
+\centering
+\caption{Representative high-confidence misclassifications exhibiting label noise or title contradiction.}
+\label{tab:confident_error_examples}
+\vspace{0.5em}
+\begin{tabular}{l l l p{7cm}}
+\hline
+True label & Title declares & Model said & Title \\
+\hline
+question & feature & feature & \texttt{Allow webview context menus triggered by primary click} \\
+question & feature & feature & \texttt{please allow for multiple tunnels on same machine} \\
+feature & question & question & \texttt{How to use opencv to erase text from images...} \\
+question & bug & bug & \texttt{Error when runnning tensorflow.python.ops.sparse\_ops...} \\
+bug & question & question & \texttt{Forders not opening} \\
+\hline
+\end{tabular}
+\end{table}
+
+These labels come from maintainers applying project conventions, not from an annotation with adjudication or inter-annotator agreement. \textbf{A ceiling below 1.0 is therefore built into the dataset}, and part of the remaining gap between any model and perfect classification is unreachable. The published baseline faces exactly the same ceiling, which is why the comparison against it remains fair even though both are measured against imperfect labels.
+
+One further observation from inspecting the list: at least one confident error is an issue written in Portuguese (\texttt{[Bug] Tela preta no terminal do VS Code}). The dataset is not language-filtered. This is a marginal effect -- one case in twenty-five -- not a major error source, and we note it only to record that we checked.
+
+\subsection{Error Summary}
+
+\begin{table}[h]
+\centering
+\caption{Summary of error analysis findings, supporting evidence, and actionability.}
+\label{tab:error_analysis_summary}
+\vspace{0.5em}
+\begin{tabular}{p{4.5cm} p{6cm} p{3.5cm}}
+\hline
+Finding & Evidence & Actionable? \\
+\hline
+\texttt{question} is the problem class & involved in 49\% of errors; 14/25 confident errors & Needs better features, not tuning \\
+Template boilerplate is learned & OpenCV forum line at 15.6$\times$ lift in one confusion & \textbf{Yes} -- strip templates harder \\
+Accuracy falls on both length tails & 0.82 mid-quintile vs 0.72 longest & Partly -- revisit truncation \\
+$\sim$1/3 of confident errors look like label noise & 9/25 titles contradict their label & No -- dataset ceiling \\
+Project difficulty varies widely & 50 errors on React vs 96 on Bitcoin & No -- data property \\
+\hline
+\end{tabular}
+\end{table}
+

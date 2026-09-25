@@ -1,0 +1,48 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% CHAPTER 7: CONCLUSION (draft)
+% ══════════════════════════════════════════════════════════════════════════════
+
+\section*{CHAPTER 7: CONCLUSION}
+\addcontentsline{toc}{section}{\numberline{}CHAPTER 7: CONCLUSION}
+\setcounter{section}{7}
+\setcounter{subsection}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\subsection{What we did}
+
+We evaluated twenty-two models on the NLBSE'24 issue report classification task, spanning trivial floors, classical machine learning, neural networks, frozen sentence encoders, a reproduction of the published SetFit baseline, and ensembles -- all measured through a single evaluation harness so that every leaderboard entry is computed identically.
+
+Our best result, a soft-voting ensemble of SetFit, TF-IDF and a frozen MPNet encoder, reaches \textbf{0.8168} cross-repository F1 against the published baseline's 0.8270. That closes 98.5\% of the distance from a majority-class classifier to the baseline. \textbf{We do not beat it overall.} On \texttt{bitcoin/bitcoin} -- the hardest project for every model tested, including the baseline -- the ensemble reaches 0.7691 against the baseline's 0.7555, and our SetFit reproduction on MPNet exceeds the baseline on \texttt{tensorflow/tensorflow}.
+
+\subsection{What we learned}
+
+\textbf{Representation matters more than classifier choice.} Every purely lexical model in this study lands between 0.70 and 0.76, whether it is naive Bayes, a support vector machine, a random forest, a feed-forward network or a convolutional network. The two things that moved the number were a better representation (+0.050 for a larger pretrained encoder) and adapting that representation to the task (+0.076 for contrastive fine-tuning).
+
+\textbf{With 300 training examples per classifier, learned representations lose to engineered ones.} Neither neural model beat TF-IDF with logistic regression. A pretrained encoder is the only practical way to bring outside knowledge into a problem this small -- which is precisely why the competition's baseline is what it is.
+
+\textbf{Encoder capacity and task adaptation are partly substitutes, not complements.} Measured at matched training settings, a larger encoder retains 57\% of its frozen-model value after fine-tuning. A projection that added the two effects independently predicted 0.8482 and was wrong by 0.038.
+
+\textbf{Conventional preprocessing was harmful.} Stop-word removal and lemmatisation -- the default pipeline in most text-classification work -- cost 0.011 macro F1, consistently across every configuration tested, because the modal words they discard are what marks a feature request.
+
+\textbf{Models that score alike can fail differently.} A TF-IDF pipeline and a frozen MPNet encoder reach nearly identical averages by winning on disjoint sets of projects. Every ensemble we built beat its best member, and the best one attained the highest AUC of any model measured.
+
+\subsection{What we got wrong}
+
+Three expectations in this project did not survive measurement, and we report them because the corrections carry more information than the original claims.
+
+We assumed aggressive text cleaning would help; the ablation showed it hurt. We assumed the encoder and fine-tuning effects would compose additively; they did not, and our first correction to that finding was itself confounded by training settings until a matched re-run settled it. We attributed a cross-device discrepancy to cuDNN nondeterminism and changed the code to fix it; re-running returned identical numbers, showing the diagnosis was wrong.
+
+\subsection{Future work}
+
+In order of expected value:
+
+\textbf{Re-execute the published baseline locally.} The 0.0168 gap between our reproduction and the published figure cannot currently be attributed between method, encoder choice and library versions. This is the largest open question in the report and the cheapest to close.
+
+\textbf{Strip issue-template boilerplate more aggressively.} The error analysis shows OpenCV's forum-referral line appearing at 15.6$\times$ lift in one specific confusion -- the model has learned the template rather than the content. This is the clearest actionable defect we identified and did not fix.
+
+\textbf{Search SetFit's hyperparameters.} \texttt{num\_iterations} and \texttt{num\_epochs} are untouched, and MPNet's contrastive loss collapsed to roughly $10^{-4}$, suggesting the objective was over-solved. Our reproduction is a lower bound on the method.
+
+\textbf{Tune the ensemble weights on cross-validation.} Soft voting currently weights all members equally. With members within 0.03 of each other this is defensible but unprincipled.
+
+\textbf{Report confidence intervals.} Bootstrap intervals over the test split would let readers distinguish real gaps from noise, which Section 7.2 currently asks them to do by eye.

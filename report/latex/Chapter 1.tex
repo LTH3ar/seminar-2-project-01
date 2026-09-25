@@ -1,0 +1,120 @@
+\section*{CHAPTER 1: INTRODUCTION}
+\addcontentsline{toc}{section}{\numberline{}CHAPTER 1: INTRODUCTION}
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\subsection{Problem}
+
+Issue trackers are the primary interface between a software project and its
+users. Before any report can be check and assigned priorities, someone must decide what kind of report it is, whether it is a defect, a request for new functionality, or a question about existing behaviour. That determines who sees the issue and how urgently, and it is a repetitive and high-volume work that maintainers mostly perform manually.
+
+Automating it is a classification problem over short, noisy and semi-structured text. Issue reports are Markdown documents in which prose is interleaved with stack traces, code blocks, logs, screenshots and template boilerplate. They vary in length, from a single sentence to over twenty-one
+thousand words. And the class boundaries are blurry in which a user who is
+unsure whether behaviour is broken and writes something that looks like both a bug report and a question.
+
+\subsection{Task definition}
+
+% Competition page: https://nlbse2024.github.io/tools/
+% Official repo (rules, data, baseline): https://github.com/nlbse2024/issue-report-classification
+% Overview paper: Kallis et al., "The NLBSE'24 Tool Competition", NLBSE'24,
+%   https://doi.org/10.1145/3643787.3648038
+We address the \textbf{NLBSE'24 tool competition on issue report classification}~\cite{nlbse2024}.
+Compared with the 2023 edition, the organisers deliberately shifted the task towards
+few-shot learning on a small multi-repository dataset.
+% Source (tools page, "Updates"): "focus on few-shot learning, small multi repo dataset,
+%   SentenceTransformer baseline" -- https://nlbse2024.github.io/tools/
+
+\noindent The dataset has 3,000 labelled issue reports from five open-source projects:
+\texttt{facebook/react}, \texttt{tensorflow/tensorflow}, \texttt{microsoft/vscode}, \texttt{bitcoin/bitcoin} and \texttt{opencv/opencv}.
+Each report carries four fields (repository, label, title and body) and exactly one
+label from \texttt{\{bug, feature, question\}}.
+% Source (README, "Dataset"): fields = Repository, Label, Title, Body; labels = bug, feature, question
+%   https://github.com/nlbse2024/issue-report-classification
+% Data files: https://github.com/nlbse2024/issue-report-classification/tree/main/data
+%   (issues_train.csv, issues_test.csv)
+
+
+\begin{itemize}
+    \item \textbf{The task is multi-class, not multi-label.} The organisers excluded
+    every issue carrying more than one label, so each report belongs to exactly one class,
+    and each classifier must assign exactly one label per issue.
+    % Source (README): "Issues with multiple labels are excluded from the dataset."
+    %   and "The classifier should assign one label to an issue."
+    
+    \item \textbf{Five classifiers are required.} The process trains a separate
+    model for each repository and evaluates it only on that repository's test issues.
+    Each classifier therefore sees only 300 training examples (100 per class), this is a few-shot problem by construction.
+    % Source (README, "Training"): "Participants must train a multi-class classifier for
+    %   each of the 5 projects, i.e., we expect 5 classifiers per model submission."
+    % 300 per repo = 1,500 training issues / 5 repos; 100 per class follows from balance.
+
+    \item \textbf{All training data must come from the provided training set.}
+    Pretrained models are permitted, but they may only be fine-tuned on the given
+    training data, and any input or feature must be derived from it. Preprocessing,
+    feature engineering, resampling and carving out a validation split are allowed
+    on the training set. On the test set, any preprocessing is allowed except
+    sampling or rebalancing.
+    % Source (README, "Training" and "Evaluation" sections)
+\end{itemize}
+
+\noindent The data is split 50/50 into a training set (1,500 issues) and a test set
+(1,500 issues). Both are class-balanced, which works out to 100 issues per
+(project, class) cell in each split.
+% Source (README): "split into a training set (50%) and a test set (50%)";
+%   training set "encompassing 1.5 thousand labeled issue reports"; both sets balanced.
+% 100 per cell = 1,500 / (5 repos x 3 classes). Not stated verbatim by the organisers,
+%   but consistent with the baseline's per-class recalls (multiples of 0.01).
+
+\noindent Per-repository performance is the macro-averaged F1 over the three classes. The cross-repository score is the arithmetic mean of the five per-repository F1 scores, and submissions are ranked on this score alone. Submissions must also report precision, recall and F1 for each class and each repository.
+% Source (README, "Evaluation"): "Repository classification performance is measured using
+%   the F1 score over all the three classes (averaged). Cross-repository performance is
+%   measured as the arithmetic mean of the five repository F1 scores."
+% Note: the README says macro and micro give the same result on balanced data. That holds
+%   for recall (both equal accuracy) but not for F1. The baseline table uses macro:
+%   react macro-F1 = 0.8718 vs accuracy/micro-F1 = 0.8733.
+
+\subsection{Approach}
+
+We evaluate twenty-two models spanning the range of available approaches, all measured through a single evaluation setup so that every leaderboard entry is computed identically:
+
+% \begin{itemize}
+%     \item \textbf{Reference floors} - majority class, stratified random, hand-written keyword rules, and naive Bayes implemented from scratch.
+%     \item \textbf{Classical machine learning} - TF-IDF features with naive Bayes, logistic regression, linear SVM and random forest, with a preprocessing ablation and hyperparameter search.
+%     \item \textbf{Neural networks} - a feed-forward network over TF-IDF features and a 1-D convolutional network over learned embeddings.
+%     \item \textbf{Sentence transformers} - frozen pretrained encoders with a classification head, and a full reproduction of the published SetFit baseline.
+%     \item \textbf{Ensembles} - soft voting over models with complementary per-project error profiles.
+% \end{itemize}
+\begin{table}[H]
+  \centering
+  \caption{Overview of evaluated models categorized by approach.}
+  \label{tab:model-categories}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Category} & \textbf{Model} \\
+    \midrule
+    \textbf{Reference floors} & majority class \\
+    & stratified random \\
+    & hand-written keyword rules \\
+    & naive Bayes implemented from scratch \\
+    \addlinespace
+    \textbf{Classical machine learning} & TF-IDF with naive Bayes \\
+    & TF-IDF with logistic regression \\
+    & TF-IDF with linear SVM \\
+    & TF-IDF with random forest \\
+    \addlinespace
+    \textbf{Neural networks} & feed-forward network over TF-IDF features \\
+    & 1-D convolutional network over learned embeddings \\
+    \addlinespace
+    \textbf{Sentence transformers} & frozen pretrained encoders with a classification head \\
+    & full reproduction of the published SetFit baseline \\
+    \addlinespace
+    \textbf{Ensembles} & soft voting over models with complementary per-project error profiles \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Structure}
+
+Section 2 characterises the dataset. Section 3 describes our approach, including the persistence architecture and the preprocessing pipeline. Section 4 sets out the evaluation methodology. Section 5 presents results, Section 6 analyses where the best model fails, and Section 7 discusses threats to validity.

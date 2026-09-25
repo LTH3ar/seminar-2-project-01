@@ -1,0 +1,77 @@
+name: Build LaTeX PDF Release
+
+on:
+  push:
+    tags:
+      - "v*"            # e.g. v1.0.0 -> builds PDFs and creates a GitHub Release
+    branches:
+      - main
+    paths:
+      - "reports/latex/**"
+  pull_request:
+    paths:
+      - "reports/latex/**"
+  workflow_dispatch:     # manual run from the Actions tab
+
+permissions:
+  contents: write        # needed to create releases and upload assets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Find every .tex file under reports/latex that is a root document
+      # (i.e. contains \documentclass), so included chapters/sections are skipped.
+      - name: Find root LaTeX files
+        id: find
+        run: |
+          files=$(grep -rlE --include='*.tex' '^[[:space:]]*\\documentclass' reports/latex || true)
+          if [ -z "$files" ]; then
+            echo "::error::No root .tex files (with \\documentclass) found in reports/latex"
+            exit 1
+          fi
+          echo "Found root documents:"
+          echo "$files"
+          {
+            echo "files<<EOF"
+            echo "$files"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Compile LaTeX documents
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ${{ steps.find.outputs.files }}
+          work_in_root_file_dir: true   # run latexmk inside each file's folder so relative \input/\includegraphics work
+          latexmk_use_lualatex: false   # set true (or use latexmk_use_xelatex) if your docs need it
+
+      # Gather PDFs into dist/, flattening paths so e.g.
+      # reports/latex/thesis/main.pdf -> dist/thesis-main.pdf (avoids name clashes)
+      - name: Collect PDFs
+        run: |
+          mkdir -p dist
+          while IFS= read -r tex; do
+            [ -z "$tex" ] && continue
+            pdf="${tex%.tex}.pdf"
+            rel="${pdf#reports/latex/}"
+            name="${rel//\//-}"
+            cp "$pdf" "dist/$name"
+          done <<< "${{ steps.find.outputs.files }}"
+          ls -l dist
+
+      - name: Upload PDFs as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-pdfs
+          path: dist/*.pdf
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.pdf
+          generate_release_notes: true
