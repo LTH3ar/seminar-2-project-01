@@ -177,25 +177,46 @@ This predicts that a classifier trained on one project will transfer poorly to a
 
 \subsection{Summary of Dataset Properties}
 Table~\ref{tab:dataset_summary} summarizes the structural properties of the corpus alongside their methodological implications for subsequent modeling phases.
-\begin{table}[H]
+% \begin{table}[H]
+% \centering
+% \caption{Summary of dataset characteristics and their modelling implications.}
+% \label{tab:dataset_summary}
+% \vspace{0.5em}
+% \begin{tabular}{l p{5cm} p{6cm}}
+% \hline
+% Property & Value & Consequence for modelling \\
+% \hline
+% Size & 1,500 train / 1,500 test & Few-shot; favours pretrained representations \\
+% Training data per classifier & 300 issues & The binding constraint on Track C \\
+% Balance & 100 per (project, class) cell & Macro- and micro-F1 coincide; no resampling \\
+% Label cardinality & Exactly one per issue & Multi-class, not multi-label \\
+% Median length & 150 words, max 21,595 & Truncation is a hyperparameter \\
+% Code blocks & 47.4\%, class-correlated & Cleaning removes signal as well as noise \\
+% Cross-project vocabulary overlap & 0.266 & Per-project classifiers justified \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+\begin{table}[ht]
 \centering
 \caption{Summary of dataset characteristics and their modelling implications.}
 \label{tab:dataset_summary}
 \vspace{0.5em}
-\begin{tabular}{l p{5cm} p{6cm}}
-\hline
+\begin{tabularx}{\linewidth}{@{} l p{4.2cm} X @{}}
+\toprule
 Property & Value & Consequence for modelling \\
-\hline
-Size & 1,500 train / 1,500 test & Few-shot; favours pretrained representations \\
-Training data per classifier & 300 issues & The binding constraint on Track C \\
-Balance & 100 per (project, class) cell & Macro- and micro-F1 coincide; no resampling \\
-Label cardinality & Exactly one per issue & Multi-class, not multi-label \\
-Median length & 150 words, max 21,595 & Truncation is a hyperparameter \\
-Code blocks & 47.4\%, class-correlated & Cleaning removes signal as well as noise \\
-Cross-project vocabulary overlap & 0.266 & Per-project classifiers justified \\
-\hline
-\end{tabular}
+\midrule
+Size                             & 1,500 train / 1,500 test      & Few-shot; favours pretrained representations \\
+Training data per classifier     & 300 issues                    & Primary constraint on per-project track \\
+Balance                          & 100 per (project, class) cell & Macro- and micro-F1 coincide; no resampling \\
+Label cardinality                & Exactly one per issue         & Multi-class, not multi-label \\
+Median length                    & 150 words, max 21,595         & Truncation is a hyperparameter \\
+Code blocks                      & 47.4\%, class-correlated      & Cleaning removes signal as well as noise \\
+Cross-project vocabulary overlap & 0.266                         & Per-project classifiers justified \\
+\bottomrule
+\end{tabularx}
 \end{table}
+
 
 \vspace{1em}
 \hrule
