@@ -1,0 +1,31 @@
+{
+  "exact_duplicates_train_test": 3,
+  "identical_titles": 23,
+  "duplicates_within_train": 1,
+  "near_duplicates": {
+    "cosine_ge_0.99": {
+      "n": 5,
+      "share": 0.0033333333333333335
+    },
+    "cosine_ge_0.95": {
+      "n": 28,
+      "share": 0.018666666666666668
+    },
+    "cosine_ge_0.90": {
+      "n": 60,
+      "share": 0.04
+    },
+    "cosine_ge_0.80": {
+      "n": 131,
+      "share": 0.08733333333333333
+    }
+  },
+  "near_duplicates_per_repo_at_090": {
+    "bitcoin/bitcoin": 2,
+    "facebook/react": 20,
+    "microsoft/vscode": 6,
+    "opencv/opencv": 20,
+    "tensorflow/tensorflow": 12
+  },
+  "note": "Small, but the same order of magnitude as the score differences reported on this benchmark. Report it rather than discover it."
+}
