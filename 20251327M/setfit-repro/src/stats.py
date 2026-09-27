@@ -168,6 +168,7 @@ def compare(
             "n01": pooled.n01,
             "n10": pooled.n10,
             "discordant": pooled.n_discordant,
+            "n_items": len(truth),
             "p_value": pooled.p_value,
         },
         "survivors": sum(1 for row in rows if row["significant"]),
@@ -274,9 +275,22 @@ def describe_claim(delta: float, comparison: dict) -> str:
     """
     points = delta * 100
     if abs(delta) < DECISION_THRESHOLD:
+        # Two different numbers, and calling both of them "the resolution of
+        # this test set" is how a reader stops trusting the rest of the file.
+        # DECISION_THRESHOLD is the preregistered bar, fixed before any
+        # experiment ran. What *this* comparison resolves follows from its own
+        # discordant rate -- a property of the pair of models, not of the test
+        # set. Two runs of one configuration disagree on barely 1% of issues
+        # and so resolve a much smaller difference than two genuinely
+        # different models would. Report both, and label them.
+        pooled = comparison["pooled"]
+        resolved = minimum_detectable_difference(
+            pooled["discordant"] / pooled["n_items"], n_items=pooled["n_items"]
+        )
         return (
             f"no detectable difference ({points:+.2f} points, below the "
-            f"{DECISION_THRESHOLD * 100:.1f}-point resolution of this test set; "
+            f"preregistered {DECISION_THRESHOLD * 100:.1f}-point decision "
+            f"threshold; this comparison resolves {resolved * 100:.1f} points; "
             f"{comparison['survivors']}/5 projects significant after Holm)"
         )
     direction = "higher" if delta > 0 else "lower"
